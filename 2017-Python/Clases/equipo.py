@@ -63,4 +63,4 @@ class equipo (object):
             elif (dia == "sabado"):
                 dia = "6"
 
-            self.turnos.append (urno + dia)
+            self.turnos.append (turno + dia)

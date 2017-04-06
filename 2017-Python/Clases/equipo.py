@@ -35,32 +35,9 @@ class equipo (object):
 
     def agregar_turnos (self , turno , dia):
 
-        if ((str(turno) != "manana") and (str(turno) != "tarde") and (str(turno) != "noche")):
+        if ((turno != 0) and (turno != 1) and (turno != 2)):
             return False
-        elif ((str(dia) != "lunes") and (str(dia) != "martes") and (str(dia) != "miercoles") and (str(dia) != "jueves") and (str(dia) != "viernes") and (str(dia) != "sabado")):
+        elif (dia != 0) and (dia != 1) and (dia != 2) and (dia != 3) and dia != 4) and (dia != 5) and (dia != 6)):
              return False
         else:
-
-            if (turno == "manana"):
-                turno = "a"
-
-            elif (turno == "tarde"):
-                turno = "b"
-
-            elif (turno == "noche"):
-                turno = "c"
-
-            if (dia == "lunes"):
-                dia = "1"
-            elif (dia == "martes"):
-                dia = "2"
-            elif (dia == "miercoles"):
-                dia = "3"
-            elif (dia == "jueves"):
-                dia = "4"
-            elif (dia == "viernes"):
-                dia = "5"
-            elif (dia == "sabado"):
-                dia = "6"
-
             self.turnos.append (turno + dia)

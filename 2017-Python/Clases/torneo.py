@@ -6,23 +6,28 @@ class torneo (object):
     equipos = []
     partidos_creados = []
 
+    def __init__(self):
+        self.equipos = []
+        self.partidos_creados = []
+
     def añadir_equipo(self, equipo):
 
         self.equipos.append(equipo)
 
     def ordenar_fechas_partidos(self):
 
-        dia = 0
+        dia = -1
         semana = 0
         abortar = False
-        turno = "a"
+        turno = 0
         partidos_a_crear = 0
         partidos_establecidos = 0
         terminado = None
 
         a = 1
-        while (a > len(self.equipos)):
-            partidos_a_crear += len(self.equipos) - 1
+        while (a < len(self.equipos)):
+            partidos_a_crear += len(self.equipos) - a
+            a += 1
 
         while (True):
             if (dia == 7):
@@ -33,9 +38,11 @@ class torneo (object):
 
             while (turno != 3):
                 for item in self.equipos:
-                    for item_2 in self.equipos[item].turnos:
-                        if ((item_2[1] == str(dia)) and (item_2[0] == turno)):
+                    for item_2 in item.turnos:
+                        print (item_2[1] , item_2[0] , dia , turno)
+                        if ((item_2[1] == dia) and (item_2[0] == turno)):
                             for item_3 in self.equipos:
+                                print (item_3.nombre , item.nombre)
                                 if (item_3 != item):
                                     posicion = 0
                                     for item_5 in self.partidos_creados:
@@ -43,29 +50,28 @@ class torneo (object):
                                             abortar = True
                                             break
                                         posicion += 1
-                                    for item_4 in self.equipos[item_3].turnos:
+                                    for item_4 in item_3.turnos:
                                         if (abortar == True):
                                             abortar = False
                                             break
-                                        if ((item_4[1] == str(dia)) and (item_4[0] == turno)):
+                                        if ((item_4[1] == dia) and (item_4[0] == turno)):
                                             nuevo_partido = partido (item , item_3 , semana , dia , turno)
                                             self.partidos_creados.append (nuevo_partido)
                                             partidos_establecidos += 1
                                             if (partidos_establecidos == partidos_a_crear):
                                                 return True
-                                        else:
-                                            terminado = True
+                                            else:
+                                                terminado = True
                                                 break
-                                        if (terminado == True):
+                                    if (terminado == True):
                                         break
-                            if (terminado == True):
-                                break
+                                if (terminado == True):
+                                    break
                             if (terminado == True):
                                 break
                         if (terminado == True):
-                            break
+                             break
                     if (terminado == True):
                         terminado = False
                         break
-
-                turno ++;
+                turno += 1

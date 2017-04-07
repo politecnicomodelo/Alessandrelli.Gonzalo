@@ -2,11 +2,15 @@ from .jugador import jugador
 
 class equipo (object):
 
-    Nombre = ""
+    nombre = ""
     localidad = ""
     lista_jugadores = []
     capitan = None
     turnos = []
+
+    def __init__(self):
+        self.lista_jugadores = []
+        self.turnos = []
 
     def agregar_nombre (self , nombre):
 
@@ -21,8 +25,8 @@ class equipo (object):
         for item in self.lista_jugadores:
             if (item.numero_camisa == jugador.numero_camisa):
                 return False
-            else:
-                self.lista_jugadores.append (jugador)
+        self.lista_jugadores.append (jugador)
+        return True
 
     def agregar_capitan (self , numero_camisa):
 
@@ -37,7 +41,7 @@ class equipo (object):
 
         if ((turno != 0) and (turno != 1) and (turno != 2)):
             return False
-        elif (dia != 0) and (dia != 1) and (dia != 2) and (dia != 3) and dia != 4) and (dia != 5) and (dia != 6)):
+        elif ((dia != 0) and (dia != 1) and (dia != 2) and (dia != 3) and (dia != 4) and (dia != 5) and (dia != 6)):
              return False
         else:
-            self.turnos.append (turno + dia)
+            self.turnos.append ([turno , dia])

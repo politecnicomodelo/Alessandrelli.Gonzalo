@@ -1,9 +1,10 @@
 from Clases.equipo import equipo
 from Clases.jugador import jugador
 from Clases.partido import partido
+from Clases.torneo import torneo
 from datetime import date
 
-torneo = partido ()
+torneo = torneo ()
 
 equipo_1 = equipo ()
 equipo_2 = equipo ()
@@ -25,12 +26,14 @@ ano = None
 
 equipo_1.agregar_nombre (input ("ingrese un nombre para el equipo 1: "))
 equipo_1.agregar_localidad (input ("ingrese una localidad para el equipo 1: "))
+
 jugador_1.agregar_nombre(input ("ingrese un nombre para el jugador 1: "))
 jugador_1.agregar_numero_camisa (input ("ingrese un numero de camisa para el jugador 1: "))
 dia = input ("Ingrese el dia de nacimiento para el jugador 1 (solo dia, y numericamente): ")
 mes = input ("Ingrese el mes de nacimiento para el jugador 1 (solo mes, y numericamente): ")
 ano = input ("Ingrese el ano de nacimiento para el jugador 1 (solo ano, y numericamente): ")
 jugador_1.agregar_fecha_nacimiento (date (int (ano) , int (mes) , int (dia)))
+equipo_1.agregar_jugadores (jugador_1)
 
 while (True):
     jugador_2.agregar_nombre (input ("ingrese un nombre para el jugador 2: "))
@@ -45,44 +48,9 @@ while (True):
         break
 
 while (True):
-    jugador_3.agregar_nombre (input ("ingrese un nombre para el jugador 3: "))
-    jugador_3.agregar_numero_camisa (input("ingrese un numero de camisa para el jugador 3: "))
-    dia = input ("Ingrese el dia de nacimiento para el jugador 3 (solo dia, y numericamente): ")
-    mes = input ("Ingrese el mes de nacimiento para el jugador 3 (solo mes, y numericamente): ")
-    ano = input ("Ingrese el ano de nacimiento para el jugador 3 (solo ano, y numericamente): ")
-    jugador_3.agregar_fecha_nacimiento (date (int (ano) , int (mes) , int (dia)))
-    if equipo_1.agregar_jugadores(jugador_3) == False:
-            print ("numero de camisa ya ingresada, reingrede datos: ")
-    else:
-        break
-
-while (True):
-    jugador_4.agregar_nombre (input ("ingrese un nombre para el jugador 4: "))
-    jugador_4.agregar_numero_camisa (input("ingrese un numero de camisa para el jugador 4: "))
-    dia = input ("Ingrese el dia de nacimiento para el jugador 4 (solo dia, y numericamente): ")
-    mes = input ("Ingrese el mes de nacimiento para el jugador 4 (solo mes, y numericamente): ")
-    ano = input ("Ingrese el ano de nacimiento para el jugador 4 (solo ano, y numericamente): ")
-    jugador_4.agregar_fecha_nacimiento (date (int (ano) , int (mes) , int (dia)))
-    if equipo_1.agregar_jugadores (jugador_4) == False:
-        print ("numero de camisa ya ingresada, reingrede datos: ")
-    else:
-        break
-
-while (True):
-    jugador_5.agregar_nombre (input ("ingrese un nombre para el jugador 5: "))
-    jugador_5.agregar_numero_camisa (input("ingrese un numero de camisa para el jugador 5: "))
-    dia = input ("Ingrese el dia de nacimiento para el jugador 5 (solo dia, y numericamente): ")
-    mes = input ("Ingrese el mes de nacimiento para el jugador 5 (solo mes, y numericamente): ")
-    ano = input ("Ingrese el ano de nacimiento para el jugador 5 (solo ano, y numericamente): ")
-    jugador_5.agregar_fecha_nacimiento (date (int (ano) , int (mes) , int (dia)))
-    if equipo_1.agregar_jugadores (jugador_5) == False:
-        print ("numero de camisa ya ingresada, reingrede datos: ")
-    else:
-        break
-
-while (True):
     if equipo_1.agregar_capitan (input ("ingrese el numero de camisa del capitan: ")) == False:
         print ("No existe ese numero de camisa en el equipo, reingrese el dato: ")
+        print (equipo_1.lista_jugadores)
     else:
         break
 
@@ -93,14 +61,33 @@ while posicion <= 18:
     turno = input ("agregar turno (MANANA/TARDE/NOCHE/) (s para salir): ")
     if turno == "s":
         break
+    elif (turno == "manana"):
+        turno = 0
+    elif (turno == "tarde"):
+        turno = 1
+    elif (turno == "noche"):
+        turno = 2
     dia = input("agregar turno (LUNES/MARTES/MIERCOLES/JUEVES/VIERNES/SABADO): ")
+    if (dia == "lunes"):
+        dia = 0
+    elif (dia == "martes"):
+        dia = 1
+    elif (dia == "miercoles"):
+        dia = 2
+    elif (dia == "jueves"):
+        dia = 3
+    elif (dia == "viernes"):
+        dia = 4
+    elif (dia == "sabado"):
+        dia = 5
+    elif (dia == "domingo"):
+        dia = 6
+
     equipo_1.agregar_turnos (turno , dia)
     posicion += 1
     if (posicion == 18):
         print ("se excedio el maximo numero de turnos")
         break
-
-torneo.añadir_equipo (equipo_1)
 
 equipo_2.agregar_nombre(input("ingrese un nombre: "))
 equipo_2.agregar_localidad(input("ingrese una localidad: "))
@@ -111,6 +98,7 @@ dia = input ("Ingrese el dia de nacimiento para el jugador 6 (solo dia, y numeri
 mes = input ("Ingrese el mes de nacimiento para el jugador 6 (solo mes, y numericamente): ")
 ano = input ("Ingrese el ano de nacimiento para el jugador 6 (solo ano, y numericamente): ")
 jugador_6.agregar_fecha_nacimiento (date (int (ano) , int (mes) , int (dia)))
+equipo_2.agregar_jugadores(jugador_6)
 
 while (True):
     jugador_7.agregar_nombre (input ("ingrese un nombre: "))
@@ -124,47 +112,12 @@ while (True):
     else:
         break
 
-while (True):
-    jugador_8.agregar_nombre (input ("ingrese un nombre: "))
-    jugador_8.agregar_numero_camisa (input("ingrese un numero de camisa: "))
-    dia = input ("Ingrese el dia de nacimiento para el jugador 7 (solo dia, y numericamente): ")
-    mes = input ("Ingrese el mes de nacimiento para el jugador 7 (solo mes, y numericamente): ")
-    ano = input ("Ingrese el ano de nacimiento para el jugador 7 (solo ano, y numericamente): ")
-    jugador_7.agregar_fecha_nacimiento (date (int (ano) , int (mes) , int (dia)))
-    if equipo_2.agregar_jugadores (jugador_8) == False:
-        print ("numero de camisa ya ingresada, reingrede datos: ")
-    else:
-        break
-
-while (True):
-    jugador_9.agregar_nombre (input ("ingrese un nombre: "))
-    jugador_9.agregar_numero_camisa (input("ingrese un numero de camisa: "))
-    dia = input ("Ingrese el dia de nacimiento para el jugador 8 (solo dia, y numericamente): ")
-    mes = input ("Ingrese el mes de nacimiento para el jugador 8 (solo mes, y numericamente): ")
-    ano = input ("Ingrese el ano de nacimiento para el jugador 8 (solo ano, y numericamente): ")
-    jugador_8.agregar_fecha_nacimiento (date (int (ano) , int (mes) , int (dia)))
-    if equipo_2.agregar_jugadores (jugador_9) == False:
-        print ("numero de camisa ya ingresada, reingrede datos: ")
-    else:
-        break
-
-while (True):
-    jugador_10.agregar_nombre (input ("ingrese un nombre: "))
-    jugador_10.agregar_numero_camisa (input("ingrese un numero de camisa: "))
-    dia = input ("Ingrese el dia de nacimiento para el jugador 9 (solo dia, y numericamente): ")
-    mes = input ("Ingrese el mes de nacimiento para el jugador 9 (solo mes, y numericamente): ")
-    ano = input ("Ingrese el ano de nacimiento para el jugador 9 (solo ano, y numericamente): ")
-    jugador_9.agregar_fecha_nacimiento (date (int (ano) , int (mes) , int (dia)))
-    if equipo_2.agregar_jugadores (jugador_10) == False:
-        print ("numero de camisa ya ingresada, reingrede datos: ")
-    else:
-        break
-
-while (True):
-    if equipo_2.agregar_capitan(input("ingrese el numero de camisa del capitan: ")) == False:
-         print ("No existe ese numero de camisa en el equipo, reingrese el dato: ")
-    else:
-        break
+    while (True):
+        if equipo_2.agregar_capitan(input("ingrese el numero de camisa del capitan: ")) == False:
+            print ("No existe ese numero de camisa en el equipo, reingrese el dato: ")
+            print (equipo_2.lista_jugadores)
+        else:
+            break
 
 posicion = 1
 turno = None
@@ -173,11 +126,50 @@ while posicion <= 18:
     turno = input("agregar turno (MANANA/TARDE/NOCHE/) (s para salir): ")
     if turno == "s":
         break
+    elif (turno == "manana"):
+        turno = 0
+    elif (turno == "tarde"):
+        turno = 1
+    elif (turno == "noche"):
+        turno = 2
     dia = input("agregar turno (LUNES/MARTES/MIERCOLES/JUEVES/VIERNES/SABADO): ")
+    if (dia == "lunes"):
+        dia = 0
+    elif (dia == "martes"):
+        dia = 1
+    elif (dia == "miercoles"):
+        dia = 2
+    elif (dia == "jueves"):
+        dia = 3
+    elif (dia == "viernes"):
+        dia = 4
+    elif (dia == "sabado"):
+        dia = 5
+    elif (dia == "domingo"):
+        dia = 6
     equipo_2.agregar_turnos(turno, dia)
     posicion += 1
     if (posicion == 18):
         print ("se excedio el maximo numero de turnos")
         break
 
-torneo.añadir_equipo(equipo_1)
+print (equipo_1.turnos)
+print (equipo_2.turnos)
+
+torneo.añadir_equipo (equipo_1)
+torneo.añadir_equipo (equipo_2)
+
+
+for item in torneo.equipos:
+    print (item.nombre)
+
+if (torneo.ordenar_fechas_partidos () == False):
+    print ("Se produjo un error al crear los aprtidos...lol")
+else:
+    print ("partidos creados exitosamente:")
+
+    for item in torneo.partidos_creados:
+        print (item.equipo_1.nombre , " vs ")
+        print (item.equipo_2.nombre , " | semana: " , item.semana , " | dia: ")
+        print (item.dia + 1 , " turno: ")
+        print (item.turno + 1)

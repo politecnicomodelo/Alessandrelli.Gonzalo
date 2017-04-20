@@ -32,10 +32,10 @@ for i in range (int(cantidad_empleados) + 1):
     identificador += 1
     print ("asistencias: ")
     for i in range(4):
-        dia = input("DIA DE CUMPLEAÑOS (NUMERICAMENTE): ")
-        mes = input("MES DE CUMPLEAÑOS (NUMERICAMENTE): ")
-        ano = input("ANO DE CUMPLEAÑOS (NUMERICAMENTE): ")
-        hora = str (input("HORA DE CUMPLEAÑOS (FORMATO 24HS): "))
+        dia = input("DIA DE ENTRADA (NUMERICAMENTE): ")
+        mes = input("MES DE ENTRADA (NUMERICAMENTE): ")
+        ano = input("ANO DE ENTRADA (NUMERICAMENTE): ")
+        hora = str (input("HORA DE ENTRADA (FORMATO 24HS): "))
         datos = [ano , mes , dia , hora]
         mi_empleado.asistencia (datos)
     mi_empresa.agregar_empleado (mi_empleado)

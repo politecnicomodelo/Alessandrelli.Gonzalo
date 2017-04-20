@@ -13,7 +13,7 @@ hora = None
 identificador = 0
 
 mi_empresa.set_nombre (str(input ("INGRESE EL NOMBRE DE LA EMPRESA: ")))
-
+print ("a")
 mi_empresa.set_telefono (input ("INGRESE EL NUMERO DE TELEFONO DE LA EMPRESA: "))
 
 input ("CUANTOS EMPLEADOS TIENE ESTA EMPRESA: ")

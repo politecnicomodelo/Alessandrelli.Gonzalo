@@ -1,6 +1,7 @@
 from datetime import date
-from .alumno import alumno
-from .profesor import profesor
+from .ej7alumno import alumno
+from .ej7profesor import profesor
+from .ej7plato import plato
 
 class pedido (object):
     fecha_creacion = None

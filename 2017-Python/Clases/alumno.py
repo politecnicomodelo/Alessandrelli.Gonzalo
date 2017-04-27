@@ -7,7 +7,7 @@ from .materia import materia
 #ESTOS SON ERRORES PORQUE PRODUCEN COHECION.
 
 
-class alumno (object):
+class alumno (persona):
 
     Nombre = ""
     Apellido = ""

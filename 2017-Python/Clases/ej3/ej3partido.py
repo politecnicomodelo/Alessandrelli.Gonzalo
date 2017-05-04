@@ -1,4 +1,4 @@
-from .equipo import equipo
+from .ej3equipo import equipo
 
 class partido (object):
 

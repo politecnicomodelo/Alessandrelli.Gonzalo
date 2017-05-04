@@ -1,9 +1,6 @@
-from Clases.materia import materia
-from Clases.alumno import alumno
+from Clases.ej1alumno import alumno
 
-
-
-
+from Clases.ej2materia import materia
 
 MiAlumno = alumno ()
 m=materia()

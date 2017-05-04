@@ -1,4 +1,4 @@
-from .vehiculo import vehiculo
+from .ej6vehiculo import vehiculo
 
 class camioneta (vehiculo):
     capacidad_carga = None

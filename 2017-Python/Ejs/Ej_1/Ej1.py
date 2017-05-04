@@ -1,4 +1,4 @@
-from Clases.alumno import alumno
+from Clases.ej1alumno import alumno
 
 MiAlumno = alumno ()
 

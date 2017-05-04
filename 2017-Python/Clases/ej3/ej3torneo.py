@@ -1,5 +1,5 @@
-from .equipo import equipo
-from .partido import partido
+from .ej3equipo import equipo
+from .ej3partido import partido
 
 
 class torneo (object):

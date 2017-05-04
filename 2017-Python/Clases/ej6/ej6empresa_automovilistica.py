@@ -1,4 +1,4 @@
-from .vehiculo import vehiculo
+from .ej6vehiculo import vehiculo
 
 class empresa (object):
     lista_camionetas = []

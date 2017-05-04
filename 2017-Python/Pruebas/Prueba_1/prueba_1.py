@@ -1,6 +1,6 @@
-from datetime import date
-from Clases.prueba_1_peso_altura_fecha import relacion
 from Clases.prueba_1_persona import persona
+from Clases.prueba_1_peso_altura_fecha import relacion
+from datetime import date
 
 mi_persona = persona ()
 mis_datos = relacion ()

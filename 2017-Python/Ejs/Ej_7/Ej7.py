@@ -1,7 +1,7 @@
 from Clases.ej7alumno import alumno
-from Clases.ej7profesor import profesor
-from Clases.ej7plato import plato
 from Clases.ej7pedido import pedido
+from Clases.ej7plato import plato
+from Clases.ej7profesor import profesor
 
 mi_alumno = alumno ()
 mi_profesor = profesor ()

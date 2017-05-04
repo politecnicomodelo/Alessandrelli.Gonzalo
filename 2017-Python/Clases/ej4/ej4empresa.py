@@ -1,4 +1,4 @@
-from .empleado import empleado
+from .ej4empleado import empleado
 
 class empresa (object):
 

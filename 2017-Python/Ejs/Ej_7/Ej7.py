@@ -249,4 +249,4 @@ while (True):
             print ("nombre: " + str (item.nombre) + " | precio: " + str (item.precio) + "\n")
 
     else:
-        print ("tecla incorrecta, intente nuevamfgente\n")
+        print ("tecla incorrecta, intente nuevamente\n")

@@ -15,7 +15,8 @@ ano = None
 nro_pedido = 0
 while (True):
     tecla = input ("A (AGREGAR ALUMNO)\nB (AGREGAR PROFESOR)\nC (AGREGAR PLATO)\nD (AGREGAR PEDIDO) \n"
-                   "E (MOFIDICAR PERSONA/PEDIDO/PLATO)\nF (ELIMINAR PERSONA/PEDIDO/PLATO)\n(m) mostrar todo\n\nRESPUESTA: ")
+                   "E (MOFIDICAR PERSONA/PEDIDO/PLATO)\nF (ELIMINAR PERSONA/PEDIDO/PLATO)\nG "
+                   "(MOSTRAR PEDIDOS DEL DIA)\nm (mostrar todo)\n\nRESPUESTA: ")
 
     if (tecla == "e"):
         while (True):
@@ -203,7 +204,7 @@ while (True):
         mi_pedido = pedido ()
         dia = int (input("ESCRIBA EL DIA DE CREACION DEL PEDIDO: "))
         mes = int (input("ESCRIBA EL MES DE CREACION DEL PEDIDO: "))
-        ano = int (input("ESCRIBA EL AÑO DE CREACION DEL PEDIDO: "))
+        ano = int (input("ESCRIBA EL ANO DE CREACION DEL PEDIDO: "))
         mi_pedido.agregar_fecha_creacion (date (ano , mes , dia))
 
         for mi_item in lista_platos:
@@ -223,11 +224,21 @@ while (True):
         tecla = str (input("ESCRIBA LA HORA DE ENTREGA DEL PEDIDO: "))
         mi_pedido.agregar_hora_entrega (tecla)
 
-        mi_pedido.establecer_estado ("en proceso")
+        mi_pedido.establecer_estado (0)
         mi_pedido.establecer_nro_pedido(nro_pedido)
         nro_pedido += 1
 
         lista_pedidos.append (mi_pedido)
+
+    elif (tecla == "g"):
+
+        print ("PEDIDOS DEL DIA:\n")
+
+        for item in lista_pedidos:
+            if ((item.fecha_creacion == datetime.today()) and (item.estado == 0)):
+                print ("PEDIDO:\nNRO_PEDIDO: " + str (item.nro_pedido) + "\nHORA DE ENTREGA: " + str (item.hora_entrega)
+                       + "\nPLATO: " + str (item.plato.nombre) + "\nPRECIO CON DESCUENTO: " + str (item.dar_precio_con_desc))
+
 
     elif (tecla == "m"):
         print ("\nPEDIDOS: \n")

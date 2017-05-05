@@ -1,5 +1,5 @@
 from datetime import date
-from .Ej7alumno import alumno
+from .ej7alumno import alumno
 from .ej7plato import plato
 from .ej7profesor import profesor
 
@@ -20,7 +20,6 @@ class pedido (object):
 
     def agregar_persona (self , persona):
         self.persona = persona
-        self.plato.precio = self.plato.precio - ((self.plato.precio / 100) * persona.dar_desc ())
 
     def agregar_hora_entrega (self , hora_entrega):
         self.hora_entrega = hora_entrega

@@ -1,6 +1,5 @@
 from datetime import date
-
-from .ej7alumno import alumno
+from .Ej7alumno import alumno
 from .ej7plato import plato
 from .ej7profesor import profesor
 

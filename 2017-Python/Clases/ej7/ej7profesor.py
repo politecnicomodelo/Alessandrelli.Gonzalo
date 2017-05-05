@@ -1,8 +1,7 @@
-from .persona import persona
+from .ej7persona import persona
 
 
 class profesor(persona):
-    descuento = None
 
     def dar_desc (self):
         return self.descuento

@@ -8,3 +8,6 @@ class plato (object):
 
     def agregar_precio(self , precio):
         self.precio = precio
+
+    def __str__(self):
+        return str ("nombre: " + str(self.nombre) + " | precio: " + str(self.precio) + "\n")

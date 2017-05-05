@@ -16,3 +16,7 @@ class persona (object):
 
     def agregar_dni (self, dni):
         self.dni = dni
+
+    def __str__ (self):
+        return str ("dni: " + str (self.dni) + " | nombre comp: " + str (self.nombre) + " " + str (self.apellido)
+                    + " | desc: " + str (self.descuento) + "\n")

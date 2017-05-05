@@ -13,7 +13,6 @@ dia = None
 mes = None
 ano = None
 nro_pedido = 0
-
 while (True):
     tecla = input ("A (AGREGAR ALUMNO)\nB (AGREGAR PROFESOR)\nC (AGREGAR PLATO)\nD (AGREGAR PEDIDO) \n"
                    "E (MOFIDICAR PERSONA/PEDIDO/PLATO)\nF (ELIMINAR PERSONA/PEDIDO/PLATO)\n(m) mostrar todo\n\nRESPUESTA: ")
@@ -35,19 +34,19 @@ while (True):
                         tecla = input ("INGRESE LO QUE DESEA MODIFICAR (NOMBRE/APELLIDO/DIVISION/DNI): ")
                         if (tecla == "nombre"):
                             tecla = input ("INGRESE EL NUEVO NOMBRE: ")
-                            item.nombre = tecla
+                            item.agregar_nombre (tecla)
 
                         elif (tecla == "apellido"):
                             tecla = input("INGRESE EL NUEVO APELLIDO: ")
-                            item.apellido = tecla
+                            item.agregar_apellido (tecla)
 
                         elif (tecla == "division"):
                             tecla = input("INGRESE EL NUEVO DIVISION: ")
-                            item.division = tecla
+                            item.agregar_division (tecla)
 
                         elif (tecla == "dni"):
                             tecla = str (input("INGRESE EL NUEVO DNI: "))
-                            item.dni = tecla
+                            item.agregar_dni (tecla)
 
                         else:
                             print ("tecla incorrecta, intente nuevamente\n")
@@ -57,26 +56,26 @@ while (True):
             elif (tecla == "b"):
                 for mi_item in lista_personas:
                     if type(mi_item) is profesor:
-                        print (mi_item.dni + "|" + mi_item.nombre + " " + mi_item.apellido + " - ")
+                        print (str (mi_item.dni) + "|" + str (mi_item.nombre + " " + mi_item.apellido) + " - ")
                 tecla = str (input("INGRESE EL DNI DEL PROFESOR: "))
                 for item in lista_personas:
                     if (item.dni == tecla):
                         tecla = input("INGRESE LO QUE DESEA MODIFICAR (NOMBRE/APELLIDO/DESCUENTO/DNI): ")
                         if (tecla == "nombre"):
                             tecla = input("INGRESE EL NUEVO NOMBRE: ")
-                            item.nombre = tecla
+                            item.agregar_nombre (tecla)
 
                         elif (tecla == "apellido"):
                             tecla = input("INGRESE EL NUEVO APELLIDO: ")
-                            item.apellido = tecla
+                            item.agregar_apellido (tecla)
 
                         elif (tecla == "descuento"):
                             tecla = int (input("INGRESE EL NUEVO DESCUENTO: "))
-                            item.descuento = tecla
+                            item.agregar_descuento (tecla)
 
                         elif (tecla == "dni"):
                             tecla = str (input("INGRESE EL NUEVO DNI: "))
-                            item.dni = tecla
+                            item.agregar_dni (tecla)
 
                         else:
                             print ("tecla incorrecta, intente nuevamente\n")
@@ -92,11 +91,11 @@ while (True):
                         tecla = input("INGRESE LO QUE DESEA MODIFICAR (NOMBRE/PRECIO): ")
                         if (tecla == "nombre"):
                             tecla = str (input("INGRESE EL NUEVO NOMBRE: "))
-                            item.nombre = tecla
+                            item.agregar_nombre (tecla)
 
                         elif (tecla == "precio"):
                             tecla = int (input("INGRESE EL NUEVO PRECIO: "))
-                            item.precio = tecla
+                            item.agregar_precio (tecla)
 
                         else:
                             print ("tecla incorrecta, intente nuevamente\n")
@@ -110,9 +109,9 @@ while (True):
                         tecla = input("INGRESE EL NUEVO ESTADO DEL PEDIDO (ENTREGADO/EN PROCESO)): ")
                         if (tecla == "entregado"):
                             if (tecla == "entregado"):
-                                item.estado = "entregado"
+                                item.establecer_estado (1)
                             elif (tecla == "en proceso"):
-                                item.estado = "en proceso"
+                                item.establecer_estado (0)
 
             elif (tecla == "s"):
                 break
@@ -233,20 +232,14 @@ while (True):
     elif (tecla == "m"):
         print ("\nPEDIDOS: \n")
         for item in lista_pedidos:
-            print ("\nNRO. PEDIDO: " + str (item.nro_pedido) + "\nCREACION: " + str (item.fecha_creacion) + "\nPERSONA: "
-                   + str (item.persona.dni) + "\nDESCUENTO DE LA PERSONA: " + str (item.persona.dar_desc ()) + "\nNOMBRE PLATO: "
-                   + str (item.plato.nombre) + "\nPRECIO PLATO: " + str (item.plato.precio) + "\nPRECIO PLATO CON DESCUENTO: "
-                   + str (int (item.plato.precio) - ((int (item.plato.precio) / 100) * int (item.persona.dar_desc ()))) + "\nHORA ENTREGA: "
-                   + str (item.hora_entrega + "\nESTADO PEDIDO: " + item.estado))
+            print (item)
 
         print ("PERSONAS: \n")
         for item in lista_personas:
-            print ("dni: " + str (item.dni) + " | nombre comp: " + str (item.nombre) + " " + str (item.apellido)
-                    + " | desc: " + str (item.descuento) + "\n")
+            print (item)
 
         print ("PLATOS: \n")
         for item in lista_platos:
-            print ("nombre: " + str (item.nombre) + " | precio: " + str (item.precio) + "\n")
-
+            print (item)
     else:
         print ("tecla incorrecta, intente nuevamente\n")

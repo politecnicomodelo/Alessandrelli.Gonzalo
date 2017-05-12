@@ -4,7 +4,6 @@ from clases.ej7pedido import pedido
 from clases.ej7plato import plato
 from clases.ej7profesor import profesor
 
-
 lista_pedidos = []
 lista_personas = []
 lista_platos = []
@@ -13,10 +12,72 @@ dia = None
 mes = None
 ano = None
 nro_pedido = 0
+dato = []
+
+arc_alumnos = open ("arc_alumnos.txt", "r")
+for line in arc_alumnos:
+    if (line == ""):
+        break
+    mi_alumno = alumno()
+    dato = line.split('º')
+    mi_alumno.agregar_dni (dato [0])
+    mi_alumno.agregar_nombre (dato [1])
+    mi_alumno.agregar_apellido (dato [2])
+    mi_alumno.agregar_division (dato [3])
+
+    lista_personas.append (mi_alumno)
+arc_alumnos.close()
+
+arc_profesores = open ("arc_profesores.txt", "r")
+for line in arc_profesores:
+    if (line == ""):
+        break
+    mi_profesor = profesor()
+    dato = line.split('º')
+    mi_profesor.agregar_dni (dato [0])
+    mi_profesor.agregar_nombre (dato [1])
+    mi_profesor.agregar_apellido (dato [2])
+    mi_profesor.agregar_desc (dato [3])
+    lista_personas.append (mi_profesor)
+arc_profesores.close()
+
+arc_platos = open ("arc_platos.txt", "r")
+for line in arc_platos:
+    if (line == ""):
+        break
+    mi_plato = plato()
+    dato = line.split('º')
+    mi_plato.agregar_nombre (dato [0])
+    mi_plato.agregar_precio (dato [1])
+    lista_platos.append (mi_plato)
+arc_platos.close()
+
+arc_pedidos = open ("arc_pedidos.txt", "r")
+for line in arc_pedidos:
+    if (line == ""):
+        break
+    mi_pedido = pedido()
+    dato = line.split('º')
+    mi_pedido.establecer_nro_pedido (dato [0])
+    for item in lista_personas:
+        if (item.dni == dato [1]):
+            mi_pedido.agregar_persona (item)
+    for item in lista_platos:
+        if (item.nombre == dato [3]):
+            mi_pedido.agregar_plato (item)
+    mi_pedido.agregar_hora_entrega (dato [4])
+    mi_pedido.establecer_estado (dato [5])
+    dato = dato [6].split('-')
+    mi_pedido.agregar_fecha_creacion (date (int (dato [0]) , int (dato [1]) , int (dato [2])))
+    lista_pedidos.append (mi_pedido)
+arc_pedidos.close()
+
+
+
 while (True):
     tecla = input ("A (AGREGAR ALUMNO)\nB (AGREGAR PROFESOR)\nC (AGREGAR PLATO)\nD (AGREGAR PEDIDO) \n"
-                   "E (MOFIDICAR PERSONA/PEDIDO/PLATO)\nF (ELIMINAR PERSONA/PEDIDO/PLATO)\nG "
-                   "(MOSTRAR PEDIDOS DEL DIA)\nm (mostrar todo)\n\nRESPUESTA: ")
+                   "E (MOFIDICAR PERSONA/PEDIDO/PLATO)\nF (ELIMINAR PERSONA/PEDIDO/PLATO)\nP "
+                   "(MOSTRAR PEDIDOS DEL DIA)\nG (GUARDAR TODO)\nm (mostrar todo)\n\nRESPUESTA: ")
 
     if (tecla == "e"):
         while (True):
@@ -189,7 +250,6 @@ while (True):
         mi_profesor.agregar_dni (tecla)
 
         lista_personas.append(mi_profesor)
-
     elif (tecla == "c"):
         mi_plato = plato ()
         tecla = input("ESCRIBA EL NOMBRE DEL PLATO: ")
@@ -230,7 +290,7 @@ while (True):
 
         lista_pedidos.append (mi_pedido)
 
-    elif (tecla == "g"):
+    elif (tecla == "p"):
 
         print ("PEDIDOS DEL DIA:\n")
 
@@ -252,5 +312,43 @@ while (True):
         print ("PLATOS: \n")
         for item in lista_platos:
             print (item)
+
+    elif (tecla == "g"):
+        arc_alumnos = open("arc_alumnos.txt" , "w")
+        for item in lista_personas:
+            if (type (item) is alumno):
+                arc_alumnos.write(str(item.dni) + "º")
+                arc_alumnos.write(str(item.nombre) + "º")
+                arc_alumnos.write(str(item.apellido) + "º")
+                arc_alumnos.write(str(item.division) + "º" + "\n")
+        arc_alumnos.close()
+
+        arc_profesores = open("arc_profesores.txt", "w")
+        for item in lista_personas:
+            if (type (item) is profesor):
+                arc_profesores.write(str(item.dni) + "º")
+                arc_profesores.write(str(item.nombre) + "º")
+                arc_profesores.write(str(item.apellido) + "º")
+                arc_profesores.write(str(item.descuento) + "º" + "\n")
+        arc_profesores.close()
+
+        arc_plato = open("arc_platos.txt", "w")
+        for item in lista_platos:
+            arc_plato.write(str(item.nombre) + "º")
+            arc_plato.write(str(item.precio) + "º" + "\n")
+        arc_plato.close()
+
+        arc_pedidos = open("arc_pedidos.txt" , "w")
+        for item in lista_pedidos:
+            arc_pedidos.write(str(item.nro_pedido) + "º")
+            arc_pedidos.write(str(item.persona.dni) + "º")
+            arc_pedidos.write(str(item.plato.nombre) + "º")
+            arc_pedidos.write(str(item.hora_entrega) + "º")
+            arc_pedidos.write(str(item.estado) + "º")
+            arc_pedidos.write(str(item.fecha_creacion) + "º" + "\n")
+            arc_pedidos.close()
+
+
     else:
         print ("tecla incorrecta, intente nuevamente\n")
+

@@ -1,4 +1,5 @@
 from datetime import date
+from datetime import datetime
 from clases.ej7alumno import alumno
 from clases.ej7pedido import pedido
 from clases.ej7plato import plato
@@ -63,14 +64,16 @@ for line in arc_pedidos:
         if (item.dni == dato [1]):
             mi_pedido.agregar_persona (item)
     for item in lista_platos:
-        if (item.nombre == dato [3]):
+        if (item.nombre == dato [2]):
             mi_pedido.agregar_plato (item)
-    mi_pedido.agregar_hora_entrega (dato [4])
-    mi_pedido.establecer_estado (dato [5])
-    dato = dato [6].split('-')
+    mi_pedido.agregar_hora_entrega (dato [3])
+    mi_pedido.establecer_estado (int (dato [4]))
+    dato = dato [5].split('-')
     mi_pedido.agregar_fecha_creacion (date (int (dato [0]) , int (dato [1]) , int (dato [2])))
     lista_pedidos.append (mi_pedido)
 arc_pedidos.close()
+
+nro_pedido = (int (lista_pedidos [-1].nro_pedido) + 1)
 
 
 
@@ -232,8 +235,12 @@ while (True):
 
         tecla = str (input("ESCRIBA EL DNI DEL ALUMNO: "))
         mi_alumno.agregar_dni (tecla)
+        for item in lista_personas:
+            if (item.dni == mi_alumno.dni):
+                print ("ESE DNI ESTA EN USO\n")
+                break
+            lista_personas.append(mi_alumno)
 
-        lista_personas.append (mi_alumno)
 
     elif (tecla == "b"):
         mi_profesor = profesor ()
@@ -249,7 +256,13 @@ while (True):
         tecla = str (input("ESCRIBA EL DNI DEL PROFESOR: "))
         mi_profesor.agregar_dni (tecla)
 
-        lista_personas.append(mi_profesor)
+        for item in lista_personas:
+            if (item.dni == mi_profesor.dni):
+                print ("ESE DNI ESTA EN USO\n")
+                break
+            lista_personas.append(mi_profesor)
+
+
     elif (tecla == "c"):
         mi_plato = plato ()
         tecla = input("ESCRIBA EL NOMBRE DEL PLATO: ")
@@ -258,7 +271,11 @@ while (True):
         tecla = input("ESCRIBA EL PRECIO DEL PLATO: ")
         mi_plato.agregar_precio (int (tecla))
 
-        lista_platos.append (mi_plato)
+        for item in lista_platos:
+            if (item.nombre == mi_plato.nombre):
+                print ("ESE NOMBRE ESTA EN USO\n")
+                break
+            lista_platos.append(mi_plato)
 
     elif (tecla == "d"):
         mi_pedido = pedido ()
@@ -267,19 +284,31 @@ while (True):
         ano = int (input("ESCRIBA EL ANO DE CREACION DEL PEDIDO: "))
         mi_pedido.agregar_fecha_creacion (date (ano , mes , dia))
 
-        for mi_item in lista_platos:
-            print (mi_item.nombre + " - ")
-        tecla = input("ESCRIBA EL NOMBRE DEL PLATO A PEDIR: ")
-        for item in lista_platos:
-            if (item.nombre == tecla):
-                mi_pedido.agregar_plato(item)
+        while (True):
+            for mi_item in lista_platos:
+                print (mi_item.nombre + " - ")
+            tecla = input("ESCRIBA EL NOMBRE DEL PLATO A PEDIR: ")
+            for item in lista_platos:
+                if (item.nombre == tecla):
+                    mi_pedido.agregar_plato(item)
 
-        for mi_item in lista_personas:
-            print (mi_item.dni + "|" + mi_item.nombre + " " + mi_item.apellido + " - ")
-        tecla = input("ESCRIBA EL DNI DE LA PERSONA QUE PIDIO EL PLATO: ")
-        for item in lista_personas:
-            if (item.dni == tecla):
-                mi_pedido.agregar_persona (item)
+            if (mi_pedido.plato == None):
+                print ("ESE PLATO NO EXISTE, REINGRESE EL DATO:\n")
+            else:
+                break
+
+        while (True):
+            for mi_item in lista_personas:
+                print (mi_item.dni + "|" + mi_item.nombre + " " + mi_item.apellido + " - ")
+            tecla = input("ESCRIBA EL DNI DE LA PERSONA QUE PIDIO EL PLATO: ")
+            for item in lista_personas:
+                if (item.dni == tecla):
+                    mi_pedido.agregar_persona (item)
+
+            if (mi_pedido.persona == None):
+                print ("ESE DNI NO EXISTE, REINGRESE EL DATO:\n")
+            else:
+                break
 
         tecla = str (input("ESCRIBA LA HORA DE ENTREGA DEL PEDIDO: "))
         mi_pedido.agregar_hora_entrega (tecla)
@@ -295,9 +324,9 @@ while (True):
         print ("PEDIDOS DEL DIA:\n")
 
         for item in lista_pedidos:
-            if ((item.fecha_creacion == datetime.today()) and (item.estado == 0)):
+            if ((item.fecha_creacion == datetime.today().date()) and (item.estado == 0)):
                 print ("PEDIDO:\nNRO_PEDIDO: " + str (item.nro_pedido) + "\nHORA DE ENTREGA: " + str (item.hora_entrega)
-                       + "\nPLATO: " + str (item.plato.nombre) + "\nPRECIO CON DESCUENTO: " + str (item.dar_precio_con_desc))
+                       + "\nPLATO: " + str (item.plato.nombre) + "\nPRECIO CON DESCUENTO: $" + str (item.dar_precio_con_desc()))
 
 
     elif (tecla == "m"):
@@ -346,9 +375,73 @@ while (True):
             arc_pedidos.write(str(item.hora_entrega) + "º")
             arc_pedidos.write(str(item.estado) + "º")
             arc_pedidos.write(str(item.fecha_creacion) + "º" + "\n")
-            arc_pedidos.close()
+        arc_pedidos.close()
 
 
     else:
         print ("tecla incorrecta, intente nuevamente\n")
 
+
+
+
+
+    def cargar_datos (nro_pedido , lista_personas , lista_platos , lista_pedidos):
+        arc_alumnos = open("arc_alumnos.txt", "r")
+        for line in arc_alumnos:
+            if (line == ""):
+                break
+            mi_alumno = alumno()
+            dato = line.split('º')
+            mi_alumno.agregar_dni(dato[0])
+            mi_alumno.agregar_nombre(dato[1])
+            mi_alumno.agregar_apellido(dato[2])
+            mi_alumno.agregar_division(dato[3])
+
+            lista_personas.append(mi_alumno)
+        arc_alumnos.close()
+
+        arc_profesores = open("arc_profesores.txt", "r")
+        for line in arc_profesores:
+            if (line == ""):
+                break
+            mi_profesor = profesor()
+            dato = line.split('º')
+            mi_profesor.agregar_dni(dato[0])
+            mi_profesor.agregar_nombre(dato[1])
+            mi_profesor.agregar_apellido(dato[2])
+            mi_profesor.agregar_desc(dato[3])
+            lista_personas.append(mi_profesor)
+        arc_profesores.close()
+
+        arc_platos = open("arc_platos.txt", "r")
+        for line in arc_platos:
+            if (line == ""):
+                break
+            mi_plato = plato()
+            dato = line.split('º')
+            mi_plato.agregar_nombre(dato[0])
+            mi_plato.agregar_precio(dato[1])
+            lista_platos.append(mi_plato)
+        arc_platos.close()
+
+        arc_pedidos = open("arc_pedidos.txt", "r")
+        for line in arc_pedidos:
+            if (line == ""):
+                break
+            mi_pedido = pedido()
+            dato = line.split('º')
+            mi_pedido.establecer_nro_pedido(dato[0])
+            for item in lista_personas:
+                if (item.dni == dato[1]):
+                    mi_pedido.agregar_persona(item)
+            for item in lista_platos:
+                if (item.nombre == dato[2]):
+                    mi_pedido.agregar_plato(item)
+            mi_pedido.agregar_hora_entrega(dato[3])
+            mi_pedido.establecer_estado(int(dato[4]))
+            dato = dato[5].split('-')
+            mi_pedido.agregar_fecha_creacion(date(int(dato[0]), int(dato[1]), int(dato[2])))
+            lista_pedidos.append(mi_pedido)
+        arc_pedidos.close()
+
+        nro_pedido = (int(lista_pedidos[-1].nro_pedido) + 1)

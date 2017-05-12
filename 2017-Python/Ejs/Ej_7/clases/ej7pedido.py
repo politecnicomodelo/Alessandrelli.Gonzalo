@@ -35,7 +35,7 @@ class pedido (object):
                    + str (self.persona.dni) + "\nDESCUENTO DE LA PERSONA: " + str (self.persona.dar_desc ()) + "\nNOMBRE PLATO: "
                    + str (self.plato.nombre) + "\nPRECIO PLATO: " + str (self.plato.precio) + "\nPRECIO PLATO CON DESCUENTO: "
                    + str (self.dar_precio_con_desc()) + "\nHORA ENTREGA: "
-                   + str (self.hora_entrega + "\nESTADO PEDIDO: " + self.estado))
+                   + str (str (self.hora_entrega) + "\nESTADO PEDIDO: " + str (self.estado)))
 
     def dar_precio_con_desc (self):
-        return (int (self.plato.precio) - ((int (self.plato.precio) / 100) * int (self.persona.dar_desc ())))
+        return int(int (self.plato.precio) - ((int (self.plato.precio) / 100) * int (self.persona.dar_desc ())))

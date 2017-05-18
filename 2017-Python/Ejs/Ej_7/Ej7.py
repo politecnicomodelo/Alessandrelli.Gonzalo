@@ -14,67 +14,74 @@ mes = None
 ano = None
 nro_pedido = 0
 dato = []
+nro_pedido = None
 
-arc_alumnos = open ("arc_alumnos.txt", "r")
-for line in arc_alumnos:
-    if (line == ""):
-        break
-    mi_alumno = alumno()
-    dato = line.split('º')
-    mi_alumno.agregar_dni (dato [0])
-    mi_alumno.agregar_nombre (dato [1])
-    mi_alumno.agregar_apellido (dato [2])
-    mi_alumno.agregar_division (dato [3])
 
-    lista_personas.append (mi_alumno)
-arc_alumnos.close()
+def cargar_datos():
+    arc_alumnos = open("arc_alumnos.txt", "r")
+    for line in arc_alumnos:
+        if (line == ""):
+            break
+        mi_alumno = alumno()
+        dato = line.split('º')
+        mi_alumno.agregar_dni(dato[0])
+        mi_alumno.agregar_nombre(dato[1])
+        mi_alumno.agregar_apellido(dato[2])
+        mi_alumno.agregar_division(dato[3])
 
-arc_profesores = open ("arc_profesores.txt", "r")
-for line in arc_profesores:
-    if (line == ""):
-        break
-    mi_profesor = profesor()
-    dato = line.split('º')
-    mi_profesor.agregar_dni (dato [0])
-    mi_profesor.agregar_nombre (dato [1])
-    mi_profesor.agregar_apellido (dato [2])
-    mi_profesor.agregar_desc (dato [3])
-    lista_personas.append (mi_profesor)
-arc_profesores.close()
+        lista_personas.append(mi_alumno)
+    arc_alumnos.close()
 
-arc_platos = open ("arc_platos.txt", "r")
-for line in arc_platos:
-    if (line == ""):
-        break
-    mi_plato = plato()
-    dato = line.split('º')
-    mi_plato.agregar_nombre (dato [0])
-    mi_plato.agregar_precio (dato [1])
-    lista_platos.append (mi_plato)
-arc_platos.close()
+    arc_profesores = open("arc_profesores.txt", "r")
+    for line in arc_profesores:
+        if (line == ""):
+            break
+        mi_profesor = profesor()
+        dato = line.split('º')
+        mi_profesor.agregar_dni(dato[0])
+        mi_profesor.agregar_nombre(dato[1])
+        mi_profesor.agregar_apellido(dato[2])
+        mi_profesor.agregar_desc(dato[3])
+        lista_personas.append(mi_profesor)
+    arc_profesores.close()
 
-arc_pedidos = open ("arc_pedidos.txt", "r")
-for line in arc_pedidos:
-    if (line == ""):
-        break
-    mi_pedido = pedido()
-    dato = line.split('º')
-    mi_pedido.establecer_nro_pedido (dato [0])
-    for item in lista_personas:
-        if (item.dni == dato [1]):
-            mi_pedido.agregar_persona (item)
-    for item in lista_platos:
-        if (item.nombre == dato [2]):
-            mi_pedido.agregar_plato (item)
-    mi_pedido.agregar_hora_entrega (dato [3])
-    mi_pedido.establecer_estado (int (dato [4]))
-    dato = dato [5].split('-')
-    mi_pedido.agregar_fecha_creacion (date (int (dato [0]) , int (dato [1]) , int (dato [2])))
-    lista_pedidos.append (mi_pedido)
-arc_pedidos.close()
+    arc_platos = open("arc_platos.txt", "r")
+    for line in arc_platos:
+        if (line == ""):
+            break
+        mi_plato = plato()
+        dato = line.split('º')
+        mi_plato.agregar_nombre(dato[0])
+        mi_plato.agregar_precio(dato[1])
+        lista_platos.append(mi_plato)
+    arc_platos.close()
 
-nro_pedido = (int (lista_pedidos [-1].nro_pedido) + 1)
+    arc_pedidos = open("arc_pedidos.txt", "r")
+    for line in arc_pedidos:
+        if (line == ""):
+            break
+        mi_pedido = pedido()
+        dato = line.split('º')
+        mi_pedido.establecer_nro_pedido(dato[0])
+        for item in lista_personas:
+            if (item.dni == dato[1]):
+                mi_pedido.agregar_persona(item)
+        for item in lista_platos:
+            if (item.nombre == dato[2]):
+                mi_pedido.agregar_plato(item)
+        mi_pedido.agregar_hora_entrega(dato[3])
+        mi_pedido.establecer_estado(int(dato[4]))
+        dato = dato[5].split('-')
+        mi_pedido.agregar_fecha_creacion(date(int(dato[0]), int(dato[1]), int(dato[2])))
+        lista_pedidos.append(mi_pedido)
+    arc_pedidos.close()
 
+    if (lista_pedidos == []):
+        nro_pedido = 0
+    else:
+        nro_pedido = (int(lista_pedidos[-1].nro_pedido) + 1)
+
+cargar_datos ()
 
 
 while (True):
@@ -380,68 +387,3 @@ while (True):
 
     else:
         print ("tecla incorrecta, intente nuevamente\n")
-
-
-
-
-
-    def cargar_datos (nro_pedido , lista_personas , lista_platos , lista_pedidos):
-        arc_alumnos = open("arc_alumnos.txt", "r")
-        for line in arc_alumnos:
-            if (line == ""):
-                break
-            mi_alumno = alumno()
-            dato = line.split('º')
-            mi_alumno.agregar_dni(dato[0])
-            mi_alumno.agregar_nombre(dato[1])
-            mi_alumno.agregar_apellido(dato[2])
-            mi_alumno.agregar_division(dato[3])
-
-            lista_personas.append(mi_alumno)
-        arc_alumnos.close()
-
-        arc_profesores = open("arc_profesores.txt", "r")
-        for line in arc_profesores:
-            if (line == ""):
-                break
-            mi_profesor = profesor()
-            dato = line.split('º')
-            mi_profesor.agregar_dni(dato[0])
-            mi_profesor.agregar_nombre(dato[1])
-            mi_profesor.agregar_apellido(dato[2])
-            mi_profesor.agregar_desc(dato[3])
-            lista_personas.append(mi_profesor)
-        arc_profesores.close()
-
-        arc_platos = open("arc_platos.txt", "r")
-        for line in arc_platos:
-            if (line == ""):
-                break
-            mi_plato = plato()
-            dato = line.split('º')
-            mi_plato.agregar_nombre(dato[0])
-            mi_plato.agregar_precio(dato[1])
-            lista_platos.append(mi_plato)
-        arc_platos.close()
-
-        arc_pedidos = open("arc_pedidos.txt", "r")
-        for line in arc_pedidos:
-            if (line == ""):
-                break
-            mi_pedido = pedido()
-            dato = line.split('º')
-            mi_pedido.establecer_nro_pedido(dato[0])
-            for item in lista_personas:
-                if (item.dni == dato[1]):
-                    mi_pedido.agregar_persona(item)
-            for item in lista_platos:
-                if (item.nombre == dato[2]):
-                    mi_pedido.agregar_plato(item)
-            mi_pedido.agregar_hora_entrega(dato[3])
-            mi_pedido.establecer_estado(int(dato[4]))
-            dato = dato[5].split('-')
-            mi_pedido.agregar_fecha_creacion(date(int(dato[0]), int(dato[1]), int(dato[2])))
-            lista_pedidos.append(mi_pedido)
-        arc_pedidos.close()
-
-        nro_pedido = (int(lista_pedidos[-1].nro_pedido) + 1)

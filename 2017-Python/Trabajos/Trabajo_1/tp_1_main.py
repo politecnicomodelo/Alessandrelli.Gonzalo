@@ -31,8 +31,12 @@ for line in arc_personas:
             dato2 = dato[3].split("-")
             mi_pasajero.agregar_fecha_nacimiento(date (int(dato2[2]) ,int(dato2[1]) , int(dato2[0])))
             mi_pasajero.agregar_dni(dato[4])
-            mi_pasajero.agregar_vip(dato[5])
+            if (int(dato[5]) == 1):
+                mi_pasajero.agregar_vip(True)
+            else:
+                mi_pasajero.agregar_vip(False)
             mi_pasajero.agregar_necesidades_especiales(dato[6])
+            print (dato[6])
             lista_personas.append(mi_pasajero)
 
         elif (dato [0] == "Piloto"):
@@ -106,50 +110,63 @@ arc_vuelos.close()
 
 print ("VUELOS: ")
 for item in lista_vuelos:
-    print ("VUELO: " + str(item.mostrar_nomina()))
+    print ("NOMINA DE: " + str(item.mostrar_nomina()))
+    lista_datos = ["NOMBRE", "APELLIDO", "FECHA NACIMIENTO", "DNI"]
+    print("{: >20} {: >20}  {: >20} {: >20}".format(*lista_datos))
+    for item2 in item.pasajeros:
+        lista_datos = [item2.nombre , item2.apellido , str(item2.fecha_nacimiento) , item2.dni]
+        print ("{: >20} {: >20}  {: >20} {: >20}".format(*lista_datos))
 
 print ("PASAJERO MAS JOVEN POR VUELO:\n")
 for item in lista_vuelos:
     pasajero = item.mostrar_pasajero_mas_joven ()
-    print ("PASAJERO MAS JOVEN: \nDNI: "  + str(pasajero.dni) + "\nEDAD: " + str(datetime.today().date() -
-    pasajero.fecha_nacimiento) + "\n")
+    print("\nPASAJERO MAS JOVEN:")
+    lista_datos = ["DNI" , "EDAD"]
+    print("{: >20} {: >20}".format(*lista_datos))
+    for item2 in item.pasajeros:
+        lista_datos = [pasajero.dni , str(datetime.today().date() - pasajero.fecha_nacimiento)]
+        print ("{: >20} {: >20}".format(*lista_datos))
 
 print ("TRIPULACION MINIMA por VUELO:\n")
 for item in lista_vuelos:
     #sys.stdout.write ("")
     #sys.stdout.flush
-    print ("VUELO " + str(item.origen) + " A " + str(item.destino) + ": ")
-    if item.tripulacion_minima() == True:
-        print ("SUFICIENTE\n")
-    else:
-        print ("NO SUFICIENTE\n")
+    lista_datos = ["VUELO" , "ORIGEN" , "DESTINO" , "ESTADO"]
+    print("{: >20} {: >20} {: >20} {: >20}".format(*lista_datos))
+    lista_datos = ["None" , item.origen , item.destino , str(item.tripulacion_minima())]
+    print ("{: >20} {: >20} {: >20} {: >20}".format(*lista_datos))
 
-print ("\nTRIPULACION INCORRECTA: \n")
-print ("VUELOS:\n")
+print ("\nTRIPULACION INCORRECTA:")
+print ("VUELOS:")
 for item in lista_vuelos:
     lista_datos = item.comprobar_tripulacion()
     if len(lista_datos) == 0:
-        print ("TODO ESTA CORRECTO")
+        print ("TODO ESTA CORRECTO\n")
     else:
+        print ("HAY ERRORES: ")
         for item2 in lista_datos:
-            print ("HAY ERRORES: \nTRIPULANTE: " + item2 .nombre + " " + item2.apellido + " DNI: " + str(item2.dni))
+            lista_datos = ["TRIPULANTE" , "DNI"]
+            print("{: >20} {: >20}".format(*lista_datos))
+            lista_datos = [item2.nombre + " " + item2.apellido , item2.dni]
+            print("{: >20} {: >20}".format(*lista_datos))
 
-print ("TRIPULANTES QUE VUELAN MULTIPLES VECES POR DIA:\n")
+print ("TRIPULANTES QUE VUELAN MULTIPLES VECES POR DIA:")
 lista_tripulantes_vuelan_mucho = []
 for item in lista_vuelos:
     for item2 in item.tripulacion:
         for item3 in lista_vuelos:
             for item4 in item3.tripulacion:
-                if ((item != item2) and (item3 == item4)):
+                print (item2.nombre + "!" + item4.nombre)
+                if ((item != item3) and (item2 == item4)):
                     for item5 in lista_tripulantes_vuelan_mucho:
                         if ((item5.dni != item4.dni) and (item5 == lista_tripulantes_vuelan_mucho [-1])):
                             lista_tripulantes_vuelan_mucho.append(item4)
 for item in lista_tripulantes_vuelan_mucho:
-    print (print(item.dni))
+    print (item.dni)
 
-print ("PASAJEROS CON NECESIDADES ESPECIALES \ vip:\n")
+print ("PASAJEROS CON NECESIDADES ESPECIALES \ vip:")
 for item in lista_vuelos:
     lista_datos = item.personas_con_necesidades_especiales()
     for item in lista_datos:
         print ("PASAJERO:\n" + "DNI: " + item.dni + "\nNOMBRE COMPLETO: " + item.nombre + " " + item.apellido +
-               "\nVIP: " , str(item.dar_vip()) , "\nNECESIDADES ESPECIALES: " , str(item.dar_necesidades_especiales()) + "\n")
+               "\nVIP: " , str(item.dar_vip()) , "\nNECESIDADES ESPECIALES: " , str(item.dar_necesidades_especiales()))

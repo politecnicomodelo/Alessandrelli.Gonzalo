@@ -63,7 +63,8 @@ class vuelos (object):
 
     def personas_con_necesidades_especiales (self):
             lista_personas = []
-            for item in self.tripulacion:
-                if item.dar_vip() != False or item.dar_necesidades_especiales != False:
+            for item in self.pasajeros:
+                print (item.dar_vip())
+                if item.dar_vip() or item.dar_necesidades_especiales() != False:
                     lista_personas.append(item)
             return lista_personas

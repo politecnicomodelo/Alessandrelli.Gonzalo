@@ -2,8 +2,8 @@ from datetime import date
 from .personas import persona
 
 class pasajero (persona):
-    vip = None
-    necesidades_especiales = None
+    vip = False
+    necesidades_especiales = False
 
     def agregar_vip (self , vip):
         self.vip = vip
@@ -13,3 +13,9 @@ class pasajero (persona):
 
     def agregar_millas_viajadas (self , millas):
         self.millas_viajadas = millas
+
+    def dar_vip (self):
+        return self.vip
+
+    def dar_necesidades_especiales (self):
+        return self.necesidades_especiales

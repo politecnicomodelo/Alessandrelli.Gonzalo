@@ -1,10 +1,12 @@
 from datetime import date
+from datetime import datetime
 from clases.tripulacion import tripulacion
 from clases.piloto import piloto
 from clases.servicio import servicio
 from clases.pasajero import pasajero
 from clases.aviones import aviones
 from clases.vuelos import vuelos
+import sys
 
 lista_personas = []
 lista_aviones = []
@@ -78,7 +80,9 @@ arc_vuelos = open("vuelos.dat", "r")
 for line in arc_vuelos:
     dato = line.split("|")
     mi_vuelo = vuelos()
-    mi_vuelo.agregar_avion(dato[0])
+    for item in lista_aviones:
+        if item.codigo_avion == dato[0]:
+            mi_vuelo.agregar_avion(item)
     dato2 = dato[1].split("-")
     mi_vuelo.agregar_fecha(date (int(dato2[2]) ,int(dato2[1]) , int(dato2[0])))
     mi_vuelo.agregar_hora(dato[2])
@@ -86,12 +90,66 @@ for line in arc_vuelos:
     mi_vuelo.agregar_destino(dato[4])
     dato2 = dato[5].split(",")
     for item in dato2:
-        mi_vuelo.agregar_tripulacion(item)
+        for item2 in lista_personas:
+            if item2.dni == item:
+                mi_vuelo.agregar_tripulacion(item2)
     dato2 = dato[6].split(",")
     for item in dato2:
-        mi_vuelo.agregar_pasajero(item)
+        for item2 in lista_personas:
+            if item2.dni == item:
+                mi_vuelo.agregar_pasajero(item2)
     mi_vuelo.agregar_origen(dato[3])
     lista_vuelos.append(mi_vuelo)
 
 arc_vuelos.close()
 
+
+print ("VUELOS: ")
+for item in lista_vuelos:
+    print ("VUELO: " + str(item.mostrar_nomina()))
+
+print ("PASAJERO MAS JOVEN POR VUELO:\n")
+for item in lista_vuelos:
+    pasajero = item.mostrar_pasajero_mas_joven ()
+    print ("PASAJERO MAS JOVEN: \nDNI: "  + str(pasajero.dni) + "\nEDAD: " + str(datetime.today().date() -
+    pasajero.fecha_nacimiento) + "\n")
+
+print ("TRIPULACION MINIMA por VUELO:\n")
+for item in lista_vuelos:
+    #sys.stdout.write ("")
+    #sys.stdout.flush
+    print ("VUELO " + str(item.origen) + " A " + str(item.destino) + ": ")
+    if item.tripulacion_minima() == True:
+        print ("SUFICIENTE\n")
+    else:
+        print ("NO SUFICIENTE\n")
+
+print ("\nTRIPULACION INCORRECTA: \n")
+print ("VUELOS:\n")
+for item in lista_vuelos:
+    lista_datos = item.comprobar_tripulacion()
+    if len(lista_datos) == 0:
+        print ("TODO ESTA CORRECTO")
+    else:
+        for item2 in lista_datos:
+            print ("HAY ERRORES: \nTRIPULANTE: " + item2 .nombre + " " + item2.apellido + " DNI: " + str(item2.dni))
+
+print ("TRIPULANTES QUE VUELAN MULTIPLES VECES POR DIA:\n")
+lista_tripulantes_vuelan_mucho = []
+for item in lista_vuelos:
+    for item2 in item.tripulacion:
+        for item3 in lista_vuelos:
+            for item4 in item3.tripulacion:
+                if ((item != item2) and (item3 == item4)):
+                    for item5 in lista_tripulantes_vuelan_mucho:
+                        if ((item5.dni != item4.dni) and (item5 == lista_tripulantes_vuelan_mucho [-1])):
+                            lista_tripulantes_vuelan_mucho.append(item4)
+for item in lista_tripulantes_vuelan_mucho:
+    print (print(item.dni))
+
+print ("PASAJEROS CON NECESIDADES ESPECIALES \ vip:\n")
+for item in lista_vuelos:
+    lista_datos = item.personas_con_necesidades_especiales()
+    for item in lista_datos:
+        print ("PASAJERO:\n" + "DNI: " + item.dni + "\nNOMBRE COMPLETO: " + item.nombre + " " + item.apellido +
+               "\nVIP: " , str(item.dar_vip()) , "\nNECESIDADES ESPECIALES: " , str(item.dar_necesidades_especiales()) + "\n")

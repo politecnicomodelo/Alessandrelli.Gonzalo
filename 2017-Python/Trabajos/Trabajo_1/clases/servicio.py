@@ -2,7 +2,7 @@ from datetime import date
 from .tripulacion import tripulacion
 
 class servicio (tripulacion):
-    idiomas = None
+    idiomas = []
 
     def agregar_idioma (self , idioma):
         self.idiomas.append (idioma)

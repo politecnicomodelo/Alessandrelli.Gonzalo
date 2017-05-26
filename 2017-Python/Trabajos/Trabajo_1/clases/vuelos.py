@@ -58,9 +58,10 @@ class vuelos (object):
         lista_tripulacion_incorrecta = []
         for item in self.tripulacion:
             for item2 in item.modelos_avion_permitidos:
-                if (str(item2) != str(self.avion.codigo_avion)) and (item2 == item.modelos_avion_permitidos [-1]):
-                    lista_tripulacion_incorrecta.append(item)
+                if (str(item2) == str(self.avion.codigo_avion)):
                     break
+                if (item2 == item.modelos_avion_permitidos [-1]):
+                    lista_tripulacion_incorrecta.append(item)
         return lista_tripulacion_incorrecta
 
     def personas_con_necesidades_especiales (self):

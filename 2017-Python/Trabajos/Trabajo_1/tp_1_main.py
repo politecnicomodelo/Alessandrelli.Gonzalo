@@ -57,6 +57,7 @@ for line in arc_personas:
 
         elif (dato [0] == "Servicio"):
             mi_tripulante_servicio = servicio()
+            mi_tripulante_servicio.modelos_avion_permitidos = []
             mi_tripulante_servicio.agregar_nombre(dato[1])
             mi_tripulante_servicio.agregar_apellido(dato[2])
             dato2 = dato[3].split("-")
@@ -81,7 +82,9 @@ for line in arc_aviones:
     mi_avion = aviones()
     mi_avion.agregar_codigo_avion(dato[0])
     mi_avion.agregar_cant_pasajeros(dato[1])
-    mi_avion.agregar_cant_tripulacion(dato[2])
+    if dato[-1][-1] == '\n':
+        dato[-1] = dato[-1].rstrip("\n")
+        mi_avion.agregar_cant_tripulacion(dato[2])
     lista_aviones.append(mi_avion)
 
 arc_personas.close()
@@ -137,7 +140,7 @@ for item in lista_vuelos:
     print("\nPASAJERO MAS JOVEN:")
     lista_datos = ["DNI" , "NOMBRE COMPLETO" , "EDAD"]
     print("{: >20} {: >20} {: >20}".format(*lista_datos))
-    lista_datos = [pasajero.dni , pasajero.nombre + " " + pasajero.apellido , (str(datetime.today().date() - pasajero.fecha_nacimiento))]
+    lista_datos = [pasajero.dni , pasajero.nombre + " " + pasajero.apellido , (str(date.today() - pasajero.fecha_nacimiento))]
     print ("{: >20} {: >20} {: >20}".format(*lista_datos))
 
 print ("TRIPULACION MINIMA por VUELO:\n")
@@ -146,7 +149,7 @@ for item in lista_vuelos:
     #sys.stdout.flush
     lista_datos = ["VUELO" , "ORIGEN" , "DESTINO" , "ESTADO" , "MINIMA - TOTAL"]
     print("{: >20} {: >20} {: >20} {: >20} {: >15}".format(*lista_datos))
-    lista_datos = ["None" , item.origen , item.destino , str(item.tripulacion_minima()) , str(item.avion.cant_tripulacion) +
+    lista_datos = ["no hay iden." , item.origen , item.destino , str(item.tripulacion_minima()) , str(item.avion.cant_tripulacion) +
                    " - " + str(len(item.tripulacion))]
     print ("{: >20} {: >20} {: >20} {: >20} {: >15}".format(*lista_datos))
 
@@ -185,12 +188,15 @@ for item in lista_vuelos:
                         if existe == False:
                             lista_repetidos.append([item4, item, item3])
 
-lista_datos = ["DNI", "NOMBRE COMPLETO", "AVION 1", "AVION 2" , "FECHA"]
-print("{: >20} {: >20} {: >30} {: >30} {: >30}".format(*lista_datos))
-for item in lista_repetidos:
-    lista_datos = [item[0].dni , item[0].nombre + " " + item[0].apellido , item[1].origen + " A " + item[1].destino ,
-                   item[2].origen + " A " + item[2].destino , str(item[2].fecha)]
+if len(lista_repetidos) == 0:
+    print ("NO HAY ERROR. NO HAY ERROR. LA MONARQUIA ESPANIOLA")
+else:
+    lista_datos = ["DNI", "NOMBRE COMPLETO", "AVION 1", "AVION 2" , "FECHA"]
     print("{: >20} {: >20} {: >30} {: >30} {: >30}".format(*lista_datos))
+    for item in lista_repetidos:
+        lista_datos = [item[0].dni , item[0].nombre + " " + item[0].apellido , item[1].origen + " A " + item[1].destino ,
+                       item[2].origen + " A " + item[2].destino , str(item[2].fecha)]
+        print("{: >20} {: >20} {: >30} {: >30} {: >30}".format(*lista_datos))
 
 
 print ("\nPASAJEROS CON NECESIDADES ESPECIALES \ vip:")

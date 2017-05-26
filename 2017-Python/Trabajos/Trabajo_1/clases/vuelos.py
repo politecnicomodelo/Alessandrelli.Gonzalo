@@ -49,18 +49,18 @@ class vuelos (object):
         return pasajero
 
     def tripulacion_minima (self):
-        if int(self.avion.cant_tripulacion) > len(self.tripulacion):
-            return False
+        for item in self.tripulacion:
+            if int(self.avion.cant_tripulacion) > len(self.tripulacion):
+                return False
         return True
 
     def comprobar_tripulacion (self):
         lista_tripulacion_incorrecta = []
         for item in self.tripulacion:
-            print ("persona")
             for item2 in item.modelos_avion_permitidos:
-                print (str(item2) + " " + str(self.avion.codigo_avion))
-                if ((str (item2) != str (self.avion.codigo_avion)) and (item == item.modelos_avion_permitidos [-1])):
+                if (str(item2) != str(self.avion.codigo_avion)) and (item2 == item.modelos_avion_permitidos [-1]):
                     lista_tripulacion_incorrecta.append(item)
+                    break
         return lista_tripulacion_incorrecta
 
     def personas_con_necesidades_especiales (self):

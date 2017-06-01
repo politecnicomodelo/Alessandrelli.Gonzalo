@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from datetime import date
 from datetime import datetime
 from clases.tripulacion import tripulacion
@@ -36,6 +37,7 @@ for line in arc_personas:
             else:
                 mi_pasajero.agregar_vip(False)
             if dato[6] != "\n":
+                dato[6] = dato[6].rstrip("\n")
                 mi_pasajero.agregar_necesidades_especiales(dato[6])
             else:
                 mi_pasajero.agregar_necesidades_especiales(False)
@@ -128,10 +130,10 @@ for item in lista_vuelos:
     lista_datos = ["NOMBRE", "APELLIDO", "FECHA NACIMIENTO", "DNI"]
     print("{: >20} {: >20}  {: >20} {: >20}".format(*lista_datos))
     for item2 in item.pasajeros:
-        lista_datos = [item2.nombre , item2.apellido , str(item2.fecha_nacimiento) , item2.dni]
+        lista_datos = [item2.nombre.ljust(7 , " ") , item2.apellido.ljust(9 , " ") , str(item2.fecha_nacimiento) , item2.dni]
         print ("{: >20} {: >20}  {: >20} {: >20}".format(*lista_datos))
     for item2 in item.tripulacion:
-        lista_datos = [item2.nombre , item2.apellido , str(item2.fecha_nacimiento) , item2.dni]
+        lista_datos = [item2.nombre.ljust(7 , " ") , item2.apellido.ljust(9 , " ") , str(item2.fecha_nacimiento) , item2.dni]
         print ("{: >20} {: >20}  {: >20} {: >20}".format(*lista_datos))
 
 print ("\nPASAJERO MAS JOVEN POR VUELO:")
@@ -140,7 +142,8 @@ for item in lista_vuelos:
     print("\nPASAJERO MAS JOVEN:")
     lista_datos = ["DNI" , "NOMBRE COMPLETO" , "EDAD"]
     print("{: >20} {: >20} {: >20}".format(*lista_datos))
-    lista_datos = [pasajero.dni , pasajero.nombre + " " + pasajero.apellido , (str(date.today() - pasajero.fecha_nacimiento))]
+    dato = str((date.today() - pasajero.fecha_nacimiento)).split(' ')
+    lista_datos = [pasajero.dni , (pasajero.nombre + " " + pasajero.apellido).ljust(15 , " ") , (str("{0:.1f}".format(int(dato[0]) / 365.25))) + " años"]
     print ("{: >20} {: >20} {: >20}".format(*lista_datos))
 
 print ("TRIPULACION MINIMA por VUELO:\n")
@@ -155,16 +158,16 @@ for item in lista_vuelos:
 
 print ("\nTRIPULACION INCORRECTA:")
 for item in lista_vuelos:
-    print ("VUELO:")
+    print ("\nVUELO:")
     lista_datos = item.comprobar_tripulacion()
     if len(lista_datos) == 0:
         print ("TODO ESTA CORRECTO\n")
     else:
-        print ("HAY ERRORES: ")
+        print ("HAY ERRORES:\n")
         lista_datos2 = ["TRIPULANTE" , "DNI" , "AVIONES PERMITIDOS" , "MODELO DE AVION DEL VUELO"]
         print("{: >20} {: >20} {: >30} {: >30}".format(*lista_datos2))
         for item2 in lista_datos:
-            lista_datos2 = [item2.nombre + " " + item2.apellido, item2.dni, item2.modelos_avion_permitidos[0], #no muestra modelos de avion del item2
+            lista_datos2 = [(item2.nombre + " " + item2.apellido).ljust(15 , " ") , item2.dni, item2.modelos_avion_permitidos[0], #no muestra modelos de avion del item2
                             item.avion.codigo_avion]
             print("{: >20} {: >20} {: >30} {: >30}".format(*lista_datos2))
 
@@ -182,19 +185,20 @@ for item in lista_vuelos:
                     else:
                         existe = False
                         for item5 in lista_repetidos:
-                            if ((item5[0] == item4) and ((item5[1] == item) and (item5[2] == item3)) or ((item5[2] == item) and (item5[1] == item3))):
+                            if ((item5[0] == item4) and ((item5[1] == item) and (item5[2] == item3)) or
+                                    ((item5[2] == item) and (item5[1] == item3))):
                                 existe = True
                                 break
                         if existe == False:
                             lista_repetidos.append([item4, item, item3])
 
 if len(lista_repetidos) == 0:
-    print ("NO HAY ERROR. NO HAY ERROR. LA MONARQUIA ESPANIOLA")
+    print ("NO HAY ERROR. NO HAY ERROR. LA MONARQUIA ESPAÑOLA")
 else:
     lista_datos = ["DNI", "NOMBRE COMPLETO", "AVION 1", "AVION 2" , "FECHA"]
     print("{: >20} {: >20} {: >30} {: >30} {: >30}".format(*lista_datos))
     for item in lista_repetidos:
-        lista_datos = [item[0].dni , item[0].nombre + " " + item[0].apellido , item[1].origen + " A " + item[1].destino ,
+        lista_datos = [item[0].dni , (item[0].nombre + " " + item[0].apellido).ljust(15 , " ") , item[1].origen + " A " + item[1].destino ,
                        item[2].origen + " A " + item[2].destino , str(item[2].fecha)]
         print("{: >20} {: >20} {: >30} {: >30} {: >30}".format(*lista_datos))
 
@@ -204,7 +208,7 @@ for item in lista_vuelos:
     print ("\nVUELO:")
     lista_datos = item.personas_con_necesidades_especiales()
     lista_datos2 = ["DNI", "NOMBRE COMPLETO", "VIP", "NECESIDADES ESPECIALES"]
-    print("{: >20} {: >20} {: >20} {: >30}".format(*lista_datos2))
+    print("{: >20} {: >30} {: >20} {: >30}".format(*lista_datos2))
     for item in lista_datos:
-        lista_datos2 = [item.dni, item.nombre + " " + item.apellido , str(item.dar_vip()) , str(item.dar_necesidades_especiales())]
-        print("{: >20} {: >20} {: >20} {: >30}".format(*lista_datos2))
+        lista_datos2 = [item.dni, (item.nombre + " " + item.apellido).ljust(15 , " ") , str(item.dar_vip()) , str(item.dar_necesidades_especiales()).ljust(22 , " ")]
+        print("{: >20} {: >30} {: >20} {: >30}".format(*lista_datos2))

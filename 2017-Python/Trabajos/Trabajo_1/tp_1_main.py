@@ -128,13 +128,15 @@ print ("VUELOS: ")
 for item in lista_vuelos:
     print ("NOMINA DE: " + str(item.mostrar_nomina()))
     lista_datos = ["NOMBRE", "APELLIDO", "FECHA NACIMIENTO", "DNI"]
-    print("{: >20} {: >20}  {: >20} {: >20}".format(*lista_datos))
+    print("{: >20} {: >20} {: >20} {: >20}".format(*lista_datos))
     for item2 in item.pasajeros:
         lista_datos = [item2.nombre.ljust(7 , " ") , item2.apellido.ljust(9 , " ") , str(item2.fecha_nacimiento) , item2.dni]
         print ("{: >20} {: >20}  {: >20} {: >20}".format(*lista_datos))
     for item2 in item.tripulacion:
         lista_datos = [item2.nombre.ljust(7 , " ") , item2.apellido.ljust(9 , " ") , str(item2.fecha_nacimiento) , item2.dni]
         print ("{: >20} {: >20}  {: >20} {: >20}".format(*lista_datos))
+    print ("------------------------------------------------------------------------------------------------------------")
+print ("-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-")
 
 print ("\nPASAJERO MAS JOVEN POR VUELO:")
 for item in lista_vuelos:
@@ -145,6 +147,8 @@ for item in lista_vuelos:
     dato = str((date.today() - pasajero.fecha_nacimiento)).split(' ')
     lista_datos = [pasajero.dni , (pasajero.nombre + " " + pasajero.apellido).ljust(15 , " ") , (str("{0:.1f}".format(int(dato[0]) / 365.25))) + " años"]
     print ("{: >20} {: >20} {: >20}".format(*lista_datos))
+    print ("------------------------------------------------------------------------------------------------------------")
+print ("-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-")
 
 print ("TRIPULACION MINIMA por VUELO:\n")
 for item in lista_vuelos:
@@ -152,9 +156,11 @@ for item in lista_vuelos:
     #sys.stdout.flush
     lista_datos = ["VUELO" , "ORIGEN" , "DESTINO" , "ESTADO" , "MINIMA - TOTAL"]
     print("{: >20} {: >20} {: >20} {: >20} {: >15}".format(*lista_datos))
-    lista_datos = ["no hay iden." , item.origen , item.destino , str(item.tripulacion_minima()) , str(item.avion.cant_tripulacion) +
-                   " - " + str(len(item.tripulacion))]
+    lista_datos = ["no hay iden." , item.origen , item.destino , str(item.tripulacion_minima()) , (str(item.avion.cant_tripulacion) +
+                   " - " + str(len(item.tripulacion))).ljust(9 , " ")]
     print ("{: >20} {: >20} {: >20} {: >20} {: >15}".format(*lista_datos))
+    print ("------------------------------------------------------------------------------------------------------------")
+print ("-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-")
 
 print ("\nTRIPULACION INCORRECTA:")
 for item in lista_vuelos:
@@ -170,6 +176,8 @@ for item in lista_vuelos:
             lista_datos2 = [(item2.nombre + " " + item2.apellido).ljust(15 , " ") , item2.dni, item2.modelos_avion_permitidos[0], #no muestra modelos de avion del item2
                             item.avion.codigo_avion]
             print("{: >20} {: >20} {: >30} {: >30}".format(*lista_datos2))
+    print ("------------------------------------------------------------------------------------------------------------")
+print ("-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-")
 
 print ("\nTRIPULANTES QUE VUELAN MULTIPLES VECES POR DIA:")
 lista_repetidos = []
@@ -191,9 +199,11 @@ for item in lista_vuelos:
                                 break
                         if existe == False:
                             lista_repetidos.append([item4, item, item3])
+print ("-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-")
 
 if len(lista_repetidos) == 0:
     print ("NO HAY ERROR. NO HAY ERROR. LA MONARQUIA ESPAÑOLA")
+    print ("------------------------------------------------------------------------------------------------------------")
 else:
     lista_datos = ["DNI", "NOMBRE COMPLETO", "AVION 1", "AVION 2" , "FECHA"]
     print("{: >20} {: >20} {: >30} {: >30} {: >30}".format(*lista_datos))
@@ -201,6 +211,9 @@ else:
         lista_datos = [item[0].dni , (item[0].nombre + " " + item[0].apellido).ljust(15 , " ") , item[1].origen + " A " + item[1].destino ,
                        item[2].origen + " A " + item[2].destino , str(item[2].fecha)]
         print("{: >20} {: >20} {: >30} {: >30} {: >30}".format(*lista_datos))
+        print("---------------------------------------------------------------------------------------------------------"
+              "--------------------------------")
+print ("-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-")
 
 
 print ("\nPASAJEROS CON NECESIDADES ESPECIALES \ vip:")
@@ -212,3 +225,5 @@ for item in lista_vuelos:
     for item in lista_datos:
         lista_datos2 = [item.dni, (item.nombre + " " + item.apellido).ljust(15 , " ") , str(item.dar_vip()) , str(item.dar_necesidades_especiales()).ljust(22 , " ")]
         print("{: >20} {: >30} {: >20} {: >30}".format(*lista_datos2))
+    print ("------------------------------------------------------------------------------------------------------------")
+print ("-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-")

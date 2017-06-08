@@ -49,9 +49,8 @@ class vuelos (object):
         return pasajero
 
     def tripulacion_minima (self):
-        for item in self.tripulacion:
-            if int(self.avion.cant_tripulacion) > len(self.tripulacion):
-                return False
+        if int(self.avion.cant_tripulacion) > len(self.tripulacion):
+            return False
         return True
 
     def comprobar_tripulacion (self):
@@ -63,6 +62,7 @@ class vuelos (object):
                 if (item2 == item.modelos_avion_permitidos [-1]):
                     lista_tripulacion_incorrecta.append(item)
         return lista_tripulacion_incorrecta
+
 
     def personas_con_necesidades_especiales (self):
             lista_personas = []

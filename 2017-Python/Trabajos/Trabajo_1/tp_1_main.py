@@ -199,7 +199,6 @@ for item in lista_vuelos:
                                 break
                         if existe == False:
                             lista_repetidos.append([item4, item, item3])
-print ("-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-")
 
 if len(lista_repetidos) == 0:
     print ("NO HAY ERROR. NO HAY ERROR. LA MONARQUIA ESPAÑOLA")
@@ -216,7 +215,7 @@ else:
 print ("-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-__-")
 
 
-print ("\nPASAJEROS CON NECESIDADES ESPECIALES \ vip:")
+print ("\nPASAJEROS CON NECESIDADES ESPECIALES \ VIP:")
 for item in lista_vuelos:
     print ("\nVUELO:")
     lista_datos = item.personas_con_necesidades_especiales()

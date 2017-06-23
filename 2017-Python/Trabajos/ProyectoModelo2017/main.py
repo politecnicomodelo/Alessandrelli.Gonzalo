@@ -1,15 +1,25 @@
 from flask import Flask
 from flask import render_template
+
+
+import pymysql
+
+db = pymysql.connect (host = '172.16.2.250' , user = "root" , password = "alumno" , db = "expo_modelo_2017_computacion" , autocommit = True)
+c= db.cursor()
+
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('Index.html')
+    titulo = "titulo"
+    descripcion = "descripcion"
+    espacio = " "
+    imagenes = ["foto1.png", "foto2.png"]#lista de rutas de fotos del proyecto.
+    return render_template('Index.html', titulo = titulo, descripcion= descripcion, imagenes= imagenes, espacio = espacio)
 
-#@app.route('/ProyectoLoL')
-#def index():
-    #return render_template('ProyectoLoL.html')
-
+@app.route('/Proyecto')
+def proyecto_titulo(titulo):
+    return render_template('Proyecto.html', titulo = titulo)
 
 
 if __name__ == '__main__':

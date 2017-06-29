@@ -11,15 +11,34 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    titulo = "titulo"
-    descripcion = "descripcion"
-    espacio = " "
-    imagenes = ["foto1.png", "foto2.png"]#lista de rutas de fotos del proyecto.
-    return render_template('Index.html', titulo = titulo, descripcion= descripcion, imagenes= imagenes, espacio = espacio)
+    titulo = "Pantalla Principal"
+    descripcion = "ESTA DESCRIPCION ESTA RE LOCA"
+    imagenes = ["FOTOS.PNG", "FOTOS.PNG"]#lista de rutas de fotos del proyecto
+    guia = "COLOCA UNA PIEZA PARA SABER MAS INFORMACION SOBRE ESE PROYECTO"
+    return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, guia = guia)
 
 @app.route('/Proyecto')
-def proyecto_titulo(titulo):
-    return render_template('Proyecto.html', titulo = titulo)
+def proyecto (titulo, descripcion, imagenes, estadisticas):
+    return render_template('Proyecto.html', titulo = titulo,  descripcion = descripcion, imagenes = imagenes, estadisticas = estadisticas)
+
+
+def seleccionarProyecto(codigo):
+    titulo = c.execute("select entregar_titulo(codigo)")
+    descipion = c.execute("select entregar_descripcion(codigo)")
+    imagenes = c.execute("select dar_imagenes(codigo)")
+    imagenes = imagenes.split("º")
+
+    if codigo == 1:
+
+
+    elif codigo == 2:
+
+
+    elif codigo == 2:
+
+
+
+
 
 
 if __name__ == '__main__':

@@ -24,22 +24,11 @@ def proyecto (titulo, descripcion, imagenes, estadisticas):
 
 def seleccionarProyecto(codigo):
     titulo = c.execute("select entregar_titulo(codigo)")
-    descipion = c.execute("select entregar_descripcion(codigo)")
+    descripcion = c.execute("select entregar_descripcion(codigo)")
     imagenes = c.execute("select dar_imagenes(codigo)")
     imagenes = imagenes.split("º")
-
-    if codigo == 1:
-
-
-    elif codigo == 2:
-
-
-    elif codigo == 2:
-
-
-
-
-
+    estadisticas = ""
+    proyecto(titulo, descripcion, imagenes, estadisticas)
 
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)

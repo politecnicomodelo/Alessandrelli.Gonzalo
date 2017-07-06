@@ -30,7 +30,6 @@ class Proyecto (object):
     def obtener_integrantes(self, cursor , id):
         integrante = Integrante()
         integrante.__init__(cursor, id)
-        return integrante
 
 
 
@@ -48,8 +47,8 @@ class Integrante (object):
         self.apellido = self.obtner_apellido(cursor, id)
         self.curso = self.obtener_curso(cursor, id)
         self.edad = self.obtener_edad(cursor, id)
-        self.imagen = self.obtner_imagen(cursor, id)
-
+        self.imagen = self.obtener_imagen(cursor, id)
+        return self.nombre, self.apellido
 
     def obtener_nombre(self, cursor, id):
         cursor.execute("select integrante.nombre from integrante "
@@ -86,7 +85,7 @@ class Integrante (object):
                        "where integrante_has_proyecto = (" + str(id) + ")")
         self.edad = cursor.fetchall()
 
-    def obtner_imagen(self, cursor, id):
+    def obtener_imagen(self, cursor, id):
         cursor.execute("select integrante.imagen from integrante "
                        "join integrnte_has_proyecto"
                        "on integrante.dni = integrante_has_proyecto.integrante.dni"
@@ -104,7 +103,7 @@ class Imagen (object):
         self.id_imagen = self.obtener_id_imagen(id , cursor)
         self.imagen = self.obtener_imagenes(id , cursor)
         self.descripcion = self.obtener_descipcion(id , cursor)
-
+        return self.imagen
 
     def obtener_imagenes (self , id , cursor):
         cursor.execute("call dar_imagenes(" + str(id) + ")")
@@ -120,6 +119,3 @@ class Imagen (object):
         cursor.execute("select id_imagen from imagen where proyecto_id_grupo = (" + str(id) + ")")
         self.id_imagen = cursor.fetchall()
         return self.id_imagen
-
-
-

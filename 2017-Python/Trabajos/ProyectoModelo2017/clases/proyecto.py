@@ -5,13 +5,6 @@ class Proyecto (object):
     imagenes = []
 
 
-    def __init__(self , id , cursor):
-        self.id_proyecto = id
-        self.titulo = self.obtener_titulo(id , cursor)
-        self.descripcion = self.obtener_descripcion(id, cursor)
-        self.imagenes = self.obtener_imagenes(id, cursor)
-
-
     def obtener_titulo (self , id , cursor):
         cursor.execute("select entregar_titulo ("+str(id)+")")
         self.titulo = cursor.fetchall()
@@ -24,12 +17,12 @@ class Proyecto (object):
 
     def obtener_imagenes (self , id , cursor):
         self.imagenes = Imagen()
-        self.imagenes.__init__(id , cursor)
+        self.imagenes.obtener_imagenes(id , cursor)
         return self.imagenes
 
     def obtener_integrantes(self, cursor , id):
         integrante = Integrante()
-        integrante.__init__(cursor, id)
+        integrante.obtener_nombre(cursor, id)
 
 
 
@@ -41,14 +34,6 @@ class Integrante (object):
     edad = None
     imagen = None
 
-    def __init__(self, cursor, id):
-        self.dni = self.obtener_dni(cursor, id)
-        self.nombre = self.obtener_nombre(cursor, id)
-        self.apellido = self.obtner_apellido(cursor, id)
-        self.curso = self.obtener_curso(cursor, id)
-        self.edad = self.obtener_edad(cursor, id)
-        self.imagen = self.obtener_imagen(cursor, id)
-        return self.nombre, self.apellido
 
     def obtener_nombre(self, cursor, id):
         cursor.execute("select integrante.nombre from integrante "
@@ -99,16 +84,13 @@ class Imagen (object):
     imagen = None
     descripcion = None
 
-    def __init__(self, id, cursor):
-        self.id_imagen = self.obtener_id_imagen(id , cursor)
-        self.imagen = self.obtener_imagenes(id , cursor)
-        self.descripcion = self.obtener_descipcion(id , cursor)
-        return self.imagen
+
 
     def obtener_imagenes (self , id , cursor):
-        cursor.execute("call dar_imagenes(" + str(id) + ")")
+        self.imagen=None
+        cursor.callproc("dar_imagenes",(id,self.imagen))
         self.imagen = cursor.fetchall()
-        return self.imagen
+        return self.imagen[0]
 
     def obtener_descipcion (self , id , cursor):
         cursor.execute("call descripcion_imagenes(" + str(id) + ")")

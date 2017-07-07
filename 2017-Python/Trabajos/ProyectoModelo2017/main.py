@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import render_template
-from .clases.proyecto import *
+from clases.proyecto import *
 
 
 import pymysql
@@ -18,7 +18,7 @@ def ObtenerProyecto(id, cursor):
     titulo = proyecto.obtener_titulo(id, cursor)
     descripcion = proyecto.obtener_descripcion(id, cursor)
     imagenes = proyecto.obtener_imagenes(id, cursor)
-    imagenes = imagenes.split(',')
+    imagenes = imagenes.split('º')
     return titulo, descripcion, imagenes
 
 
@@ -26,7 +26,7 @@ def ObtenerProyecto(id, cursor):
 @app.route('/')
 def index():
     cursor = db.cursor()
-    titulo, descripcion, imagenes = ObtenerProyecto(1, cursor)
+    titulo, descripcion, imagenes = ObtenerProyecto(0, cursor)
     guia = "COLOCA UNA PIEZA PARA SABER MAS INFORMACION SOBRE ESE PROYECTO"
     return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, guia = guia)
 

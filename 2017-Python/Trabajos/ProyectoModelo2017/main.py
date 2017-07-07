@@ -13,12 +13,11 @@ app = Flask(__name__)
 
 
 
-def ObtenerProyecto(id, cursor):
+def ObtenerProyecto(id, db):
     proyecto = Proyecto()
-    titulo = proyecto.obtener_titulo(id, cursor)
-    descripcion = proyecto.obtener_descripcion(id, cursor)
-    imagenes = proyecto.obtener_imagenes(id, cursor)
-    imagenes = imagenes.split('º')
+    titulo = proyecto.obtener_titulo(id, db)
+    descripcion = proyecto.obtener_descripcion(id, db)
+    imagenes = proyecto.obtener_imagenes(id, db)
     return titulo, descripcion, imagenes
 
 
@@ -26,7 +25,7 @@ def ObtenerProyecto(id, cursor):
 @app.route('/')
 def index():
     cursor = db.cursor()
-    titulo, descripcion, imagenes = ObtenerProyecto(0, cursor)
+    titulo, descripcion, imagenes = ObtenerProyecto(0, db)
     guia = "COLOCA UNA PIEZA PARA SABER MAS INFORMACION SOBRE ESE PROYECTO"
     return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, guia = guia)
 

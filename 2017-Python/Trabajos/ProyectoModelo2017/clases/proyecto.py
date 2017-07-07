@@ -1,3 +1,5 @@
+import pymysql
+
 class Proyecto (object):
     id_proyecto = None
     titulo = None
@@ -5,22 +7,26 @@ class Proyecto (object):
     imagenes = []
 
 
-    def obtener_titulo (self , id , cursor):
+    def obtener_titulo (self , id , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select entregar_titulo ("+str(id)+")")
         self.titulo = cursor.fetchall()
-        return self.titulo
+        return self.titulo[0]
 
-    def obtener_descripcion (self , id , cursor):
+    def obtener_descripcion (self , id , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select entregar_descripcion ("+str(id)+")")
         self.descripcion = cursor.fetchall()
-        return self.descripcion
+        return self.descripcion[0]
 
-    def obtener_imagenes (self , id , cursor):
+    def obtener_imagenes (self , id , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         self.imagenes = Imagen()
-        self.imagenes.obtener_imagenes(id , cursor)
+        self.imagenes.obtener_imagenes(id, db)
         return self.imagenes
 
-    def obtener_integrantes(self, cursor , id):
+    def obtener_integrantes(self, db , id):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         integrante = Integrante()
         integrante.obtener_nombre(cursor, id)
 
@@ -35,42 +41,48 @@ class Integrante (object):
     imagen = None
 
 
-    def obtener_nombre(self, cursor, id):
+    def obtener_nombre(self, db, id):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select integrante.nombre from integrante "
                         "join integrnte_has_proyecto"
                         "on integrante.dni = integrante_has_proyecto.integrante.dni"
                         "where integrante_has_proyecto = ("+str(id)+")")
         self.nombre = cursor.fetchall()
 
-    def obtener_dni(self, cursor, id):
+    def obtener_dni(self,db , id):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select integrante.dni from integrante "
                         "join integrnte_has_proyecto"
                         "on integrante.dni = integrante_has_proyecto.integrante.dni"
                         "where integrante_has_proyecto = (" + str(id) + ")")
         self.dni = cursor.fetchall()
 
-    def obtner_apellido(self, cursor, id):
+    def obtner_apellido(self,db , id):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select integrante.apellido from integrante "
                         "join integrnte_has_proyecto"
                         "on integrante.dni = integrante_has_proyecto.integrante.dni"
                         "where integrante_has_proyecto = (" + str(id) + ")")
         self.apellido = cursor.fetchall()
 
-    def obtener_curso(self, cursor, id):
+    def obtener_curso(self, db, id):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select integrante.curso from integrante "
                         "join integrnte_has_proyecto"
                         "on integrante.dni = integrante_has_proyecto.integrante.dni"
                         "where integrante_has_proyecto = (" + str(id) + ")")
         self.curso = cursor.fetchall()
 
-    def obtener_edad(self, cursor, id):
+    def obtener_edad(self, db, id):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select integrante.edad from integrante "
                        "join integrnte_has_proyecto"
                        "on integrante.dni = integrante_has_proyecto.integrante.dni"
                        "where integrante_has_proyecto = (" + str(id) + ")")
         self.edad = cursor.fetchall()
 
-    def obtener_imagen(self, cursor, id):
+    def obtener_imagen(self, db, id):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select integrante.imagen from integrante "
                        "join integrnte_has_proyecto"
                        "on integrante.dni = integrante_has_proyecto.integrante.dni"
@@ -86,18 +98,21 @@ class Imagen (object):
 
 
 
-    def obtener_imagenes (self , id , cursor):
-        self.imagen=None
+    def obtener_imagenes (self , id , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+        self.imagen = None
         cursor.callproc("dar_imagenes",(id,self.imagen))
         self.imagen = cursor.fetchall()
-        return self.imagen[0]
+        return self.imagen
 
-    def obtener_descipcion (self , id , cursor):
+    def obtener_descipcion (self , id , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("call descripcion_imagenes(" + str(id) + ")")
         self.descripcion = cursor.fetchall()
         return self.descripcion
 
-    def obtener_id_imagen(self , id , cursor):
+    def obtener_id_imagen(self , id , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select id_imagen from imagen where proyecto_id_grupo = (" + str(id) + ")")
         self.id_imagen = cursor.fetchall()
         return self.id_imagen

@@ -1,5 +1,6 @@
 import pymysql
 
+
 class Proyecto (object):
     id_proyecto = None
     titulo = None
@@ -9,15 +10,15 @@ class Proyecto (object):
 
     def obtener_titulo (self , id , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("select entregar_titulo ("+str(id)+")")
+        cursor.execute("select nombre from proyecto where id_grupo = ("+str(id)+")")
         self.titulo = cursor.fetchall()
-        return self.titulo[0]
+        return self.titulo[0]['nombre']
 
     def obtener_descripcion (self , id , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("select entregar_descripcion ("+str(id)+")")
+        cursor.execute("select descripcion from proyecto where id_grupo = ("+str(id)+")")
         self.descripcion = cursor.fetchall()
-        return self.descripcion[0]
+        return self.descripcion[0]['descripcion']
 
     def obtener_imagenes (self , id , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
@@ -116,3 +117,5 @@ class Imagen (object):
         cursor.execute("select id_imagen from imagen where proyecto_id_grupo = (" + str(id) + ")")
         self.id_imagen = cursor.fetchall()
         return self.id_imagen
+
+

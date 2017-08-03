@@ -1,7 +1,9 @@
+import os.path
+
 from flask import Flask
+from flask import Response
 from flask import render_template
 from clases.proyecto import *
-
 
 import pymysql
 
@@ -10,6 +12,11 @@ db = pymysql.connect (host = '172.16.2.250' , user = "root" , password = "alumno
 
 cursor = db.cursor()
 app = Flask(__name__)
+
+
+app = Flask(__name__, static_url_path='')
+
+
 
 def eliminarCosas (titulo, descripcion, imagenes):
     pass
@@ -31,6 +38,9 @@ def index():
     guia = "COLOCA UNA PIEZA PARA SABER MAS INFORMACION SOBRE ESE PROYECTO"
     return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, guia = guia)
 
+@app.route('/imagenes')
+def imagenes():
+    return app.send_static_file('imagenes/fondo1.jpg')
 
 
 @app.route('/Proyecto')

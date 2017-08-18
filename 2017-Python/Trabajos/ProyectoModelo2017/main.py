@@ -1,7 +1,7 @@
 import os.path
 
 from flask import Flask
-from flask import Response
+from flask import request
 from flask import render_template
 from clases.proyecto import *
 
@@ -14,12 +14,8 @@ cursor = db.cursor()
 app = Flask(__name__)
 
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__, static_url_path='/static')
 
-
-
-def eliminarCosas (titulo, descripcion, imagenes):
-    pass
 
 def ObtenerProyecto(id, db):
     proyecto = Proyecto()
@@ -34,14 +30,16 @@ def ObtenerProyecto(id, db):
 def index():
     cursor = db.cursor()
     titulo, descripcion, imagenes = ObtenerProyecto(0, db)
-    #titulo, descripcion, imagenes = eliminarCosas(titulo, descripcion, imagenes)
     guia = "COLOCA UNA PIEZA PARA SABER MAS INFORMACION SOBRE ESE PROYECTO"
     return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, guia = guia)
 
 @app.route('/imagenes')
 def imagenes():
-    return app.send_static_file('imagenes/fondo1.jpg')
-
+    cursor = db.cursor()
+    titulo, descripcion, imagenes = ObtenerProyecto(0, db)
+    estadisticas = 'xd lol '
+    descripcionImagen = "xd lolololo"
+    return render_template('imagenes.html',  titulo = titulo,  descripcion = descripcion, imagenes = imagenes, estaditicas = estadisticas, descripcionImagen = descripcionImagen)
 
 @app.route('/Proyecto')
 def proyecto ():

@@ -21,32 +21,25 @@ def ObtenerProyecto(id, db):
     proyecto = Proyecto()
     titulo = proyecto.obtener_titulo(id, db)
     descripcion = proyecto.obtener_descripcion(id, db)
-    imagenes = proyecto.obtener_imagenes(id, db)
-    return titulo, descripcion, imagenes
+    imagenes, descripcionImagen = proyecto.obtener_imagenes(id, db)
+
+    return titulo, descripcion, imagenes, descripcionImagen
 
 
 
 @app.route('/')
 def index():
     cursor = db.cursor()
-    titulo, descripcion, imagenes = ObtenerProyecto(0, db)
+    titulo, descripcion, imagenes, descripcionImagen = ObtenerProyecto(0, db)
     guia = "COLOCA UNA PIEZA PARA SABER MAS INFORMACION SOBRE ESE PROYECTO"
-    return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, guia = guia)
+    return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = descripcionImagen ,guia = guia)
 
-@app.route('/imagenes')
-def imagenes():
-    cursor = db.cursor()
-    titulo, descripcion, imagenes = ObtenerProyecto(0, db)
-    estadisticas = 'xd lol '
-    descripcionImagen = "xd lolololo"
-    return render_template('imagenes.html',  titulo = titulo,  descripcion = descripcion, imagenes = imagenes, estaditicas = estadisticas, descripcionImagen = descripcionImagen)
 
 @app.route('/Proyecto')
 def proyecto ():
     cursor = db.cursor()
-    titulo, descripcion, imagenes = ObtenerProyecto(2, db)
+    titulo, descripcion, imagenes = ObtenerProyecto(3, db)
     return render_template('Proyecto.html', titulo = titulo,  descripcion = descripcion, imagenes = imagenes)
-
 
 
 if __name__ == '__main__':

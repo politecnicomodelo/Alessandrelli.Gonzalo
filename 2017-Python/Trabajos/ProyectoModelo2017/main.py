@@ -17,6 +17,9 @@ app = Flask(__name__)
 app = Flask(__name__, static_url_path='/static')
 
 
+def ObtenerEstadisticas(id, db):
+    pass
+
 def ObtenerProyecto(id, db):
     proyecto = Proyecto()
     titulo = proyecto.obtener_titulo(id, db)
@@ -36,10 +39,12 @@ def index():
 
 
 @app.route('/Proyecto')
-def proyecto ():
+def proyecto (id):
     cursor = db.cursor()
-    titulo, descripcion, imagenes = ObtenerProyecto(3, db)
-    return render_template('Proyecto.html', titulo = titulo,  descripcion = descripcion, imagenes = imagenes)
+    titulo, descripcion, imagenes, descripcionImagen = ObtenerProyecto(id, db)
+    Estadisticas = ObtenerEstadisticas(id, db)
+    return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = descripcionImagen ,estadisticas = estadisticas)
+
 
 
 if __name__ == '__main__':

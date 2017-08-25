@@ -1,11 +1,8 @@
 import os.path
-
-from flask import Flask
-from flask import request
-from flask import render_template
+import pymysql
+from flask import Flask, request, render_template, send_from_directory
 from clases.proyecto import *
 
-import pymysql
 
 db = pymysql.connect (host = '172.16.2.250' , user = "root" , password = "alumno" ,
                       db = "expo_modelo_2017_computacion" , autocommit = True)
@@ -14,7 +11,7 @@ cursor = db.cursor()
 app = Flask(__name__)
 
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_url_path='')
 
 
 def ObtenerEstadisticas(id, db):
@@ -24,18 +21,19 @@ def ObtenerProyecto(id, db):
     proyecto = Proyecto()
     titulo = proyecto.obtener_titulo(id, db)
     descripcion = proyecto.obtener_descripcion(id, db)
-    imagenes, descripcionImagen = proyecto.obtener_imagenes(id, db)
+    imagenes = proyecto.obtener_imagenes(id, db)
 
-    return titulo, descripcion, imagenes, descripcionImagen
+    return titulo, descripcion, imagenes
 
 
 
 @app.route('/')
 def index():
     cursor = db.cursor()
-    titulo, descripcion, imagenes, descripcionImagen = ObtenerProyecto(0, db)
-    guia = "COLOCA UNA PIEZA PARA SABER MAS INFORMACION SOBRE ESE PROYECTO"
-    return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = descripcionImagen ,guia = guia)
+    titulo, descripcion, imagenes = ObtenerProyecto(0, db)
+    guia = "Coloca una pieza para saber mas informacion sobre el proyecto"
+    return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = 'Descripcipon de la imagen' ,guia = guia)
+
 
 
 @app.route('/Proyecto')

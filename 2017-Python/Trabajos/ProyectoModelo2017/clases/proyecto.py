@@ -25,8 +25,7 @@ class Proyecto (object):
         descripcion = ""
         self.imagenes = Imagen()
         self.imagenes.obtener_imagenes(id, db)
-        self.descripcionImagen = self.imagenes.obtener_descripcion(id, db, descripcion)
-        return self.imagenes, self.descripcionImagen
+        return self.imagenes
 
     def obtener_integrantes(self, db , id):
         cursor = db.cursor(pymysql.cursors.DictCursor)
@@ -108,9 +107,9 @@ class Imagen (object):
         self.imagen = cursor.fetchall()
         return self.imagen
 
-    def obtener_descripcion (self , id , db, descripcion):
+    def obtener_descripcion (self , id , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("call descripcion_imagen(" + str(id) + str(descripcion)")")
+        cursor.execute("call descripcion_imagen(" + str(id) + ")")
         self.descripcion = cursor.fetchall()
         return self.descripcion
 

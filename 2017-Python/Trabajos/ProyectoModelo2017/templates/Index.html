@@ -1,15 +1,11 @@
 <html>
 <head>
     <title>Proyectos de Computacion</title>
+	<link rel="icon" type="image/png" href="static/images/favicon.ico" />
 </head>
-
-
 <body>
-
-
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Trabajos Expo 2017</title>
 		<style type="text/css">
 			html, #page { padding:0; margin:0;}
@@ -65,17 +61,6 @@
 			/* Clear both sides to assist with div alignment  */
 			.clr { clear:both; padding:0; margin:0; width:100%; font-size:0px; line-height:0px;}
 		</style>
-		<script type="text/javascript">
-			/* =============================
-			This script generates sample text for the body content.
-			You can remove this script and any reference to it.
-			 ============================= */
-			var bodyText=["The smaller your reality, the more convinced you are that you know everything.", "If the facts don't fit the theory, change the facts.", "The past has no power over the present moment.", "This, too, will pass.", "</p><p>You will not be punished for your anger, you will be punished by your anger.", "Peace comes from within. Do not seek it without.", "<h2>Heading</h2><p>The most important moment of your life is now. The most important person in your life is the one you are with now, and the most important activity in your life is the one you are involved with now."]
-			function generateText(sentenceCount){
-				for (var i=0; i<sentenceCount; i++)
-				document.write(bodyText[Math.floor(Math.random()*7)]+" ")
-			}
-		</script>
 	</head>
 	<body>
 		<div id="page">
@@ -83,10 +68,9 @@
 				<div id="header-inner">
 					<div id="logo">
                         <div>
-                           <h1> <span> {{titulo
-                               }}</span>
+                           <h1> <span> {{titulo}}</span>
                         </div>
-                        <h3><span style="color:black"> Proyectos 5 Computacion</span></h3>
+                        <h3><span style="color:darkblue"> Proyectos 5 Computacion</span></h3>
 					</div>
 
 					<div class="clr"></div>
@@ -100,15 +84,15 @@
 				<div id="content-inner">
 					<main id="contentbar">
 						<div class="logo">
-						    <h2>Descripcion</h2>
-                            <h3>{{descripcion}}</h3>
+							<h2><span style="color:#d3d3f9;">Descripcion</span></h2>
+							<h3><span style="color:darkblue">{{descripcion}}</span></h3>
 					    </div>
 
 					</main>
 					<nav id="sidebar">
 						<div class="widget">
-							<h2>Guia</h2>
-                            <p><span>{{guia}}</span></p>
+							<h2><span style="color:#d3d3f9;">Guia</span></h2>
+                            <h3><span style="color:darkblue">{{guia}}</span></h3>
 						</div>
 					</nav>
 
@@ -117,19 +101,20 @@
 			</div>
 
 			<div id="footerblurb">
+				<h2><center><span style="color:darkblue">Imagenes</span></center></h2>
 				<div id="footerblurb-inner">
 					<div class="column">
-                        <h2><center><span>Imagenes</span></center></h2>
-                        <center><p> {{descripcionImagen}}</p></center>
-                        <img src = {{imagenes[0]}}>
+						<div class="widget">
+							<img src="{{ url_for('static', filename='{{imagenes[0]}}') }}"/>
+						</div>
+						<h3><center><span style="color:darkblue">{{descripcionImagen}}</span></center></h3>
 					</div>
-
 					<div class="clr"></div>
 				</div>
 			</div>
 			<footer id="footer">
 				<div id="footer-inner">
-					<p>&copy; Copyright  &copy;Alessandrelli &copy;Opderbeck &copy;Vespa</p>
+					<p>&copy; Copyright  Alessandrelli-Opderbeck-Vespa</p>
 					<div class="clr"></div>
 				</div>
 			</footer>

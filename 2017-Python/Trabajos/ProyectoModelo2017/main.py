@@ -1,9 +1,9 @@
-import os.path
+
 import pymysql
 from flask import Flask, request, render_template, send_from_directory
 from clases.proyecto import *
 
-
+HTTP_STATIC="http://172.16.2.250/"
 db = pymysql.connect (host = '172.16.2.250' , user = "root" , password = "alumno" ,
                       db = "expo_modelo_2017_computacion" , autocommit = True)
 
@@ -32,7 +32,7 @@ def index():
     cursor = db.cursor()
     titulo, descripcion, imagenes = ObtenerProyecto(0, db)
     guia = "Coloca una pieza para saber mas informacion sobre el proyecto"
-    return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = 'Descripcipon de la imagen' ,guia = guia)
+    return render_template('Index.html', static=HTTP_STATIC,titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = 'Descripción de la imagen' ,guia = guia)
 
 
 

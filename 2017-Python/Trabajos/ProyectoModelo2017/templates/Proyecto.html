@@ -80,8 +80,7 @@
 				<div id="header-inner">
 					<div id="logo">
                         <div>
-                           <h1> <span> {{titulo
-                               }}</span>
+                           <h1> <span> {{titulo}}</span>
                         </div>
                         <h3><span style="color:black"> Proyectos 5 Computacion</span></h3>
 					</div>
@@ -120,7 +119,7 @@
                         <table>
                         <tr>
                         <td><strong>{{descripcionImagen}}</strong></td>
-                        <td><img src="{{ url_for('static', filename='{{imagenes[0]}}') }}"/></td>
+                        <td><img src="{{ static }} {{ imagenes[0]}}"/></td>
                         </tr>
                         </table>
 

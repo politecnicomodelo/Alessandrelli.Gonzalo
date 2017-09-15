@@ -22,26 +22,26 @@ def ObtenerProyecto(id, db):
     titulo = proyecto.obtener_titulo(id, db)
     descripcion = proyecto.obtener_descripcion(id, db)
     imagenes = proyecto.obtener_imagenes(id, db)
-
-    return titulo, descripcion, imagenes
+    descripcionImagen = proyecto.obtener_descripcionImagen(id, db)
+    return titulo, descripcion, imagenes, descripcionImagen
 
 
 
 @app.route('/')
 def index():
-    cursor = db.cursor()
-    titulo, descripcion, imagenes = ObtenerProyecto(0, db)
+    titulo, descripcion, imagenes, descripcionImagen = ObtenerProyecto(0, db)
     guia = "Coloca una pieza para saber mas informacion sobre el proyecto"
-    return render_template('Index.html', static=HTTP_STATIC,titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = 'Descripción de la imagen' ,guia = guia)
+    return render_template('Index.html', static=HTTP_STATIC, titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = descripcionImagen ,guia = guia)
 
 
 
 @app.route('/Proyecto')
-def proyecto (id):
-    cursor = db.cursor()
+def proyecto ():
+    id = 1
     titulo, descripcion, imagenes, descripcionImagen = ObtenerProyecto(id, db)
-    Estadisticas = ObtenerEstadisticas(id, db)
-    return render_template('Index.html', titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = descripcionImagen ,estadisticas = estadisticas)
+    titulo2 = "Proyectos 5to Computacion"
+
+    return render_template('Proyecto.html', static=HTTP_STATIC, titulo = titulo, titulo2 = titulo2, descripcion = descripcion, imagenes = imagenes)
 
 
 

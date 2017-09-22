@@ -1,5 +1,6 @@
 <html>
 <head>
+	<link rel="shortcut icon" type="image/png" href={{ static }}favicon.ico>
 	<style>
 	/* Fuentes */
 	@font-face{
@@ -34,37 +35,62 @@
 			font-size:102px;
 	}
 	#principal {
-		 width:650px;
-		 margin: 0 auto 0 auto;
-
+		 width:600px;
+		 margin:50px;
 		 float: left;
 	}
 	.anuncios1 {
 		 width:150px;
 		 margin: 0 auto 0 auto;
-
 		 float: right;
 	}
 	#pie {
 		 width:800px;
 		 margin: 0 auto 0 auto;
-
 		 float: left;
+	}
+	#Copy{
+		font-size:20px;
+		float:right;
+		position: fixed;
+		top: 730px;
+	}
+	#images{
+		width:450px;
+		float: right;
+		position: relative;
+		left:-10px;
+		top:400px;
+	}
+	div.avatar {
+		height:300px;
+		width: 300px;
+		background-position: 50%;
+		border-radius: 50%;
+		background-size: 100% auto;
+		position: relative;
+		left:800px;
+		top:250px;
 	}
 
 </style>
+	<title>Proyectos</title>
 </head>
 <body background = {{ static }}paginaProyecto.png>
 <div id = contenido>
 	<span style="font-family: PTF55F; color:#b2b2b2">Proyecto 5to Computacion</span>
 	<div id = navegacion>
-		<span style="font-family: LeagueGothic-Regular; color:#182a44">PANTALLA PRINCIPAL</span>
+		<span style="font-family: LeagueGothic-Regular; color:#182a44">{{titulo}}</span>
 	</div>
+	<div id = "principal">
+		<span style="font-family: LeagueGothic-Regular; color:#182a44">{{descripcion}}</span>
+	</div>
+	</div>
+	<div class="avatar" style="background-image: url({{ static }}{{ imagenes}})">
+
 </div>
-
 </body>
-
-
-<p &copy; Alessandrelli-Fiorino-Quaglia-Opderbeck-Vespa</p>
-
+	<div id = Copy>
+			<span style="font-family: LeagueGothic-Regular; color:#b2b2b2">{{nombres}}   {{nombre1}}   {{nombre2}} </span>
+	</div>
 </html>

@@ -24,15 +24,13 @@ class Proyecto (object):
         self.imagenes = Imagen()
         return self.imagenes.obtener_imagenes(id, db)
 
-
     def obtener_descripcionImagen (self , id , db):
         self.descripcion = Imagen()
         return self.descripcion.obtener_descripcion(id, db)
 
-    def obtener_integrantes(self, db , id):
-        cursor = db.cursor(pymysql.cursors.DictCursor)
+    def obtener_integrantes(self, db, id):
         integrante = Integrante()
-        integrante.obtener_nombre(cursor, id)
+        return integrante.obtener_nombre(db, id)
 
 
 
@@ -47,13 +45,13 @@ class Integrante (object):
 
     def obtener_nombre(self, db, id):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("select integrante.nombre from integrante "
-                        "join integrnte_has_proyecto"
-                        "on integrante.dni = integrante_has_proyecto.integrante.dni"
-                        "where integrante_has_proyecto = ("+str(id)+")")
+        cursor.execute("select integrante.apellido from integrante join integrante_has_proyecto on integrante.dni = integrante_has_proyecto.integrante_dni where integrante_has_proyecto.proyecto_id_grupo = ("+str(id)+")")
         self.nombre = cursor.fetchall()
+        if id == 0 or id == 3 or id == 5 or id == 1: return self.nombre[0]['apellido'], self.nombre[1]['apellido'], self.nombre[2]['apellido']
+        else: return self.nombre[0]['apellido'], self.nombre[1]['apellido'], " "
 
-    def obtener_dni(self,db , id):
+
+    def obtener_dni(self, db, id):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select integrante.dni from integrante "
                         "join integrnte_has_proyecto"

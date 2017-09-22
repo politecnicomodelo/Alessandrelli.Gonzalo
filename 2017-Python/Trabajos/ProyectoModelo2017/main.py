@@ -1,6 +1,6 @@
 
 import pymysql
-from flask import Flask, request, render_template, send_from_directory
+from flask import Flask, render_template
 from clases.proyecto import *
 
 HTTP_STATIC="http://172.16.2.250/"
@@ -14,17 +14,14 @@ app = Flask(__name__)
 app = Flask(__name__, static_url_path='')
 
 
-def ObtenerEstadisticas(id, db):
-    pass
-
 def ObtenerProyecto(id, db):
     proyecto = Proyecto()
     titulo = proyecto.obtener_titulo(id, db)
     descripcion = proyecto.obtener_descripcion(id, db)
     imagenes = proyecto.obtener_imagenes(id, db)
     descripcionImagen = proyecto.obtener_descripcionImagen(id, db)
-    return titulo, descripcion, imagenes, descripcionImagen
-
+    nombres, nombre1, nombre2 = proyecto.obtener_integrantes(db, id)
+    return titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2
 
 
 @app.route('/')
@@ -33,17 +30,11 @@ def index():
     guia = "Coloca una pieza para saber mas informacion sobre el proyecto"
     return render_template('Index.html', static=HTTP_STATIC, titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = descripcionImagen ,guia = guia)
 
-
-
 @app.route('/Proyecto')
 def proyecto ():
     id = 1
-    titulo, descripcion, imagenes, descripcionImagen = ObtenerProyecto(id, db)
-    titulo2 = "Proyectos 5to Computacion"
-
-    return render_template('Proyecto.html', static=HTTP_STATIC, titulo = titulo, titulo2 = titulo2, descripcion = descripcion, imagenes = imagenes)
-
-
+    titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2  = ObtenerProyecto(id, db)
+    return render_template('Proyecto.html', static=HTTP_STATIC, titulo = titulo, descripcion = descripcion, imagenes = imagenes, nombres = nombres, nombre1 = nombre1, nombre2 = nombre2, id = id)
 
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)

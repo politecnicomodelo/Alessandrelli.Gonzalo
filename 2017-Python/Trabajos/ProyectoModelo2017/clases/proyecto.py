@@ -32,6 +32,11 @@ class Proyecto (object):
         integrante = Integrante()
         return integrante.obtener_nombre(db, id)
 
+    def obtener_curso(self, id, db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("select curso from proyecto where id_grupo = (" + str(id) + ")")
+        self.descripcion = cursor.fetchall()
+        return self.descripcion[0]['curso']
 
 
 class Integrante (object):
@@ -47,9 +52,8 @@ class Integrante (object):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select integrante.apellido from integrante join integrante_has_proyecto on integrante.dni = integrante_has_proyecto.integrante_dni where integrante_has_proyecto.proyecto_id_grupo = ("+str(id)+")")
         self.nombre = cursor.fetchall()
-        if id == 0 or id == 3 or id == 5 or id == 1: return self.nombre[0]['apellido'], self.nombre[1]['apellido'], self.nombre[2]['apellido']
+        if id == 3 or id == 5 or id == 1: return self.nombre[0]['apellido'], self.nombre[1]['apellido'], self.nombre[2]['apellido']
         else: return self.nombre[0]['apellido'], self.nombre[1]['apellido'], " "
-
 
     def obtener_dni(self, db, id):
         cursor = db.cursor(pymysql.cursors.DictCursor)

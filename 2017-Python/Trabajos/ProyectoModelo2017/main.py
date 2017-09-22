@@ -37,5 +37,6 @@ def proyecto ():
     titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2, curso  = ObtenerProyecto(id, db)
     return render_template('Proyecto.html', static = HTTP_STATIC, curso = curso, titulo = titulo, descripcion = descripcion, imagenes = imagenes, nombres = nombres, nombre1 = nombre1, nombre2 = nombre2, id = id)
 
+
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)

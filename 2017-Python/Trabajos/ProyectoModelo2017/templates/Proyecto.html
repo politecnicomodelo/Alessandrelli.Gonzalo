@@ -13,6 +13,32 @@
 		src: url({{static}}Fuentes/LeagueGothic-Regular.otf);
 		letter-spacing:22px;
 	}
+	@font-face{
+		font-family:"Capsuula";
+		src: url({{static}}Fuentes/Capsuula.ttf);
+		letter-spacing:22px;
+	}
+	@font-face{
+		font-family:"Quenda";
+		src: url({{static}}Fuentes/Quenda.otf);
+		letter-spacing:22px;
+	}
+	@font-face{
+		font-family:"Uni";
+		src: url({{static}}Fuentes/Uni.ttf);
+		letter-spacing:22px;
+	}
+	@font-face{
+		font-family:"HBM";
+		src: url({{static}}Fuentes/HBM.ttf);
+		letter-spacing:22px;
+	}
+	@font-face{
+		font-family:"OpenSans";
+		src: url({{static}}Fuentes/OpenSans.ttf);
+		letter-spacing:22px;
+	}
+
 	#global {
 		 width:800px; height:800px;
 		 margin: 0 auto 0 auto;
@@ -36,8 +62,12 @@
 	}
 	#principal {
 		 width:500px;
-		 margin:50px;
+		 margin:5px;
 		 float: left;
+		 position: fixed;
+		 top: 270px;
+
+		 font-size:25px;
 	}
 	.anuncios1 {
 		 width:150px;
@@ -83,7 +113,7 @@
 		<span style="font-family: LeagueGothic-Regular; color:#182a44">{{titulo}}</span>
 	</div>
 	<div id = "principal">
-		<span style="font-family: LeagueGothic-Regular; color:#182a44">{{descripcion}}</span>
+		<span style="font-family: OpenSans; color:#182a44">{{descripcion}}</span>
 	</div>
 	</div>
 	<div class="avatar" style="background-image: url({{ static }}{{ imagenes}})"></div>

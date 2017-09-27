@@ -20,22 +20,22 @@ def ObtenerProyecto(id, db):
     descripcion = proyecto.obtener_descripcion(id, db)
     imagenes = proyecto.obtener_imagenes(id, db)
     descripcionImagen = proyecto.obtener_descripcionImagen(id, db)
-    nombres, nombre1, nombre2 = proyecto.obtener_integrantes(db, id)
+    nombres, nombre1, nombre2, nombre3, nombre4 = proyecto.obtener_integrantes(db, id)
     curso = proyecto.obtener_curso(id, db)
-    return titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2, curso
+    return titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2, nombre3, nombre4, curso
 
 
 @app.route('/')
 def index():
-    titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2, curso = ObtenerProyecto(0, db)
+    titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2, nombre3, nombre4, curso = ObtenerProyecto(0, db)
     guia = "Coloca una pieza para saber mas informacion sobre el proyecto"
     return render_template('Index.html', static = HTTP_STATIC, titulo = titulo, descripcion = descripcion, imagenes = imagenes, descripcionImagen = descripcionImagen ,guia = guia)
 
 @app.route('/Proyecto')
 def proyecto ():
     id = 1
-    titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2, curso  = ObtenerProyecto(id, db)
-    return render_template('Proyecto.html', static = HTTP_STATIC, curso = curso, titulo = titulo, descripcion = descripcion, imagenes = imagenes, nombres = nombres, nombre1 = nombre1, nombre2 = nombre2, id = id)
+    titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2, nombre3, nombre4, curso  = ObtenerProyecto(id, db)
+    return render_template('Proyecto.html', static = HTTP_STATIC, curso = curso, titulo = titulo, descripcion = descripcion, imagenes = imagenes, nombres = nombres, nombre1 = nombre1, nombre2 = nombre2, nombre3 = nombre3, nombre4 = nombre4,id = id)
 
 
 if __name__ == '__main__':

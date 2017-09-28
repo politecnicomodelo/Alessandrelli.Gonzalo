@@ -33,7 +33,7 @@ def index():
 
 @app.route('/Proyecto')
 def proyecto ():
-    id = 1
+    id = 0
     titulo, descripcion, imagenes, descripcionImagen, nombres, nombre1, nombre2, nombre3, nombre4, curso  = ObtenerProyecto(id, db)
     return render_template('Proyecto.html', static = HTTP_STATIC, curso = curso, titulo = titulo, descripcion = descripcion, imagenes = imagenes, nombres = nombres, nombre1 = nombre1, nombre2 = nombre2, nombre3 = nombre3, nombre4 = nombre4,id = id)
 

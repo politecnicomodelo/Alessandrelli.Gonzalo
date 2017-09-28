@@ -63,7 +63,7 @@
 	#principal {
 		 width:500px;
 		 margin:5px;
-		 float: left;
+		 float:left;
 		 position: fixed;
 		 top: 270px;
 		 font-size:25px;
@@ -75,15 +75,14 @@
 	}
 	#pie {
 		 width:800px;
-		 margin: 0 auto 0 auto;
 		 float: left;
 	}
 	#Copy{
-		font-size:22px;
-		float:right;
-		position: relative;
+		font-size:25px;
+		position: absolute;
+    	right: 40px;
+    	top: 720px;
 	}
-
 	#images{
 		width:450px;
 		float: right;
@@ -116,8 +115,9 @@
 	</div>
 	</div>
 	<div class="avatar" style="background-image: url({{ static }}{{ imagenes}})"></div>
-</body>
 	<div id = Copy>
-			<span style="font-family: PTF55F; color:#b2b2b2">{{nombres}} {{nombre1}} {{nombre2}} {{nombre3}} {{nombre4}}</span>
+		<span style="font-family: PTF55F; color:#b2b2b2">{{nombres}} {{nombre1}} {{nombre2}} {{nombre3}} {{nombre4}}</span>
 	</div>
+</body>
+
 </html>

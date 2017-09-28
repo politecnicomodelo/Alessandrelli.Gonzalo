@@ -47,16 +47,11 @@ class Integrante (object):
     edad = None
     imagen = None
 
-
     def obtener_nombre(self, db, id):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select integrante.apellido from integrante join integrante_has_proyecto on integrante.dni = integrante_has_proyecto.integrante_dni where integrante_has_proyecto.proyecto_id_grupo = ("+str(id)+") order by integrante.apellido")
         self.nombre = cursor.fetchall()
-        if id == 6: return "Quinto Computacion", " ", " ", " ", " ", " ", " "
-        elif id == 2 or id == 4: return self.nombre[0]['apellido'], self.nombre[1]['apellido'], " ", " ", " ", " ", " "
-        elif id == 1 or id == 3 or id == 5 or id == 7: return self.nombre[0]['apellido'], self.nombre[1]['apellido'], self.nombre[2]['apellido'], " ", " ", " ", " "
-        elif id == 0: return self.nombre[0]['apellido'], self.nombre[1]['apellido'], self.nombre[2]['apellido'], self.nombre[3]['apellido'], self.nombre[4]['apellido'], " ", " "
-        elif id == 8: return self.nombre[0]['apellido'], self.nombre[1]['apellido'], self.nombre[2]['apellido'], self.nombre[3]['apellido'], self.nombre[4]['apellido'], self.nombre[5]['apellido'], self.nombre[6]['apellido']
+        return self.nombre
 
     def obtener_dni(self, db, id):
         cursor = db.cursor(pymysql.cursors.DictCursor)
@@ -99,13 +94,10 @@ class Integrante (object):
         self.imagen = cursor.fetchall()
 
 
-
 class Imagen (object):
     id_imagen = None
     imagen = None
     descripcion = None
-
-
 
     def obtener_imagenes (self , id , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)

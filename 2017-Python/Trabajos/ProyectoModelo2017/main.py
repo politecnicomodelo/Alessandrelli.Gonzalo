@@ -24,8 +24,13 @@ def ObtenerProyecto(id, db):
 
 def ObtenerNombres(id, db):
     proyecto = Proyecto()
-    nombres, nombre1, nombre2, nombre3, nombre4, nombre5, nombre6 = proyecto.obtener_integrantes(db, id)
-    listaNombre = nombres, nombre1, nombre2, nombre3, nombre4, nombre5, nombre6
+    nombre = proyecto.obtener_integrantes(db, id)
+    if id == 6: listaNombre = "Quinto Computacion", " ", " ", " ", " ", " ", " "
+    elif id == 2 or id == 4 : listaNombre =  nombre[0]['apellido'], nombre[1]['apellido'], " ", " ", " ", " ", " "
+    elif id == 1 or id == 3 or id == 5: listaNombre =  nombre[0]['apellido'], nombre[1]['apellido'], nombre[2]['apellido'], " ", " ", " ", " "
+    elif id == 7: listaNombre =  nombre[0]['apellido'], nombre[1]['apellido'], nombre[2]['apellido'], nombre[3]['apellido'], " ", " ", " "
+    elif id == 0 : listaNombre =  nombre[0]['apellido'], nombre[1]['apellido'], nombre[2]['apellido'], nombre[3]['apellido'], nombre[4]['apellido'], " ", " "
+    elif id == 8: listaNombre = nombre[0]['apellido'], nombre[1]['apellido'], nombre[2]['apellido'], nombre[3][ 'apellido'], nombre[4]['apellido'], nombre[5]['apellido'], nombre[6]['apellido']
     return listaNombre
 @app.route('/')
 def index():
@@ -33,9 +38,10 @@ def index():
 
 @app.route('/Proyecto')
 def proyecto ():
-    id = 8
-    titulo, descripcion, imagenes, descripcionImagen, curso  = ObtenerProyecto(id, db)
-    listaNombre = obtenerNombres(id, db)
+    id = 4
+    titulo, descripcion, imagenes, curso  = ObtenerProyecto(id, db)
+    listaNombre = ObtenerNombres(id, db)
+    print (imagenes)
     return render_template('Proyecto.html', static = HTTP_STATIC, curso = curso, titulo = titulo, descripcion = descripcion, imagenes = imagenes, listaNombre = listaNombre)
 
 if __name__ == '__main__':

@@ -23,7 +23,10 @@ def ObtenerProyecto(id, db):
     return titulo, descripcion, imagenes, curso
 
 def ObtenerNombres(id, db):
+    proyecto = Proyecto()
     nombres, nombre1, nombre2, nombre3, nombre4, nombre5, nombre6 = proyecto.obtener_integrantes(db, id)
+    listaNombre = nombres, nombre1, nombre2, nombre3, nombre4, nombre5, nombre6
+    return listaNombre
 @app.route('/')
 def index():
     return render_template('Index.html', static = HTTP_STATIC)

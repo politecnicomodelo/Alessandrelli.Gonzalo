@@ -32,6 +32,11 @@ def ObtenerNombres(id, db):
     elif id == 0 : listaNombre =  nombre[0]['apellido'], nombre[1]['apellido'], nombre[2]['apellido'], nombre[3]['apellido'], nombre[4]['apellido'], " ", " "
     elif id == 8: listaNombre = nombre[0]['apellido'], nombre[1]['apellido'], nombre[2]['apellido'], nombre[3][ 'apellido'], nombre[4]['apellido'], nombre[5]['apellido'], nombre[6]['apellido']
     return listaNombre
+
+def obtenerFlecha(id):
+    if id == 4: listaFlecha = "FlechaIzq.png", "100px;", "100px;"
+    return listaFlecha
+
 @app.route('/')
 def index():
     return render_template('Index.html', static = HTTP_STATIC)
@@ -41,8 +46,8 @@ def proyecto ():
     id = 4
     titulo, descripcion, imagenes, curso  = ObtenerProyecto(id, db)
     listaNombre = ObtenerNombres(id, db)
-    print (imagenes)
-    return render_template('Proyecto.html', static = HTTP_STATIC, curso = curso, titulo = titulo, descripcion = descripcion, imagenes = imagenes, listaNombre = listaNombre)
+    listaFlecha = obtenerFlecha(id)
+    return render_template('Proyecto.html', static = HTTP_STATIC, curso = curso, titulo = titulo, descripcion = descripcion, imagenes = imagenes, listaNombre = listaNombre, listaFlecha = listaFlecha)
 
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)

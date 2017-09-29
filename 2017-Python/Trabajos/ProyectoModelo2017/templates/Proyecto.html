@@ -100,6 +100,13 @@
 		left:800px;
 		top:250px;
 	}
+	#arrow{
+		width:900px;
+		height:900px;
+		position: relative;
+		left:1150px;
+		top:50px;
+	}
 
 </style>
 	<title>Proyectos</title>
@@ -115,9 +122,11 @@
 	</div>
 	</div>
 	<div class="avatar" style="background-image: url({{ static }}{{ imagenes}})"></div>
+	<div id = arrow>
+		<img src={{static}}{{listaFlecha[0]}} alt="flecha" height={{listaFlecha[1]}} width={{listaFlecha[2]}}>
+	</div>
 	<div id = Copy>
 		<span style="font-family: PTF55F; color:#b2b2b2">{{listaNombre[0]}} {{listaNombre[1]}} {{listaNombre[2]}} {{listaNombre[3]}} {{listaNombre[4]}} {{listaNombre[5]}} {{listaNombre[6]}} </span>
 	</div>
 </body>
-
 </html>

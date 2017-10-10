@@ -1,4 +1,5 @@
 import pymysql
+from .Amigo import Amigo
 import hashlib
 from datetime import date
 
@@ -66,5 +67,9 @@ class Usuario (object):
 
     def agregar_amigo (self , id_amigo , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("select idUsuario from Usuario where CorreoElectronico = (" + str(
-            correo) + ") and contrasena_hash = (" + str(contrasena_hash) + ")")
+        correo_amigo = cursor.execute("select CorreoElectronico from Usuario where idUsuario = ("+int(id_amigo)+")")
+        mi_correo = self.correo_electronico
+        amigo = Amigo()
+        amigo.agregar_amigo(mi_correo , correo_amigo)
+        return amigo
+

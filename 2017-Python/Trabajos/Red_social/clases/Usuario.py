@@ -2,7 +2,9 @@ import pymysql
 from .Amigo import Amigo
 from .Grupo import Grupo
 from .Pagina import Pagina
+from .Post import post
 from .Multimedia import Multimedia
+from .Chat import chat
 import hashlib
 from datetime import date
 
@@ -25,6 +27,9 @@ class Usuario (object):
     lista_amigos = []
     lista_grupos = []
     lista_paginas = []
+    lista_multimedia = []
+    lista_posts = []
+    lista_conversaciones = []
 
 
     def crear_usuario (self , id , formacion , residencias , informacion , acontecimientos , nomb , ap , correo , numero_tarjeta , fecha_tarjeta , codigo_tarjeta , nacimiento , genero , contra_hash , db):
@@ -59,8 +64,7 @@ class Usuario (object):
         return datos
 
     def loguear (self , correo , contrasena , db):
-        contrasena_hash = hashlib.md5()
-        contrasena_hash.update = (contrasena)
+        contrasena_hash = self.hashear_contrasena(contrasena)
 
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select idUsuario from Usuario where CorreoElectronico = ("+str(correo)+") and contrasena_hash "
@@ -74,27 +78,40 @@ class Usuario (object):
 
     def agregar_amigo(self , correo_amigo, db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        if (cursor.execute("select CorreoElectronico from Usuario where CorreoElectronico = (" + str(
-                correo_amigo) + ")") != correo_amigo):
+        cursor.execute("select CorreoElectronico from Usuario where CorreoElectronico = (" + str(
+            correo_amigo) + ")")
+        correo = cursor.fetchall()
+        correo = correo[0]["CorreoElectronico"]
+        if (correo != correo_amigo):
             return 0
-        elif (cursor.execute("select usuario_CorreoElectronico from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
-                self.correo_electronico) + ") and usuario_CorreoElectronico1 = (" + str(correo_amigo) + ")") == self.correo_electronico):
+        cursor.execute("select usuario_CorreoElectronico from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
+                self.correo_electronico) + ") and usuario_CorreoElectronico1 = (" + str(correo_amigo) + ")")
+        correo = cursor.fetchall()
+        correo = correo[0]["usuario_CorreoElectronico"]
+        if (correo == self.correo_electronico):
             return 0
         else:
             cursor.execute("insert into usuario_has_usuario values (NULL , (" + str(self.correo_electronico) + ") , (" + str(
                 correo_amigo) + "))")
-            id = cursor.execute("select idAmigo from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
+            cursor.execute("select idAmigo from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
                 self.correo_electronico) + ") and usuario_CorreoElectronico1 = (" + str(correo_amigo) + ")")
+            id = cursor.fetchall()
+            id = id[0]["idAmigo"]
             mi_amigo = Amigo()
             mi_amigo.id_amigo = id
             mi_amigo.mi_correo = self.correo_electronico
             self.lista_amigos.append(mi_amigo)
+            return 1
 
     def eliminar_amigo(self , correo_amigo, db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        if (cursor.execute("select usuario_CorreoElectronico from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
+        cursor.execute(
+            "select usuario_CorreoElectronico from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
                 self.correo_electronico) + ") and usuario_CorreoElectronico1 = (" + str(
-                correo_amigo) + ")") != self.correo_electronico):
+                correo_amigo) + ")")
+        correo = cursor.fetchall()
+        correo = [0]["usuario_CorreoElectronico"]
+        if (correo != self.correo_electronico):
             return 0
         else:
             for item in self.lista_amigos:
@@ -102,24 +119,85 @@ class Usuario (object):
                     id = item.id_amigo
                     self.lista_amigos.remove(item)
             cursor.execute("delete from usuario_has_usuario where IdAmigo = (" + int(id) + ")")
+            return 1
 
     def crear_grupo (self , nomb , priv , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        if (cursor.execute("select Nombre from Grupo where Nombre = (" + int(nomb) + ")") != nomb):
+        cursor.execute("select Nombre from Grupo where Nombre = (" + str(nomb) + ")")
+        mi_nombre = cursor.fetchall()
+        mi_nombre = mi_nombre[0]["Nombre"]
+        if (mi_nombre == nomb):
             return 0
         else:
             mi_grupo = Grupo()
             cursor.execute("insert into grupo values (NULL , (" + bool(priv) + ") , (" + str(nomb) + ") , (" + str(self.correo_electronico) + "))")
-            mi_grupo.
+            cursor.exeute("select IdGrupo from grupo where Nombre = (" + str(nomb) + ")")
+            id = cursor.fetchall()
+            id = id[0]["IdGrupo"]
+            mi_grupo.id_grupo = id
+            mi_grupo.privado = priv
+            mi_grupo.nombre = nomb
+            mi_grupo.correo_admin = self.correo_electronico
+            self.lista_grupos.append(mi_grupo)
+            return 1
 
     def crear_pagina (self , nomb , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         mi_pagina = Pagina()
-        mi_pagina.crear_pagina(nomb, self.correo_electronico)
-        return mi_pagina
+        cursor.execute("insert into Pagina values (NULL , (" + str(nomb) + ") , (" + str(self.correo_electronico) + "))")
+        cursor.execute("select IdPagina from Pagina where usuario_CorreoElectronico = "
+                       "(" + str(self.correo_electronico) + ") order by DESC")
+        id = cursor.fetchall()
+        id = id[0]["IdPagina"]
+        mi_pagina.id_pagina = id
+        mi_pagina.nombre = nomb
+        mi_pagina.correo_admin = self.correo_electronico
+        self.lista_multimedia.append(mi_pagina)
+        return 1
 
     def subir_multimedia (self , archivo , creacion , album , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         mi_multimedia = Multimedia()
-        mi_multimedia.subir_multimedia(archivo , creacion , album , self.correo_electronico)
-        return mi_multimedia
+        #terminar
+        cursor.execute("insert into Multimedia values (NULL , )")
+        return 1
+
+    def crear_post (self , fecha  , descripcion , id_pagina , id_grupo , id_archivos , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+        mi_post = post()
+        cursor.execute("insert into Post values (NULL , (" + date(fecha) + ") , (" + str(descripcion) + ") ,"
+                       " (" + int(id_pagina) + ") , (" + str(self.correo_electronico) + ") , (" + str(id_grupo) + "))")
+        cursor.execute("select idPost from post where usuario_CorreoElectronico = (" + str(self.correo_electronico) + ")"
+                       "order by DESC")
+        id = cursor.fetchall()
+        id = id[0]["idPost"]
+
+        for item in id_archivos:
+            cursor.execute("insert into post_has_multimedia values ((" + int(id) + ") , (" + int(item) + "))")
+
+        mi_post.id_post = id
+        mi_post.fecha = fecha
+        mi_post.descripcion = descripcion
+        mi_post.id_pagina = id_pagina
+        mi_post.id_grupo = id_grupo
+        mi_post.archivos_multimedia = id_archivos
+        return 1
+
+    def mandar_mensaje (self , id_amigo , mensaje , fecha , emisor , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+        mi_chat = chat()
+        cursor.execute("insert into Chat values(NULL , (" + str(mensaje) + ") , (" + str(id_amigo) + ") , "
+                       "(" + date(fecha) + ") , (" + bool(emisor) + "))")
+        cursor.execute("select idChat from Chat where usuario_has_usuario_IdAmigo = (" + int(id_amigo) + ")")
+        id = cursor.fetchall()
+        id = id[0]["idChat"]
+
+        mi_chat.id_chat = id
+        mi_chat.mensaje = mensaje
+        mi_chat.id_amigo = id_amigo
+        mi_chat.fecha = fecha
+        mi_chat.emisor = emisor
+        return 1
+
+
+

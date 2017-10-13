@@ -1,7 +1,8 @@
 import pymysql
 from datetime import date
 
-class Amigo (object):
+class Grupo (object):
     id_grupo = None
-    mi_correo = None
-    correo_amigo = None
+    privado = None
+    nombre = None
+    correo_admin = None

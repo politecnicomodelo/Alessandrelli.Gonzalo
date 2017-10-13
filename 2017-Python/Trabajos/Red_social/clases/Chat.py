@@ -1,7 +1,7 @@
 import pymysql
 from datetime import date
 
-class chat (object):
+class Chat (object):
     id_chat = None
     mensaje = None
     id_amigo = None

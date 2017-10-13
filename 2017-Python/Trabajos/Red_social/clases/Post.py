@@ -1,7 +1,7 @@
 import pymysql
 from datetime import date
 
-class post (object):
+class Post (object):
     id_post = None
     fecha = None
     descripcion = None

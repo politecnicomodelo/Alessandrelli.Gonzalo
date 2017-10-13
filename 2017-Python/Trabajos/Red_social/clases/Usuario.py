@@ -2,9 +2,11 @@ import pymysql
 from .Amigo import Amigo
 from .Grupo import Grupo
 from .Pagina import Pagina
-from .Post import post
+from .Post import Post
 from .Multimedia import Multimedia
-from .Chat import chat
+from .Pagina_participa import Pagina_participa
+from .Grupo_participa import Grupo_participa
+from .Chat import Chat
 import hashlib
 from datetime import date
 
@@ -152,7 +154,7 @@ class Usuario (object):
         mi_pagina.id_pagina = id
         mi_pagina.nombre = nomb
         mi_pagina.correo_admin = self.correo_electronico
-        self.lista_multimedia.append(mi_pagina)
+        self.lista_paginas.append(mi_pagina)
         return 1
 
     def subir_multimedia (self , archivo , creacion , album , db):
@@ -164,7 +166,7 @@ class Usuario (object):
 
     def crear_post (self , fecha  , descripcion , id_pagina , id_grupo , id_archivos , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        mi_post = post()
+        mi_post = Post()
         cursor.execute("insert into Post values (NULL , (" + date(fecha) + ") , (" + str(descripcion) + ") ,"
                        " (" + int(id_pagina) + ") , (" + str(self.correo_electronico) + ") , (" + str(id_grupo) + "))")
         cursor.execute("select idPost from post where usuario_CorreoElectronico = (" + str(self.correo_electronico) + ")"
@@ -181,11 +183,12 @@ class Usuario (object):
         mi_post.id_pagina = id_pagina
         mi_post.id_grupo = id_grupo
         mi_post.archivos_multimedia = id_archivos
+        self.lista_posts.append(mi_post)
         return 1
 
     def mandar_mensaje (self , id_amigo , mensaje , fecha , emisor , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        mi_chat = chat()
+        mi_chat = Chat()
         cursor.execute("insert into Chat values(NULL , (" + str(mensaje) + ") , (" + str(id_amigo) + ") , "
                        "(" + date(fecha) + ") , (" + bool(emisor) + "))")
         cursor.execute("select idChat from Chat where usuario_has_usuario_IdAmigo = (" + int(id_amigo) + ")")
@@ -197,7 +200,39 @@ class Usuario (object):
         mi_chat.id_amigo = id_amigo
         mi_chat.fecha = fecha
         mi_chat.emisor = emisor
+        for item in self.lista_paginas:
+            if (item.id_amigo == id_amigo):
+                item.append(mi_chat)
         return 1
 
+    def suscribir_pagina (self , id_pagina , admin , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+        mi_pagina = Pagina_participa()
+        cursor.execute("insert into paginaparticipa values (NULL , (" + int(id_pagina) + ") , (" + bool(admin) + ")"
+                       " , (" + str(self.correo_electronico) + "))")
+        cursor.execute("select idPaginasParticipa from paginaparticipa where usuario_CorreoElectronico = "
+                       "(" + str(self.correo_electronico) + ") order by desc")
+        id = cursor.fetchall()
+        id = id[0]["idPaginasParticipa"]
+        mi_pagina.id_pagina_participa = id
+        mi_pagina.id_pagina = id_pagina
+        mi_pagina.administrador = admin
+        mi_pagina.correo_electronico = self.correo_electronico
+        self.lista_paginas.append(mi_pagina)
+
+    def suscribir_grupo (self , admin , nombre , db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+        mi_grupo = Grupo_participa()
+        cursor.execute("insert into grupoparticipa values (NULL , (" + bool(admin) + ") , "
+                       "(" + str(self.correo_electronico) + ") , (" + str(nombre) + "))")
+        cursor.execute("select idGruposParticipa from grupoparticipa where usuario_CorreoElectronico = "
+                       "(" + str(self.correo_electronico) + ") order by desc")
+        id = cursor.fetchall()
+        id = id[0]["idGruposParticipa"]
+        mi_grupo.id_grupo_participa = id
+        mi_grupo.administrador = admin
+        mi_grupo.nombre_grupo = nombre
+        mi_grupo.correo_electronico = self.correo_electronico
+        self.lista_grupos.append(mi_grupo)
 
 

@@ -18,16 +18,37 @@ db = pymysql.connect (host = '127.0.0.1' , user = "root" , password = "" ,
 
 cursor = db.cursor()
 app = Flask(__name__)
+cursor.execute("select * from Usuario")
 
+datos = cursor.fetchall()
+lista_usuarios = []
+
+for item in datos:
+    mi_usuario = Usuario()
+    mi_usuario.id_usuario = item[0]
+    mi_usuario.formacion_empleo = item[1]
+    mi_usuario.lugares_vividos = item[2]
+    mi_usuario.informacion_basica = item[3]
+    mi_usuario.acontecimientos_importantes = item[4]
+    mi_usuario.nombre = item[5]
+    mi_usuario.apellido = item[6]
+    mi_usuario.correo_electronico = item[7]
+    mi_usuario.numero_tarjeta_credito = item[8]
+    mi_usuario.fecha_vencimiento_tarjeta = item[9]
+    mi_usuario.codigo_seguridad_tarjeta = item[10]
+    mi_usuario.fecha_nacimiento = item[11]
+    mi_usuario.genero_sexual = item[12]
+    mi_usuario.contrasena_hash = item[13]
+    lista_usuarios.append(mi_usuario)
+
+print(str(lista_usuarios[0].id_usuario))
+
+mi_usuario = Usuario()
+mi_usuario.crear_usuario("1","1","1","1","1","1","1","1",'05-05-05',"1",'05-05-05',"1","hola" , db)
+print(str(lista_usuarios[1].id_usuario))
 
 app = Flask(__name__, static_url_path='')
 
-cursor.execute("select idUsuario , FormacionEmpleo , LugaresVividos , InformacionBasica , AcontecimientosImportantes ,"
-               " Nombre , Apellido , CorreoElectronico , NumeroTargetaCredito , FechaVencimientoTargeta"
-               "CodigoSeguridadTargeta , FechaNacimiento , GeneroSexual , contrasena_hash from Usuario")
-
-mi_usuario = Usuario()
-mi_usuario.
 
 
 @app.route('/')

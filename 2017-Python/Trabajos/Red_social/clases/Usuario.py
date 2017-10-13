@@ -9,7 +9,7 @@ from .Grupo_participa import Grupo_participa
 from .Chat import Chat
 import hashlib
 from datetime import date
-
+                                                    #ARREGLAR HASHEAR CONTRASEÑA
 
 class Usuario (object):
     id_usuario = None
@@ -34,11 +34,11 @@ class Usuario (object):
     lista_conversaciones = []
 
 
-    def crear_usuario (self , id , formacion , residencias , informacion , acontecimientos , nomb , ap , correo , numero_tarjeta , fecha_tarjeta , codigo_tarjeta , nacimiento , genero , contra_hash , db):
-        contra_hash = self.hashear_contrasena(contra_hash)
+    def crear_usuario (self , formacion , residencias , informacion , acontecimientos , nomb , ap , correo ,
+                       numero_tarjeta , fecha_tarjeta , codigo_tarjeta , nacimiento , genero , contra_hash , db):
+        #contra_hash = self.hashear_contrasena(contra_hash)
 
-        cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("insert into Usuario values (("+int(id)+") , ("+str(formacion)+") , ("+str(residencias)+") , ("+str(informacion)+") , ("+str(acontecimientos)+") , ("+str(nomb)+") , ("+str(ap)+") , ("+str(correo)+") , ("+str(numero_tarjeta)+") , ("+date(fecha_tarjeta)+") , ("+str(codigo_tarjeta)+") , ("+date(nacimiento)+") , ("+str(genero)+") , ("+str(contra_hash)+"))")
+
 
         self.id_usuario = id
         self.formacion_empleo = self.crear_lista(formacion)
@@ -55,10 +55,9 @@ class Usuario (object):
         self.genero_sexual = genero
         self.contrasena_hash = contra_hash
 
-    def hashear_contrasena (contrasena):
-        contra = hashlib.md5()
-        contra.update(contrasena)
-        return contra
+    def hashear_contrasena (self , contrasena):
+        #contra = hashlib.sha256(contrasena).hexdigest() #arreglar
+        return contrasena
 
     def crear_lista (self , dato):
         datos = []

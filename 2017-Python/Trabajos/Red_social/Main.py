@@ -1,5 +1,5 @@
 import pymysql
-from flask import Flask, render_template
+from flask import Flask, render_template , request
 from clases.Usuario import Usuario
 from clases.Amigo import Amigo
 from clases.Grupo import Grupo
@@ -12,9 +12,9 @@ from clases.Chat import Chat
 import hashlib
 from datetime import date
 
-HTTP_STATIC="http://172.16.2.250/"
-db = pymysql.connect (host = '172.16.2.250' , user = "root" , password = "alumno" ,
-                      db = "expo_modelo_2017_computacion" , autocommit = True)
+HTTP_STATIC="http://127.0.0.1/"
+db = pymysql.connect (host = '127.0.0.1' , user = "root" , password = "" ,
+                      db = "red_social" , autocommit = True)
 
 cursor = db.cursor()
 app = Flask(__name__)
@@ -22,6 +22,12 @@ app = Flask(__name__)
 
 app = Flask(__name__, static_url_path='')
 
+cursor.execute("select idUsuario , FormacionEmpleo , LugaresVividos , InformacionBasica , AcontecimientosImportantes ,"
+               " Nombre , Apellido , CorreoElectronico , NumeroTargetaCredito , FechaVencimientoTargeta"
+               "CodigoSeguridadTargeta , FechaNacimiento , GeneroSexual , contrasena_hash from Usuario")
+
+mi_usuario = Usuario()
+mi_usuario.
 
 
 @app.route('/')

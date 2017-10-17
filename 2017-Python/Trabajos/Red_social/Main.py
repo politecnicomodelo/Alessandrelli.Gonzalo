@@ -43,10 +43,14 @@ for item in datos:
     lista_usuarios.append(mi_usuario)
 
 mi_usuario = Usuario()
+lista_amigos = Amigo()
+lista_amigos.id_amigo = 1
+lista_amigos.mi_correo = 1
+lista_amigos.correo_amigo = 2
 mi_usuario.correo_electronico = "1"
 #mi_usuario.crear_usuario("1","1","1","1","1","1","11","1",'05-05-05',"1","1","1","1" , db)
 #print(str(lista_usuarios[1].id_usuario))
-print (mi_usuario.agregar_amigo("4" , db) , "holaaa")
+print (mi_usuario.eliminar_amigo("2" , lista_amigos , db) , "holaaa")
 #print (mi_usuario.agregar_amigo("2" , db))
 
 

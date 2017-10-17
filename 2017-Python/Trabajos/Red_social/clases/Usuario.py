@@ -120,11 +120,15 @@ class Usuario (object):
         cursor.execute("select * from usuario_has_usuario")
         datos = cursor.fetchall()
         for item in datos:
-            if item["usuario_CorreoElectronico"] == self.correo_electronico:
-                if item["usuario_CorreoElectronico1"] == correo_amigo:
+            if item["usuario_CorreoElectronico"] == self.correo_electronico or item["usuario_CorreoElectronico"] == correo_amigo:
+                if item["usuario_CorreoElectronico1"] == correo_amigo or item["usuario_CorreoElectronico1"] == self.correo_electronico:
+                    id = item["IdAmigo"]
+                    cursor.execute("delete from usuario_has_usuario where IdAmigo = (" + str(id) + ")")
                     for item in lista_amigos:
-                        if ((item.mi_correo == self.correo_electronico) and (item.correo_amigo == correo_amigo)) or ((item.mi_correo == correo_amigo) and (item.correo_amigo == self.correo_electronico)):
-                            cursor.execute("delete from usuario_has_usuario where ")
+                        if (item.id_amigo == id):
+                            lista_amigos.remove(item)
+                            return lista_amigos
+        return 0
 
     def crear_grupo (self , nomb , priv , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)

@@ -34,29 +34,39 @@ class Usuario (object):
     lista_conversaciones = []
 
 
-    def crear_usuario (self , formacion , residencias , informacion , acontecimientos , nomb , ap , correo ,
-                       numero_tarjeta , fecha_tarjeta , codigo_tarjeta , nacimiento , genero , contra_hash , db):
-        #contra_hash = self.hashear_contrasena(contra_hash)
+    def crear_usuario (self , formacion_empleo , lugares_vividos , informacion_basica
+                       , acontecimientos_importantes , nombre , apellido , correo_electronico , numero_tarjeta_credito
+                       , fecha_vencimiento_tarjeta , codigo_seguridad_tarjeta , fecha_nacimiento , genero_sexual
+                       , contrasena_hash , db):
+
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+        contrasena_hash = self.hashear_contrasena(contrasena_hash)
+        cursor.execute("insert into Usuario values (NULL , ("+str(formacion_empleo)+") , ("+str(lugares_vividos)+") "
+                       ", ("+str(informacion_basica)+") , ("+str(acontecimientos_importantes)+") , ("+str(nombre)+") "
+                       ", ("+str(apellido)+") , ("+str(correo_electronico)+") , ("+str(numero_tarjeta_credito)+")"
+                       ", ("+str(fecha_vencimiento_tarjeta)+") , ("+str(codigo_seguridad_tarjeta)+") , ("+str(fecha_nacimiento)+")"
+                       " , ("+str(genero_sexual)+") , ("+str(contrasena_hash)+"))")
 
 
-
-        self.id_usuario = id
-        self.formacion_empleo = self.crear_lista(formacion)
-        self.lugares_vividos = self.crear_lista(residencias)
-        self.informacion_basica = informacion
-        self.acontecimientos_importantes = self.crear_lista(acontecimientos)
-        self.nombre = nomb
-        self.apellido = ap
-        self.correo_electronico = correo
-        self.numero_tarjeta_credito = numero_tarjeta
-        self.fecha_vencimiento_tarjeta = fecha_tarjeta
-        self.codigo_seguridad_tarjeta = codigo_tarjeta
-        self.fecha_nacimiento = nacimiento
-        self.genero_sexual = genero
-        self.contrasena_hash = contra_hash
+        self.formacion_empleo = self.crear_lista(formacion_empleo)
+        self.lugares_vividos = self.crear_lista(lugares_vividos)
+        self.informacion_basica = informacion_basica
+        self.acontecimientos_importantes = self.crear_lista(acontecimientos_importantes)
+        self.nombre = nombre
+        self.apellido = apellido
+        self.correo_electronico = correo_electronico
+        self.numero_tarjeta_credito = numero_tarjeta_credito
+        self.fecha_vencimiento_tarjeta = fecha_vencimiento_tarjeta
+        self.codigo_seguridad_tarjeta = codigo_seguridad_tarjeta
+        self.fecha_nacimiento = fecha_nacimiento
+        self.genero_sexual = genero_sexual
+        self.contrasena_hash = contrasena_hash
 
     def hashear_contrasena (self , contrasena):
-        #contra = hashlib.sha256(contrasena).hexdigest() #arreglar
+        #contra = hashlib.sha256()
+        #contra.update(contrasena)
+        #contra.digest()
+        #return contra
         return contrasena
 
     def crear_lista (self , dato):
@@ -68,59 +78,53 @@ class Usuario (object):
         contrasena_hash = self.hashear_contrasena(contrasena)
 
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("select idUsuario from Usuario where CorreoElectronico = ("+str(correo)+") and contrasena_hash "
-                                                                                               "= ("+str(contrasena_hash)+")")
-
+        cursor.execute("select CorreoElectronico from Usuario")
         datos = cursor.fetchall()
-        if (str(datos [0]['idUsuario']) == "NULL"):
-            return 0
-        else:
-            return 1
+
+        for item in datos:
+            if item["CorreoElectronico"] == correo:
+                cursor.execute("select contrasena_hash from Usuario where CorreoElectronico = ("+str(correo)+")")
+                datos = cursor.fetchall()
+                if datos[0]["contrasena_hash"] == self.hashear_contrasena(contrasena):
+                    return 1
+                else:
+                    return 0
 
     def agregar_amigo(self , correo_amigo, db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("select CorreoElectronico from Usuario where CorreoElectronico = (" + str(
-            correo_amigo) + ")")
+        cursor.execute("select CorreoElectronico from Usuario")
         correo = cursor.fetchall()
-        correo = correo[0]["CorreoElectronico"]
-        if (correo != correo_amigo):
-            return 0
-        cursor.execute("select usuario_CorreoElectronico from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
-                self.correo_electronico) + ") and usuario_CorreoElectronico1 = (" + str(correo_amigo) + ")")
-        correo = cursor.fetchall()
-        correo = correo[0]["usuario_CorreoElectronico"]
-        if (correo == self.correo_electronico):
-            return 0
-        else:
-            cursor.execute("insert into usuario_has_usuario values (NULL , (" + str(self.correo_electronico) + ") , (" + str(
-                correo_amigo) + "))")
-            cursor.execute("select idAmigo from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
-                self.correo_electronico) + ") and usuario_CorreoElectronico1 = (" + str(correo_amigo) + ")")
-            id = cursor.fetchall()
-            id = id[0]["idAmigo"]
-            mi_amigo = Amigo()
-            mi_amigo.id_amigo = id
-            mi_amigo.mi_correo = self.correo_electronico
-            self.lista_amigos.append(mi_amigo)
-            return 1
+        for item in correo:
+            if item["CorreoElectronico"] == correo_amigo:
+                cursor.execute("select * from usuario_has_usuario")
+                datos = cursor.fetchall()
+                for item in datos:
+                    if ((item["usuario_CorreoElectronico"] == self.correo_electronico) and (item["usuario_CorreoElectronico1"] == correo_amigo)) or ((item["usuario_CorreoElectronico"] == correo_amigo) and (item["usuario_CorreoElectronico1"] == self.correo_electronico)):
+                            return 0
+                cursor.execute("insert into usuario_has_usuario values (NULL , (" + str(self.correo_electronico) + ") , (" + str(
+                    correo_amigo) + "))")
+                cursor.execute("select idAmigo from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
+                    self.correo_electronico) + ") and usuario_CorreoElectronico1 = (" + str(correo_amigo) + ")")
+                id = cursor.fetchall()
+                id = id[0]["idAmigo"]
+                mi_amigo = Amigo()
+                mi_amigo.id_amigo = id
+                mi_amigo.mi_correo = self.correo_electronico
+                mi_amigo.correo_amigo = correo_amigo
+                self.lista_amigos.append(mi_amigo)
+                return 1
+        return 0
 
-    def eliminar_amigo(self , correo_amigo, db):
+    def eliminar_amigo(self , correo_amigo , lista_amigos , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute(
-            "select usuario_CorreoElectronico from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
-                self.correo_electronico) + ") and usuario_CorreoElectronico1 = (" + str(
-                correo_amigo) + ")")
-        correo = cursor.fetchall()
-        correo = [0]["usuario_CorreoElectronico"]
-        if (correo != self.correo_electronico):
-            return 0
-        else:
-            for item in self.lista_amigos:
-                if (item.correo_amigo == correo_amigo):
-                    id = item.id_amigo
-                    self.lista_amigos.remove(item)
-            cursor.execute("delete from usuario_has_usuario where IdAmigo = (" + int(id) + ")")
-            return 1
+        cursor.execute("select * from usuario_has_usuario")
+        datos = cursor.fetchall()
+        for item in datos:
+            if item["usuario_CorreoElectronico"] == self.correo_electronico:
+                if item["usuario_CorreoElectronico1"] == correo_amigo:
+                    for item in lista_amigos:
+                        if ((item.mi_correo == self.correo_electronico) and (item.correo_amigo == correo_amigo)) or ((item.mi_correo == correo_amigo) and (item.correo_amigo == self.correo_electronico)):
+                            cursor.execute("delete from usuario_has_usuario where ")
 
     def crear_grupo (self , nomb , priv , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)

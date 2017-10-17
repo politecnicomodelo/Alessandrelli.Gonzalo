@@ -18,6 +18,7 @@ db = pymysql.connect (host = '127.0.0.1' , user = "root" , password = "" ,
 
 cursor = db.cursor()
 app = Flask(__name__)
+
 cursor.execute("select * from Usuario")
 
 datos = cursor.fetchall()
@@ -41,14 +42,12 @@ for item in datos:
     mi_usuario.contrasena_hash = item[13]
     lista_usuarios.append(mi_usuario)
 
-print(str(lista_usuarios[0].id_usuario))
-
 mi_usuario = Usuario()
-mi_usuario.crear_usuario("1","1","1","1","1","1","1","1",'05-05-05',"1",'05-05-05',"1","hola" , db)
-print(str(lista_usuarios[1].id_usuario))
-
-app = Flask(__name__, static_url_path='')
-
+mi_usuario.correo_electronico = "1"
+#mi_usuario.crear_usuario("1","1","1","1","1","1","11","1",'05-05-05',"1","1","1","1" , db)
+#print(str(lista_usuarios[1].id_usuario))
+print (mi_usuario.agregar_amigo("4" , db) , "holaaa")
+#print (mi_usuario.agregar_amigo("2" , db))
 
 
 @app.route('/')

@@ -132,23 +132,23 @@ class Usuario (object):
 
     def crear_grupo (self , nomb , priv , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("select Nombre from Grupo where Nombre = (" + str(nomb) + ")")
+        cursor.execute("select Nombre from grupo")
         mi_nombre = cursor.fetchall()
-        mi_nombre = mi_nombre[0]["Nombre"]
-        if (mi_nombre == nomb):
-            return 0
-        else:
-            mi_grupo = Grupo()
-            cursor.execute("insert into grupo values (NULL , (" + bool(priv) + ") , (" + str(nomb) + ") , (" + str(self.correo_electronico) + "))")
-            cursor.exeute("select IdGrupo from grupo where Nombre = (" + str(nomb) + ")")
-            id = cursor.fetchall()
-            id = id[0]["IdGrupo"]
-            mi_grupo.id_grupo = id
-            mi_grupo.privado = priv
-            mi_grupo.nombre = nomb
-            mi_grupo.correo_admin = self.correo_electronico
-            self.lista_grupos.append(mi_grupo)
-            return 1
+        for item in mi_nombre:
+            if item["Nombre"] == str(nomb):
+                return 0
+
+        mi_grupo = Grupo()
+        cursor.execute("insert into grupo values (NULL , (" + str(priv) + ") , (" + str(nomb) + ") , (" + str(self.correo_electronico) + "))")
+        cursor.exeute("select IdGrupo from grupo where Nombre = (" + str(nomb) + ")")
+        id = cursor.fetchall()
+        id = id[0]["IdGrupo"]
+        mi_grupo.id_grupo = id
+        mi_grupo.privado = priv
+        mi_grupo.nombre = nomb
+        mi_grupo.correo_admin = self.correo_electronico
+        self.lista_grupos.append(mi_grupo)
+        return 1
 
     def crear_pagina (self , nomb , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)

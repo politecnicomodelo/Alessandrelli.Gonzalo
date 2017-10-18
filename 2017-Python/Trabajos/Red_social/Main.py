@@ -52,13 +52,10 @@ lista_amigos.append(mi_amigo)
 mi_usuario.correo_electronico = "1"
 #mi_usuario.crear_usuario("1","1","1","1","1","1","11","1",'05-05-05',"1","1","1","1" , db)
 #print(str(lista_usuarios[1].id_usuario))
-
-print (mi_usuario.eliminar_amigo(2 , lista_amigos , db))
-
 #mi_lista = mi_usuario.eliminar_amigo(2 , lista_amigos , db)
 #print (str(mi_lista[0]) , "hola")
-
 #print (mi_usuario.agregar_amigo("2" , db))
+print(mi_usuario.crear_grupo("grupo gay v2" , "0" , db))
 
 
 @app.route('/')

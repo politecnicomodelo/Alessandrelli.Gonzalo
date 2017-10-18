@@ -55,7 +55,7 @@ mi_usuario.correo_electronico = "1"
 #mi_lista = mi_usuario.eliminar_amigo(2 , lista_amigos , db)
 #print (str(mi_lista[0]) , "hola")
 #print (mi_usuario.agregar_amigo("2" , db))
-print(mi_usuario.crear_grupo("grupo gay v2" , "0" , db))
+print(mi_usuario.crear_pagina("pagina gay v2" , db))
 
 
 @app.route('/')

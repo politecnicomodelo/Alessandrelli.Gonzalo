@@ -1,4 +1,5 @@
 import pymysql
+from boolean import *
 from .Amigo import Amigo
 from .Grupo import Grupo
 from .Pagina import Pagina
@@ -137,7 +138,7 @@ class Usuario (object):
         for item in mi_nombre:
             if item["Nombre"] == str(nomb):
                 return 0
-
+                                                                        #ARREGLAR PRIV. PASAR A BOOL y terminar de teatear
         mi_grupo = Grupo()
         cursor.execute("insert into grupo values (NULL , (" + str(priv) + ") , (" + str(nomb) + ") , (" + str(self.correo_electronico) + "))")
         cursor.exeute("select IdGrupo from grupo where Nombre = (" + str(nomb) + ")")
@@ -154,10 +155,11 @@ class Usuario (object):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         mi_pagina = Pagina()
         cursor.execute("insert into Pagina values (NULL , (" + str(nomb) + ") , (" + str(self.correo_electronico) + "))")
-        cursor.execute("select IdPagina from Pagina where usuario_CorreoElectronico = "
+        cursor.execute("select IdPagina from pagina where usuario_CorreoElectronico = "
                        "(" + str(self.correo_electronico) + ") order by DESC")
         id = cursor.fetchall()
         id = id[0]["IdPagina"]
+        print (id)
         mi_pagina.id_pagina = id
         mi_pagina.nombre = nomb
         mi_pagina.correo_admin = self.correo_electronico

@@ -121,11 +121,11 @@ class Usuario (object):
         datos = cursor.fetchall()
         for item in datos:
             if item["usuario_CorreoElectronico"] == self.correo_electronico or item["usuario_CorreoElectronico"] == correo_amigo:
-                if item["usuario_CorreoElectronico1"] == correo_amigo or item["usuario_CorreoElectronico1"] == self.correo_electronico:
+                if str(item["usuario_CorreoElectronico1"]) == str(correo_amigo) or item["usuario_CorreoElectronico1"] == self.correo_electronico:
                     id = item["IdAmigo"]
                     cursor.execute("delete from usuario_has_usuario where IdAmigo = (" + str(id) + ")")
                     for item in lista_amigos:
-                        if (item.id_amigo == id):
+                        if (str(item.id_amigo) == str(id)):
                             lista_amigos.remove(item)
                             return lista_amigos
         return 0

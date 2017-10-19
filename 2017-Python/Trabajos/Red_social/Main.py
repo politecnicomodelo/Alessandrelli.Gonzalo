@@ -49,13 +49,16 @@ mi_amigo.id_amigo = 12
 mi_amigo.mi_correo = 1
 mi_amigo.correo_amigo = 2
 lista_amigos.append(mi_amigo)
-mi_usuario.correo_electronico = "1"
+mi_usuario.correo_electronico = "mail"
 #mi_usuario.crear_usuario("1","1","1","1","1","1","11","1",'05-05-05',"1","1","1","1" , db)
 #print(str(lista_usuarios[1].id_usuario))
 #mi_lista = mi_usuario.eliminar_amigo(2 , lista_amigos , db)
 #print (str(mi_lista[0]) , "hola")
 #print (mi_usuario.agregar_amigo("2" , db))
-print(mi_usuario.crear_pagina("pagina gay v2" , db))
+#print(mi_usuario.crear_post("pagina gay v3" , db))
+#print(mi_usuario.crear_post("pagina gay v3" , db))
+#print(mi_usuario.crear_post("1" , "1" , 0 , 0 , 1 , db))
+print(mi_usuario.mandar_mensaje("2" , "gay" , "1" , "1" , db))
 
 
 @app.route('/')

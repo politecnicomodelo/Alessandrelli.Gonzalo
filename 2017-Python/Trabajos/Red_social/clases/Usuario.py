@@ -1,5 +1,4 @@
 import pymysql
-from boolean import *
 from .Amigo import Amigo
 from .Grupo import Grupo
 from .Pagina import Pagina
@@ -42,11 +41,11 @@ class Usuario (object):
 
         cursor = db.cursor(pymysql.cursors.DictCursor)
         contrasena_hash = self.hashear_contrasena(contrasena_hash)
-        cursor.execute("insert into Usuario values (NULL , ("+str(formacion_empleo)+") , ("+str(lugares_vividos)+") "
-                       ", ("+str(informacion_basica)+") , ("+str(acontecimientos_importantes)+") , ("+str(nombre)+") "
-                       ", ("+str(apellido)+") , ("+str(correo_electronico)+") , ("+str(numero_tarjeta_credito)+")"
-                       ", ("+str(fecha_vencimiento_tarjeta)+") , ("+str(codigo_seguridad_tarjeta)+") , ("+str(fecha_nacimiento)+")"
-                       " , ("+str(genero_sexual)+") , ("+str(contrasena_hash)+"))")
+        cursor.execute("insert into Usuario values (NULL , '"+str(formacion_empleo)+"' , '"+str(lugares_vividos)+"' "
+                       ", '"+str(informacion_basica)+"' , '"+str(acontecimientos_importantes)+"' , '"+str(nombre)+"' "
+                       ", '"+str(apellido)+"' , '"+str(correo_electronico)+"' , '"+str(numero_tarjeta_credito)+"'"
+                       ", '"+str(fecha_vencimiento_tarjeta)+"' , '"+str(codigo_seguridad_tarjeta)+"' , '"+str(fecha_nacimiento)+"'"
+                       " , '"+str(genero_sexual)+"' , '"+str(contrasena_hash)+"')")
 
 
         self.formacion_empleo = self.crear_lista(formacion_empleo)
@@ -102,10 +101,10 @@ class Usuario (object):
                 for item in datos:
                     if ((item["usuario_CorreoElectronico"] == self.correo_electronico) and (item["usuario_CorreoElectronico1"] == correo_amigo)) or ((item["usuario_CorreoElectronico"] == correo_amigo) and (item["usuario_CorreoElectronico1"] == self.correo_electronico)):
                             return 0
-                cursor.execute("insert into usuario_has_usuario values (NULL , (" + str(self.correo_electronico) + ") , (" + str(
-                    correo_amigo) + "))")
-                cursor.execute("select idAmigo from usuario_has_usuario where usuario_CorreoElectronico = (" + str(
-                    self.correo_electronico) + ") and usuario_CorreoElectronico1 = (" + str(correo_amigo) + ")")
+                cursor.execute("insert into usuario_has_usuario values (NULL , '" + str(self.correo_electronico) + "' , '" + str(
+                    correo_amigo) + "')")
+                cursor.execute("select idAmigo from usuario_has_usuario where usuario_CorreoElectronico = '" + str(
+                    self.correo_electronico) + "' and usuario_CorreoElectronico1 = '" + str(correo_amigo) + "'")
                 id = cursor.fetchall()
                 id = id[0]["idAmigo"]
                 mi_amigo = Amigo()
@@ -140,7 +139,7 @@ class Usuario (object):
                 return 0
                                                                         #ARREGLAR PRIV. PASAR A BOOL y terminar de teatear
         mi_grupo = Grupo()
-        cursor.execute("insert into grupo values (NULL , (" + str(priv) + ") , (" + str(nomb) + ") , (" + str(self.correo_electronico) + "))")
+        cursor.execute("insert into grupo values (NULL , '" + str(priv) + "' , '" + str(nomb) + "' , '" + str(self.correo_electronico) + "')")
         cursor.exeute("select IdGrupo from grupo where Nombre = (" + str(nomb) + ")")
         id = cursor.fetchall()
         id = id[0]["IdGrupo"]
@@ -154,12 +153,11 @@ class Usuario (object):
     def crear_pagina (self , nomb , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         mi_pagina = Pagina()
-        cursor.execute("insert into Pagina values (NULL , (" + str(nomb) + ") , (" + str(self.correo_electronico) + "))")
+        cursor.execute("insert into pagina values (NULL ,'" + str(nomb) + "' , '" + str(self.correo_electronico) + "')")
         cursor.execute("select IdPagina from pagina where usuario_CorreoElectronico = "
-                       "(" + str(self.correo_electronico) + ") order by DESC")
+                       "'" + str(self.correo_electronico) + "' and Nombre = '" + str(nomb) + "'")
         id = cursor.fetchall()
         id = id[0]["IdPagina"]
-        print (id)
         mi_pagina.id_pagina = id
         mi_pagina.nombre = nomb
         mi_pagina.correo_admin = self.correo_electronico
@@ -173,33 +171,40 @@ class Usuario (object):
         cursor.execute("insert into Multimedia values (NULL , )")
         return 1
 
-    def crear_post (self , fecha  , descripcion , id_pagina , id_grupo , id_archivos , db):
+    def crear_post (self , fecha  , descripcion , id_pagina , id_grupo , id_archivo , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         mi_post = Post()
-        cursor.execute("insert into Post values (NULL , (" + date(fecha) + ") , (" + str(descripcion) + ") ,"
-                       " (" + int(id_pagina) + ") , (" + str(self.correo_electronico) + ") , (" + str(id_grupo) + "))")
-        cursor.execute("select idPost from post where usuario_CorreoElectronico = (" + str(self.correo_electronico) + ")"
-                       "order by DESC")
+        if id_pagina == 0 and id_grupo != 0:
+            cursor.execute("insert into Post values (NULL , '" + str(fecha) + "' , '" + str(descripcion) + "' ,"
+                           " '" + str(id_pagina) + "' , '" + str(self.correo_electronico) + "' , NULL)")
+        elif id_pagina != 0 and id_grupo == 0:
+            cursor.execute("insert into Post values (NULL , '" + str(fecha) + "' , '" + str(descripcion) + "' ,"
+                           " NULL , '" + str(self.correo_electronico) + "' , '" + str(id_grupo) + "')")
+        else:
+            cursor.execute("insert into Post values (NULL , '" + str(fecha) + "' , '" + str(descripcion) + "' ,"
+                           " NULL , '" + str(self.correo_electronico) + "' , NULL)")
+
+        cursor.execute("select idPost from post where usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'"
+                       "order by idPost DESC")
         id = cursor.fetchall()
         id = id[0]["idPost"]
 
-        for item in id_archivos:
-            cursor.execute("insert into post_has_multimedia values ((" + int(id) + ") , (" + int(item) + "))")
+        cursor.execute("insert into post_has_multimedia values ('" + str(id) + "' , '" + str(id_archivo) + "')")
 
         mi_post.id_post = id
         mi_post.fecha = fecha
         mi_post.descripcion = descripcion
         mi_post.id_pagina = id_pagina
         mi_post.id_grupo = id_grupo
-        mi_post.archivos_multimedia = id_archivos
+        mi_post.archivos_multimedia = id_archivo
         self.lista_posts.append(mi_post)
         return 1
 
-    def mandar_mensaje (self , id_amigo , mensaje , fecha , emisor , db):
+    def mandar_mensaje (self , id_amig o , mensaje , fecha , emisor , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         mi_chat = Chat()
         cursor.execute("insert into Chat values(NULL , (" + str(mensaje) + ") , (" + str(id_amigo) + ") , "
-                       "(" + date(fecha) + ") , (" + bool(emisor) + "))")
+                       "(" + str(fecha) + ") , (" + str(emisor) + "))")
         cursor.execute("select idChat from Chat where usuario_has_usuario_IdAmigo = (" + int(id_amigo) + ")")
         id = cursor.fetchall()
         id = id[0]["idChat"]

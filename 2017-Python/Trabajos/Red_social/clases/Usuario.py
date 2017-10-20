@@ -31,7 +31,6 @@ class Usuario (object):
     lista_paginas = []
     lista_multimedia = []
     lista_posts = []
-    lista_conversaciones = []
 
 
     def crear_usuario (self , formacion_empleo , lugares_vividos , informacion_basica
@@ -130,38 +129,55 @@ class Usuario (object):
                             return lista_amigos
         return 0
 
-    def crear_grupo (self , nomb , priv , db):
+    def crear_grupo (self , nomb , db):
+        priv = 1
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select Nombre from grupo")
         mi_nombre = cursor.fetchall()
         for item in mi_nombre:
             if item["Nombre"] == str(nomb):
                 return 0
-                                                                        #ARREGLAR PRIV. PASAR A BOOL y terminar de teatear
-        mi_grupo = Grupo()
-        cursor.execute("insert into grupo values (NULL , '" + str(priv) + "' , '" + str(nomb) + "' , '" + str(self.correo_electronico) + "')")
-        cursor.exeute("select IdGrupo from grupo where Nombre = (" + str(nomb) + ")")
+
+        cursor.execute("insert into grupo values (NULL , '" + str(priv) + "' "
+                       ", '" + str(nomb) + "' , '" + str(self.correo_electronico) + "')")
+        cursor.execute("select idGrupo from grupo where Nombre = '" + str(nomb) + "' order by Nombre DESC")
         id = cursor.fetchall()
-        id = id[0]["IdGrupo"]
-        mi_grupo.id_grupo = id
-        mi_grupo.privado = priv
-        mi_grupo.nombre = nomb
-        mi_grupo.correo_admin = self.correo_electronico
-        self.lista_grupos.append(mi_grupo)
+        print(id)
+        id = id[0]["idGrupo"]
+
+        cursor.execute("insert into grupoparticipa values (NULL , '" + str(priv) + "' "
+                       ", '" + str(self.correo_electronico) + "' , '" + str(id) + "')")
+        cursor.execute("select idGruposParticipa from grupoparticipa where grupo_nombre = '" + str(nomb) + "'" #ACA
+                       "and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+        id_grupo_participa = cursor.fetchall()
+        id_grupo_participa = id_grupo_participa[0]["idGruposParticipa"]
+        mi_grupo_participa = Grupo_participa()
+        mi_grupo_participa.id_grupo_participa = id_grupo_participa
+        mi_grupo_participa.nombre_grupo = nomb
+        mi_grupo_participa.Administrador = 1
+        mi_grupo_participa.correo_electronico = self.correo_electronico
+        self.lista_grupos.append(mi_grupo_participa)
         return 1
 
     def crear_pagina (self , nomb , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        mi_pagina = Pagina()
         cursor.execute("insert into pagina values (NULL ,'" + str(nomb) + "' , '" + str(self.correo_electronico) + "')")
         cursor.execute("select IdPagina from pagina where usuario_CorreoElectronico = "
                        "'" + str(self.correo_electronico) + "' and Nombre = '" + str(nomb) + "'")
         id = cursor.fetchall()
         id = id[0]["IdPagina"]
-        mi_pagina.id_pagina = id
-        mi_pagina.nombre = nomb
-        mi_pagina.correo_admin = self.correo_electronico
-        self.lista_paginas.append(mi_pagina)
+
+        cursor.execute("insert into paginaparticipa values (NULL , '" + str(id) + "' , 1 , '" + str(self.correo_electronico) + "')")
+        cursor.execute("select idPaginasParticipa from paginaparticipa where Pagina_idPagina = '" + str(id) + "'"
+                       "and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+        id_pagina_participa = cursor.fetchall()
+        id_pagina_participa = id_pagina_participa[0]["idPaginasParticipa"]
+        mi_pagina_participa = Pagina_participa()
+        mi_pagina_participa.id_pagina_participa = id_pagina_participa
+        mi_pagina_participa.id_pagina = id
+        mi_pagina_participa.Administrador = 1
+        mi_pagina_participa.correo_electronico = self.correo_electronico
+        self.lista_paginas.append(mi_pagina_participa)
         return 1
 
     def subir_multimedia (self , archivo , creacion , album , db):
@@ -200,12 +216,21 @@ class Usuario (object):
         self.lista_posts.append(mi_post)
         return 1
 
-    def mandar_mensaje (self , id_amig o , mensaje , fecha , emisor , db):
+    def mandar_mensaje (self , id_amigo , mensaje , fecha , lista_usuarios , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         mi_chat = Chat()
-        cursor.execute("insert into Chat values(NULL , (" + str(mensaje) + ") , (" + str(id_amigo) + ") , "
-                       "(" + str(fecha) + ") , (" + str(emisor) + "))")
-        cursor.execute("select idChat from Chat where usuario_has_usuario_IdAmigo = (" + int(id_amigo) + ")")
+
+        cursor.execute("select usuario_CorreoElectronico from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
+        usuario_correo = cursor.fetchall()
+        usuario_correo = usuario_correo[0]["usuario_CorreoElectronico"]
+        if usuario_correo == self.correo_electronico:
+            emisor = 1
+        else:
+            emisor = 0
+
+        cursor.execute("insert into Chat values(NULL , '" + str(mensaje) + "' , '" + str(id_amigo) + "' , "
+                       "'" + str(fecha) + "' , '" + str(emisor) + "')")
+        cursor.execute("select idChat from Chat where usuario_has_usuario_IdAmigo = '" + str(id_amigo) + "' order by idChat DESC")
         id = cursor.fetchall()
         id = id[0]["idChat"]
 
@@ -214,39 +239,73 @@ class Usuario (object):
         mi_chat.id_amigo = id_amigo
         mi_chat.fecha = fecha
         mi_chat.emisor = emisor
-        for item in self.lista_paginas:
-            if (item.id_amigo == id_amigo):
-                item.append(mi_chat)
+
+        for item in self.lista_amigos:
+            if item.id_amigo == id_amigo:
+                item.conversacion.append(mi_chat)
+        if emisor == 1:
+            cursor.execute("select usuario_CorreoElectronico1 from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
+            correo_usuario_CorreoElectronico = cursor.fetchall()
+            correo_usuario_CorreoElectronico = correo_usuario_CorreoElectronico[0]["usuario_CorreoElectronico1"]
+        else:
+            cursor.execute("select usuario_CorreoElectronico from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
+            correo_usuario_CorreoElectronico = cursor.fetchall()
+            correo_usuario_CorreoElectronico = correo_usuario_CorreoElectronico[0]["usuario_CorreoElectronico"]
+
+        for item in lista_usuarios:
+            if item.correo_electronico == correo_usuario_CorreoElectronico:
+                item.conversacion.append(mi_chat)
         return 1
 
-    def suscribir_pagina (self , id_pagina , admin , db):
+
+
+    def suscribir_pagina (self , id_pagina , db):
+        admin = "0"
         cursor = db.cursor(pymysql.cursors.DictCursor)
         mi_pagina = Pagina_participa()
-        cursor.execute("insert into paginaparticipa values (NULL , (" + int(id_pagina) + ") , (" + bool(admin) + ")"
-                       " , (" + str(self.correo_electronico) + "))")
-        cursor.execute("select idPaginasParticipa from paginaparticipa where usuario_CorreoElectronico = "
-                       "(" + str(self.correo_electronico) + ") order by desc")
-        id = cursor.fetchall()
-        id = id[0]["idPaginasParticipa"]
-        mi_pagina.id_pagina_participa = id
-        mi_pagina.id_pagina = id_pagina
-        mi_pagina.administrador = admin
-        mi_pagina.correo_electronico = self.correo_electronico
-        self.lista_paginas.append(mi_pagina)
 
-    def suscribir_grupo (self , admin , nombre , db):
+        for item in self.lista_paginas:
+            if item.correo_electronico == self.correo_electronico and item.id_pagina == id_pagina:
+                return 0;
+
+        cursor.execute("insert into paginaparticipa values (NULL , '" + str(id_pagina) + "' , '" + str(admin) + "' , '" + str(
+            self.correo_electronico) + "')")
+        cursor.execute("select idPaginasParticipa from paginaparticipa where Pagina_idPagina = '" + str(id_pagina) + "'"
+                       "and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+        id_pagina_participa = cursor.fetchall()
+        id_pagina_participa = id_pagina_participa[0]["idPaginasParticipa"]
+        mi_pagina_participa = Pagina_participa()
+        mi_pagina_participa.id_pagina_participa = id_pagina_participa
+        mi_pagina_participa.id_pagina = id
+        mi_pagina_participa.Administrador = 1
+        mi_pagina_participa.correo_electronico = self.correo_electronico
+        self.lista_paginas.append(mi_pagina_participa)
+        return 1
+
+    def suscribir_grupo (self , id_grupo , db): #terminar de testear
+        admin = 0
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        mi_grupo = Grupo_participa()
-        cursor.execute("insert into grupoparticipa values (NULL , (" + bool(admin) + ") , "
-                       "(" + str(self.correo_electronico) + ") , (" + str(nombre) + "))")
-        cursor.execute("select idGruposParticipa from grupoparticipa where usuario_CorreoElectronico = "
-                       "(" + str(self.correo_electronico) + ") order by desc")
+        mi_grupo_participa = Grupo_participa()
+
+        for item in self.lista_grupos:
+            if item.correo_electronico == self.correo_electronico and item.id_grupo == id_grupo:
+                return 0;
+
+        cursor.execute("insert into grupoparticipa values (NULL , '" + str(admin) + "' , "
+                       "'" + str(self.correo_electronico) + "' , '" + str(id_grupo) + "')")
+        cursor.execute("select idGruposParticipa from grupoparticipa where idGrupo = '" + str(id_grupo) + "' and usuario_CorreoElectronico = "
+                       "'" + str(self.correo_electronico) + "'")
         id = cursor.fetchall()
         id = id[0]["idGruposParticipa"]
-        mi_grupo.id_grupo_participa = id
-        mi_grupo.administrador = admin
-        mi_grupo.nombre_grupo = nombre
-        mi_grupo.correo_electronico = self.correo_electronico
-        self.lista_grupos.append(mi_grupo)
+        mi_grupo_participa.id_grupo_participa = id
+        mi_grupo_participa.administrador = admin
+        mi_grupo_participa.id_grupo = id_grupo
+        mi_grupo_participa.correo_electronico = self.correo_electronico
+        self.lista_grupos.append(mi_grupo_participa)
+        return 1
 
+        #def desuscribir_pagina(self, id_pagina, db):
 
+        #def desuscribir_grupo(self, id_grupo, db):
+
+        #def desuscribir_grupo(self, id_grupo, db):

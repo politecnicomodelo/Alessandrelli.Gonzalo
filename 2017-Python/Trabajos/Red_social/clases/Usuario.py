@@ -283,8 +283,8 @@ class Usuario (object):
         return 1
 
     def suscribir_grupo (self , id_grupo , db): #terminar de testear
-        admin = 0
         cursor = db.cursor(pymysql.cursors.DictCursor)
+        admin = 0
         mi_grupo_participa = Grupo_participa()
 
         for item in self.lista_grupos:
@@ -304,8 +304,66 @@ class Usuario (object):
         self.lista_grupos.append(mi_grupo_participa)
         return 1
 
-        #def desuscribir_pagina(self, id_pagina, db):
+        def desuscribir_pagina(self, id_pagina, db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
 
-        #def desuscribir_grupo(self, id_grupo, db):
+        cursor.execute("delete from paginaparticipa where idPagina = '" + str(id_pagina) + "' and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
 
-        #def desuscribir_grupo(self, id_grupo, db):
+        for item in self.lista_paginas:
+            if item.id_pagina == id_pagina:
+                self.lista_paginas.remove(item)
+                return 1
+        return 0
+
+        def desuscribir_grupo(self, id_grupo, db):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+
+        cursor.execute("delete from grupoparticipa where idGrupo = '" + str(id_grupo) + "' and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+
+        for item in self.lista_grupos:
+            if item.id_grupo == id_grupo:
+                self.lista_paginas.remove(item)
+                return 1
+        return 0
+
+        def eliminar_grupo(self, id_grupo, lista_usuarios, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("select idGruposParticipa from grupoparticipa where idGrupo = '" + str(id_grupo) + "'")
+
+            id = cursor.fetchall()
+            id = id[0]["idGruposParticipa"]
+            cursor.execute("delete from grupoparticipa where idGrupo = '" + str(id) + "'")
+            cursor.execute("delete from grupo where idGrupo = '" + str(idGrupo) + "'")
+
+            for item in lista_usuarios:
+                for item2 in item.lista_grupos:
+                    if item2.id_grupo == id_grupo:
+                        item.lista_grupos.remove(item2)
+
+            for item in self.lista_grupos:
+                if item.id_grupo == id_grupo:
+                    self.lista_paginas.remove(item)
+                    return 1
+            return 0
+
+        def eliminar_pagina(self, id_pagina, lista_usuarios, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("select idPaginasParticipa from paginaparticipa where pagina_idPagina = '" + str(id_pagina) + "'")
+
+            id = cursor.fetchall()
+            id = id[0]["idPaginasParticipa"]
+            cursor.execute("delete from paginaparticipa where idPagina = '" + str(id) + "'")
+            cursor.execute("delete from pagina where idPagina = '" + str(idPagina) + "'")
+
+            for item in lista_usuarios:
+                for item2 in item.lista_paginas:
+                    if item2.id_pagina == id_pagina:
+                        item.lista_paginas.remove(item2)
+
+            for item in self.lista_paginas:
+                if item.id_pagina == id_pagina:
+                    self.lista_paginas.remove(item)
+                    return 1
+            return 0

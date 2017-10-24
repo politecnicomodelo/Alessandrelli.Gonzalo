@@ -47,6 +47,11 @@ class Usuario (object):
                        " , '"+str(genero_sexual)+"' , '"+str(contrasena_hash)+"')")
 
 
+        cursor.execute("select idusuario from Usuario where correoelectronico = '"+str(correo_electronico)+"'")
+        id = cursor.fetchall()
+        id = id[0]["idusuario"]
+
+        self.id_usuario = id
         self.formacion_empleo = self.crear_lista(formacion_empleo)
         self.lugares_vividos = self.crear_lista(lugares_vividos)
         self.informacion_basica = informacion_basica
@@ -61,9 +66,67 @@ class Usuario (object):
         self.genero_sexual = genero_sexual
         self.contrasena_hash = contrasena_hash
 
-        return self
+        return self , id
 
-    #def eliminar_usuario (self , db , lista_usuarios):
+    def eliminar_usuario (self , db , lista_usuarios):
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+
+        cursor.execute("select idamigo from usuario_has_usuario where usuario_idusuario = "
+                       "'"+str(self.id_usuario)+"' or usuario_idusuario1 ="
+                       " '"+str(self.id_usuario)+"'")
+        id = cursor.fetchall()
+        if id != ():
+            for item in id:
+                cursor.execute("delete from chat where usuario_has_usuario.idamigo = '"+str(item["idamigo"])+"'")
+                cursor.execute("delete from usuario_has_usuario where id_amigo = '" + str(item["idamigo"]) + "'")
+
+        cursor.execute(
+            "select idgrupo from grupo where usuario_idusuario = '" + str(self.id_usuario) + "'")
+        id = cursor.fetchall()
+        if id != ():
+            for item in id:
+                cursor.execute(
+                    "select usuario_idusuario , administrador from grupoparticipa where grupo_idgrupo = '" + str(
+                        item["idgrupo"]) + "'")
+                datos = cursor.fetchall()
+                if datos == ():
+                    cursor.execute("delete from grupo where idgrupo = '" + str(item["idgrupo"]) + "'")
+                else:
+                    for item2 in datos:
+                        if str(item2["administrador"]) == "1":
+                            cursor.execute("update grupo set usuario_idusuario = "
+                                           "'" + str(item2["usuario_idusuario"]) + "' where id_grupo = '" + str(
+                                item["idgrupo"]) + "'")
+                        break
+
+        cursor.execute("select idpagina from pagina where usuario_idusuario = '" + str(self.id_usuario) + "'")
+        id = cursor.fetchall()
+        if id != ():
+            for item in id:
+                cursor.execute("select usuario_idusuario , administrador from paginaparticipa where pagina_idpagina = '" + str(
+                        item["idpagina"]) + "'")
+                datos = cursor.fetchall()
+                if datos == ():
+                    cursor.execute("delete from pagina where idpagina = '" + str(item["idpagina"]) + "'")
+                else:
+                    for item2 in datos:
+                        if str(item2["administrador"]) == "1":
+                            cursor.execute("update pagina set usuario_idusuario = "
+                                           "'" + str(item2["usuario_idusuario"]) + "' where id_pagina = '" + str(
+                                item["idpagina"]) + "'")
+                        break
+
+        cursor.execute("select idmultimedia from multimedia where usuario_idusuario = '" + str(self.id_usuario) + "'")
+        id = cursor.fetchall()
+        if id != ():
+            for item in id:
+                cursor.execute("delete from post_has_multimedia where pagina_idpagina = '" + str(item["idmultimedia"]) + "'")
+                cursor.execute("delete from post where multimedia_idmultimedia = '" + str(item["idmultimedia"]) + "'")
+                cursor.execute("delete from multimedia where idmultimedia = '" + str(item["idmultimedia"]) + "'")
+
+        cursor.execute("delete from usuario where idusuario = '" + str(self.id_usuario) + "'")
+
+
 
     def hashear_contrasena (self , contrasena):
         return hashlib.md5(contrasena.encode('utf-8')).hexdigest()

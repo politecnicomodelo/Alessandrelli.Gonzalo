@@ -51,9 +51,9 @@ mi_usuario.id_usuario = 13
 #print (mi_usuario.loguear("juana.rojas@hotmail.com" , "Hnvpuhkh1" , db))
 #print(mi_usuario.agregar_amigo("juan.perez@hotmail.com" , db))
 #print(mi_usuario.eliminar_amigo("juan.perez@hotmail.com" , db))
-print (mi_usuario.crear_grupo ("grupo cool" , 0 , db))
+#print (mi_usuario.crear_grupo ("grupo cool" , 0 , db))
 
-
+print (mi_usuario.hola(db))
 
 
 #app = Flask(__name__)

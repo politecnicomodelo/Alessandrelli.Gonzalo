@@ -18,7 +18,7 @@ class Usuario (object):
     informacion_basica = None
     acontecimientos_importantes = []
     nombre = None
-    apelllido = None
+    apellido = None
     correo_electronico = None
     numero_tarjeta_credito = None
     fecha_vencimiento_tarjeta = None
@@ -61,12 +61,12 @@ class Usuario (object):
         self.genero_sexual = genero_sexual
         self.contrasena_hash = contrasena_hash
 
+        return self
+
+    #def eliminar_usuario (self , db , lista_usuarios):
+
     def hashear_contrasena (self , contrasena):
-        #contra = hashlib.sha256()
-        #contra.update(contrasena)
-        #contra.digest()
-        #return contra
-        return contrasena
+        return hashlib.md5(contrasena.encode('utf-8')).hexdigest()
 
     def crear_lista (self , dato):
         datos = []
@@ -74,7 +74,6 @@ class Usuario (object):
         return datos
 
     def loguear (self , correo , contrasena , db):
-        contrasena_hash = self.hashear_contrasena(contrasena)
 
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select CorreoElectronico from Usuario")
@@ -82,12 +81,12 @@ class Usuario (object):
 
         for item in datos:
             if item["CorreoElectronico"] == correo:
-                cursor.execute("select contrasena_hash from Usuario where CorreoElectronico = ("+str(correo)+")")
+                cursor.execute("select contrasena_hash from Usuario where CorreoElectronico = '"+str(correo)+"'")
                 datos = cursor.fetchall()
                 if datos[0]["contrasena_hash"] == self.hashear_contrasena(contrasena):
                     return 1
-                else:
-                    return 0
+        return 0
+
 
     def agregar_amigo(self , correo_amigo, db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
@@ -114,23 +113,22 @@ class Usuario (object):
                 return 1
         return 0
 
-    def eliminar_amigo(self , correo_amigo , lista_amigos , db):
+    def eliminar_amigo(self , correo_amigo , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select * from usuario_has_usuario")
         datos = cursor.fetchall()
         for item in datos:
-            if item["usuario_CorreoElectronico"] == self.correo_electronico or item["usuario_CorreoElectronico"] == correo_amigo:
-                if str(item["usuario_CorreoElectronico1"]) == str(correo_amigo) or item["usuario_CorreoElectronico1"] == self.correo_electronico:
-                    id = item["IdAmigo"]
+            if item["usuario_correoelectronico"] == self.correo_electronico or item["usuario_correoelectronico"] == correo_amigo:
+                if str(item["usuario_correoelectronico1"]) == str(correo_amigo) or item["usuario_correoelectronico1"] == self.correo_electronico:
+                    id = item["idamigo"]
                     cursor.execute("delete from usuario_has_usuario where IdAmigo = (" + str(id) + ")")
-                    for item in lista_amigos:
+                    for item in self.lista_amigos:
                         if (str(item.id_amigo) == str(id)):
-                            lista_amigos.remove(item)
-                            return lista_amigos
+                            self.lista_amigos.remove(item)
+                    return 1
         return 0
 
-    def crear_grupo (self , nomb , db):
-        priv = 1
+    def crear_grupo (self , nomb , priv , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select Nombre from grupo")
         mi_nombre = cursor.fetchall()
@@ -142,13 +140,12 @@ class Usuario (object):
                        ", '" + str(nomb) + "' , '" + str(self.correo_electronico) + "')")
         cursor.execute("select idGrupo from grupo where Nombre = '" + str(nomb) + "' order by Nombre DESC")
         id = cursor.fetchall()
-        print(id)
         id = id[0]["idGrupo"]
 
-        cursor.execute("insert into grupoparticipa values (NULL , '" + str(priv) + "' "
-                       ", '" + str(self.correo_electronico) + "' , '" + str(id) + "')")
-        cursor.execute("select idGruposParticipa from grupoparticipa where grupo_nombre = '" + str(nomb) + "'" #ACA
-                       "and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+        cursor.execute("insert into grupoparticipa values (NULL , '" + "1" + "' "
+                       ", '" + str(self.id_usuario) + "' , '" + str(id) + "')")
+        cursor.execute("select idGruposParticipa from grupoparticipa where grupo_idgrupo = '" + str(id) + "'"
+                       "and usuario_idusuario = '" + str(self.id_usuario) + "'")
         id_grupo_participa = cursor.fetchall()
         id_grupo_participa = id_grupo_participa[0]["idGruposParticipa"]
         mi_grupo_participa = Grupo_participa()
@@ -305,26 +302,26 @@ class Usuario (object):
         return 1
 
         def desuscribir_pagina(self, id_pagina, db):
-        cursor = db.cursor(pymysql.cursors.DictCursor)
+            cursor = db.cursor(pymysql.cursors.DictCursor)
 
-        cursor.execute("delete from paginaparticipa where idPagina = '" + str(id_pagina) + "' and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+            cursor.execute("delete from paginaparticipa where idPagina = '" + str(id_pagina) + "' and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
 
-        for item in self.lista_paginas:
-            if item.id_pagina == id_pagina:
-                self.lista_paginas.remove(item)
-                return 1
-        return 0
+            for item in self.lista_paginas:
+                if item.id_pagina == id_pagina:
+                    self.lista_paginas.remove(item)
+                    return 1
+            return 0
 
         def desuscribir_grupo(self, id_grupo, db):
-        cursor = db.cursor(pymysql.cursors.DictCursor)
+            cursor = db.cursor(pymysql.cursors.DictCursor)
 
-        cursor.execute("delete from grupoparticipa where idGrupo = '" + str(id_grupo) + "' and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+            cursor.execute("delete from grupoparticipa where idGrupo = '" + str(id_grupo) + "' and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
 
-        for item in self.lista_grupos:
-            if item.id_grupo == id_grupo:
-                self.lista_paginas.remove(item)
-                return 1
-        return 0
+            for item in self.lista_grupos:
+                if item.id_grupo == id_grupo:
+                    self.lista_paginas.remove(item)
+                    return 1
+            return 0
 
         def eliminar_grupo(self, id_grupo, lista_usuarios, db):
             cursor = db.cursor(pymysql.cursors.DictCursor)
@@ -334,7 +331,7 @@ class Usuario (object):
             id = cursor.fetchall()
             id = id[0]["idGruposParticipa"]
             cursor.execute("delete from grupoparticipa where idGrupo = '" + str(id) + "'")
-            cursor.execute("delete from grupo where idGrupo = '" + str(idGrupo) + "'")
+            cursor.execute("delete from grupo where idGrupo = '" + str(id_grupo) + "'")
 
             for item in lista_usuarios:
                 for item2 in item.lista_grupos:
@@ -355,7 +352,7 @@ class Usuario (object):
             id = cursor.fetchall()
             id = id[0]["idPaginasParticipa"]
             cursor.execute("delete from paginaparticipa where idPagina = '" + str(id) + "'")
-            cursor.execute("delete from pagina where idPagina = '" + str(idPagina) + "'")
+            cursor.execute("delete from pagina where idPagina = '" + str(id_pagina) + "'")
 
             for item in lista_usuarios:
                 for item2 in item.lista_paginas:

@@ -40,7 +40,7 @@ datos = cursor.fetchall()
 
 mi_usuario = Usuario()
 mi_usuario.correo_electronico = "juana.rojas@hotmail.com"
-mi_usuario.id_usuario = 13
+mi_usuario.id_usuario = 5
 
 
 #mi_usuario = mi_usuario.crear_usuario("sin estudios" , "en la calle" , "me gusta el pan" , "naci" , "juan" , "perez"

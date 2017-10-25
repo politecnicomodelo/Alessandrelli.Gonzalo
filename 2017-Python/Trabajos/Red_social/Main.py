@@ -12,7 +12,7 @@ cursor = db.cursor()
 
 
 
-
+#asd
 lista_usuarios = []
 
 cursor.execute("select * from usuario")

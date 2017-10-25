@@ -9,7 +9,6 @@ from .Grupo_participa import Grupo_participa
 from .Chat import Chat
 import hashlib
 from datetime import date
-                                                    #ARREGLAR HASHEAR CONTRASEÑA
 
 class Usuario (object):
     id_usuario = None
@@ -252,13 +251,13 @@ class Usuario (object):
         mi_post = Post()
         if id_pagina == 0 and id_grupo != 0:
             cursor.execute("insert into Post values (NULL , '" + str(fecha) + "' , '" + str(descripcion) + "' ,"
-                           " '" + str(id_pagina) + "' , '" + str(self.correo_electronico) + "' , NULL)")
+                           " '" + str(id_pagina) + "' ,  NULL  , '" + str(self.correo_electronico) + "' , 0 , 0 , 0)")
         elif id_pagina != 0 and id_grupo == 0:
             cursor.execute("insert into Post values (NULL , '" + str(fecha) + "' , '" + str(descripcion) + "' ,"
-                           " NULL , '" + str(self.correo_electronico) + "' , '" + str(id_grupo) + "')")
+                           " NULL , '" + str(id_grupo) + "' , '" + str(self.correo_electronico) + "' , 0 , 0 , 0)")
         else:
             cursor.execute("insert into Post values (NULL , '" + str(fecha) + "' , '" + str(descripcion) + "' ,"
-                           " NULL , '" + str(self.correo_electronico) + "' , NULL)")
+                           " NULL , NULL , '" + str(self.correo_electronico) + "' , 0 , 0 , 0)")
 
         cursor.execute("select idPost from post where usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'"
                        "order by idPost DESC")
@@ -556,25 +555,142 @@ class Usuario (object):
         def eliminar_participante_grupo(self, id_usuario, id_grupo, db):
             cursor = db.cursor(pymysql.cursors.DictCursor)
 
-            cursor.execute(
-                "select administrador from grupoparticipa where usuario_idusuario = '" + str(self.id_usuario) + "'")
+            cursor.execute("select usuario_idusuario from grupo where idgrupo = '" + str(id_grupo) + "'")
             check = cursor.fetchall()
 
-            if ((check != ()) and (str(check[0]["administrador"]) == "1")):
-                cursor.execute("select estadoinvitacion from grupoparticipa where usuario_idusuario = "
-                               "'" + str(id_usuario) + "' and idgrupo = '" + str(id_grupo) + "'")
-                estado = cursor.fetchall()
+            if ((check != ()) and (str(check[0]["usuario_idusuario"]) != id_usuario)):
 
-                estado = estado[0]["estadoinvitacion"]
+                cursor.execute(
+                    "select administrador from grupoparticipa where usuario_idusuario = '" + str(self.id_usuario) + "'")
+                check = cursor.fetchall()
 
-                if estado == "integrante":
-                    cursor.execute("select usuario_idusuario from grupo where idgrupo = '" + str(id_grupo) + "'")
-                    id = cursor.fetchall()
-                    id = id[0]["usuario_idusuario"]
-                    if id != self.id_usuario:
-                        cursor.execute("delete from grupoaparticipa where usuario_idusuario = "
-                                       "'" + str(id_usuario) + "' and idgrupo = '" + str(id_grupo) + "'")
-                        return 1
+                if ((check != ()) and (str(check[0]["administrador"]) == "1")):
+                    cursor.execute("select estadoinvitacion from grupoparticipa where usuario_idusuario = "
+                                   "'" + str(id_usuario) + "' and idgrupo = '" + str(id_grupo) + "'")
+                    estado = cursor.fetchall()
+
+                    estado = estado[0]["estadoinvitacion"]
+
+                    if estado == "integrante":
+                        cursor.execute("select usuario_idusuario from grupo where idgrupo = '" + str(id_grupo) + "'")
+                        id = cursor.fetchall()
+                        id = id[0]["usuario_idusuario"]
+                        if id != self.id_usuario:
+                            cursor.execute("delete from grupoaparticipa where usuario_idusuario = "
+                                           "'" + str(id_usuario) + "' and idgrupo = '" + str(id_grupo) + "'")
+                            return 1
+            elif ((check != ()) and (str(check[0]["usuario_idusuario"]) == id_usuario)):
+                return 0 , "el usuario que se intento eliminar es el administrador principal"
             return 0
 
-        def aceptar_post_pagina
+        def aceptar_post_pagina (self , id_post , id_pagina , db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.update("update post set aceptacion = 2 where idpost = '" + str(id_post) + "' and "
+                          "pagina_idpagina = '" + str(id_pagina) + "'")
+
+        def declinar_post_pagina (self , id_post , id_pagina , db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.update("update post set aceptacion = 1 where idpost = '" + str(id_post) + "' and "
+                          "pagina_idpagina = '" + str(id_pagina) + "'")
+
+        def dar_like(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("insert into like values ('" + str(self.id_usuario) + "' , '" + str(id_post) + "')")
+            return 1
+
+        def sacar_like(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("delete from like where usuario_idusuario = '" + str(self.id_usuario) + "'"
+                           " and post_idpost '" + str(id_post) + "')")
+            return 1
+
+        def dar_dislike(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("insert into dislike values ('" + str(self.id_usuario) + "' , '" + str(id_post) + "')")
+            return 1
+
+        def sacar_dislike(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("delete from dislike where usuario_idusuario = '" + str(self.id_usuario) + "'"
+                           " and post_idpost '" + str(id_post) + "')")
+            return 1
+
+        def dar_anger(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("insert into anger values ('" + str(self.id_usuario) + "' , '" + str(id_post) + "')")
+            return 1
+
+        def sacar_anger(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("delete from anger where usuario_idusuario = '" + str(self.id_usuario) + "'"
+                           " and post_idpost '" + str(id_post) + "')")
+            return 1
+
+        def dar_sad(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("insert into sad values ('" + str(self.id_usuario) + "' , '" + str(id_post) + "')")
+            return 1
+
+        def sacar_sad(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("delete from sad where usuario_idusuario = '" + str(self.id_usuario) + "'"
+                           " and post_idpost '" + str(id_post) + "')")
+            return 1
+
+        def dar_wow(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("insert into wow values ('" + str(self.id_usuario) + "' , '" + str(id_post) + "')")
+            return 1
+
+        def sacar_wow(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("delete from wow where usuario_idusuario = '" + str(self.id_usuario) + "'"
+                           " and post_idpost '" + str(id_post) + "')")
+            return 1
+
+        def dar_lol(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("insert into lol values ('" + str(self.id_usuario) + "' , '" + str(id_post) + "')")
+            return 1
+
+        def sacar_lol(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("delete from lol where usuario_idusuario = '" + str(self.id_usuario) + "'"
+                           " and post_idpost '" + str(id_post) + "')")
+            return 1
+
+        def dar_beautiful(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("insert into beautiful values ('" + str(self.id_usuario) + "' , '" + str(id_post) + "')")
+            return 1
+
+        def sacar_beautiful(self, id_post, db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+
+            cursor.execute("delete from beautiful where usuario_idusuario = '" + str(self.id_usuario) + "'"
+                           " and post_idpost '" + str(id_post) + "')")
+            return 1
+
+        def cambiar_contrasena(self , nueva_contrasena , db):
+            cursor = db.cursor(pymysql.cursors.DictCursor)
+            if (len(nueva_contrasena) < 8):
+                return 0
+
+            cursor.execute("update usuario set contrasena_hash = '" + str(self.hashear_contrasena(nueva_contrasena)) + "'"
+                           " where idusuario = '" + str(self.id_usuario) + "'")
+            return 1

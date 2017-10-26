@@ -1,5 +1,4 @@
 import pymysql
-
 from clases.Usuario import Usuario
 from flask import Flask, render_template , request
 import hashlib
@@ -56,16 +55,22 @@ fecha_nacimiento = '1995-03-06'
 genero_sexual = "masculino"
 contrasena = "Hnvpuhkh1"
 
+cursor.execute("delete from usuario where correoelectronico = '" + "richard.jordiano@hotmail.com" + "'")
+
 mi_usuario = mi_usuario.crear_usuario(formacion_empleo , lugares_vividos , informacion_basica , acontecimientos_importantes
                          , nombre , apellido , correo_electronico , numero_tarjeta_credito
                          , fecha_vencimiento_tarjeta , codigo_seguridad_tarjeta , fecha_nacimiento , genero_sexual
-                         , contrasena , db)[0]
+                         , contrasena , db)
 
 lista_usuarios.append(mi_usuario)
 
-print(mi_usuario.agregar_amigo(5 , db))
-print(mi_usuario.lista_amigos[0].id_amigo)
-
+#print(mi_usuario.agregar_amigo(5 , db) , "A")
+#print(mi_usuario.lista_amigos[0].id_amigo , "B")
+#print(mi_usuario.eliminar_amigo(5 , db) , "C")
+#print(mi_usuario.eliminar_amigo(5 , db) , "C")
+#print(mi_usuario.crear_pagina("pagina gay" , db))
+lista_multimedia = [1 , 2 , 3 , 4]
+print(mi_usuario.crear_post(1 , "1" , 0 , 0 , lista_multimedia , db))
 
 
 #app = Flask(__name__)

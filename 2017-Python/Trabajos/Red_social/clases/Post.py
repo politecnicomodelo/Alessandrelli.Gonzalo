@@ -8,4 +8,5 @@ class Post (object):
     id_pagina = None
     id_grupo = None
     archivos_multimedia = []
-    correo_electronico = None
+    id_usuario = None
+    aceptacion = None

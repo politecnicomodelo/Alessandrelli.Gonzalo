@@ -1,7 +1,5 @@
 import pymysql
 from .Amigo import Amigo
-from .Grupo import Grupo
-from .Pagina import Pagina
 from .Post import Post
 from .Multimedia import Multimedia
 from .Pagina_participa import Pagina_participa
@@ -38,6 +36,15 @@ class Usuario (object):
                        , contrasena_hash , db):
 
         cursor = db.cursor(pymysql.cursors.DictCursor)
+
+        cursor.execute("select correoelectronico from usuario")
+        check = cursor.fetchall()
+
+        for item in check:
+            print (item["correoelectronico"])
+            if item["correoelectronico"] == correo_electronico:
+                return 0 , "el correo esta en uso"
+
         contrasena_hash = self.hashear_contrasena(contrasena_hash)
         cursor.execute("insert into Usuario values (NULL , '"+str(formacion_empleo)+"' , '"+str(lugares_vividos)+"' "
                        ", '"+str(informacion_basica)+"' , '"+str(acontecimientos_importantes)+"' , '"+str(nombre)+"' "
@@ -65,7 +72,7 @@ class Usuario (object):
         self.genero_sexual = genero_sexual
         self.contrasena_hash = contrasena_hash
 
-        return self , id
+        return self
 
     def eliminar_usuario (self , lista_usuarios , db): #TERMIANR DE HACER Y TESTEAR
         cursor = db.cursor(pymysql.cursors.DictCursor)
@@ -150,7 +157,6 @@ class Usuario (object):
                     return 1
         return 0
 
-
     def agregar_amigo(self , id_amigo, db): #ANDA
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select idusuario from Usuario")
@@ -180,103 +186,112 @@ class Usuario (object):
                 return 1
         return 0
 
-    def eliminar_amigo(self , correo_amigo , db):
+    def eliminar_amigo(self , id_amigo , db): #ANDA
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select * from usuario_has_usuario")
         datos = cursor.fetchall()
         for item in datos:
-            if item["usuario_correoelectronico"] == self.correo_electronico or item["usuario_correoelectronico"] == correo_amigo:
-                if str(item["usuario_correoelectronico1"]) == str(correo_amigo) or item["usuario_correoelectronico1"] == self.correo_electronico:
-                    id = item["idamigo"]
-                    cursor.execute("delete from usuario_has_usuario where IdAmigo = (" + str(id) + ")")
-                    for item in self.lista_amigos:
-                        if (str(item.id_amigo) == str(id)):
-                            self.lista_amigos.remove(item)
-                    return 1
-        return 0
+            if (((str(item["usuario_idUsuario"]) == str(self.id_usuario)) and (str(item["usuario_idUsuario1"])
+                == str(id_amigo))) or ((str(item["usuario_idIsuario"]) == str(id_amigo))
+                and (str(item["usuario_idUsuario1"]) == str(self.id_usuario)))):
+                cursor.execute("delete from usuario_has_usuario where IdAmigo = '" + str(item["IdAmigo"]) + "'")
+                for item2 in self.lista_amigos:
+                    if (item2.id_amigo == id_amigo):
+                        self.lista_amigos.remove(item2)
+                return 1
 
-    def crear_grupo (self , nomb , priv , db):
+        return 0 , "no son amigos"
+
+    def crear_grupo (self , nomb , priv , db): #ANDA
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("select Nombre from grupo")
-        mi_nombre = cursor.fetchall()
-        for item in mi_nombre:
-            if item["Nombre"] == str(nomb):
-                return 0
 
         cursor.execute("insert into grupo values (NULL , '" + str(priv) + "' "
-                       ", '" + str(nomb) + "' , '" + str(self.correo_electronico) + "')")
+                       ", '" + str(nomb) + "' , '" + str(self.id_usuario) + "')")
+
         cursor.execute("select idGrupo from grupo where Nombre = '" + str(nomb) + "' order by Nombre DESC")
         id = cursor.fetchall()
         id = id[0]["idGrupo"]
 
         cursor.execute("insert into grupoparticipa values (NULL , '" + "1" + "' "
-                       ", '" + str(self.id_usuario) + "' , '" + str(id) + "')")
+                       ", '" + str(self.id_usuario) + "' , '" + str(id) + "' , '" + "1" + "')")
+
         cursor.execute("select idGruposParticipa from grupoparticipa where grupo_idgrupo = '" + str(id) + "'"
                        "and usuario_idusuario = '" + str(self.id_usuario) + "'")
         id_grupo_participa = cursor.fetchall()
         id_grupo_participa = id_grupo_participa[0]["idGruposParticipa"]
+
         mi_grupo_participa = Grupo_participa()
         mi_grupo_participa.id_grupo_participa = id_grupo_participa
         mi_grupo_participa.nombre_grupo = nomb
         mi_grupo_participa.Administrador = 1
-        mi_grupo_participa.correo_electronico = self.correo_electronico
+        mi_grupo_participa.id_usuario = self.id_usuario
+        mi_grupo_participa.estado_invitacion = 0
         self.lista_grupos.append(mi_grupo_participa)
         return 1
 
-    def crear_pagina (self , nomb , db):
+    def crear_pagina (self , nomb , db): #ANDA
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("insert into pagina values (NULL ,'" + str(nomb) + "' , '" + str(self.correo_electronico) + "')")
-        cursor.execute("select IdPagina from pagina where usuario_CorreoElectronico = "
-                       "'" + str(self.correo_electronico) + "' and Nombre = '" + str(nomb) + "'")
-        id = cursor.fetchall()
-        id = id[0]["IdPagina"]
 
-        cursor.execute("insert into paginaparticipa values (NULL , '" + str(id) + "' , 1 , '" + str(self.correo_electronico) + "')")
-        cursor.execute("select idPaginasParticipa from paginaparticipa where Pagina_idPagina = '" + str(id) + "'"
-                       "and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+        cursor.execute("insert into pagina values (NULL , '" + str(nomb) + "' , '" + str(
+            self.id_usuario) + "')")
+
+        cursor.execute("select idPagina from Pagina where Nombre = '" + str(nomb) + "' order by Nombre DESC")
+        id = cursor.fetchall()
+        id = id[0]["idPagina"]
+
+        cursor.execute("insert into paginaparticipa values (NULL , '" + str(id) + "' , '" + "1" + "' "
+                       ", '" + str(self.id_usuario) + "')")
+
+        cursor.execute("select idPaginasParticipa from paginaparticipa where pagina_idPagina = '" + str(id) + "'"
+                       "and usuario_idusuario = '" + str(self.id_usuario) + "'")
         id_pagina_participa = cursor.fetchall()
         id_pagina_participa = id_pagina_participa[0]["idPaginasParticipa"]
+
         mi_pagina_participa = Pagina_participa()
         mi_pagina_participa.id_pagina_participa = id_pagina_participa
-        mi_pagina_participa.id_pagina = id
+        mi_pagina_participa.nombre_pagina = nomb
         mi_pagina_participa.Administrador = 1
-        mi_pagina_participa.correo_electronico = self.correo_electronico
+        mi_pagina_participa.id_usuario = self.id_usuario
+        mi_pagina_participa.estado_invitacion = 0
         self.lista_paginas.append(mi_pagina_participa)
         return 1
 
-    def subir_multimedia (self , archivo , creacion , album , db):
+    def subir_multimedia (self , archivo , creacion , album , db): #TERMINAR
         cursor = db.cursor(pymysql.cursors.DictCursor)
         mi_multimedia = Multimedia()
         #terminar
         cursor.execute("insert into Multimedia values (NULL , )")
         return 1
 
-    def crear_post (self , fecha  , descripcion , id_pagina , id_grupo , id_archivo , db):
+    def crear_post (self , fecha  , descripcion , id_pagina , id_grupo , id_multimedia , db): #ANDA
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        mi_post = Post()
+
         if id_pagina == 0 and id_grupo != 0:
             cursor.execute("insert into Post values (NULL , '" + str(fecha) + "' , '" + str(descripcion) + "' ,"
-                           " '" + str(id_pagina) + "' ,  NULL  , '" + str(self.correo_electronico) + "' , 0 , 0 , 0)")
+                           "NULL ,  '" + str(id_grupo) + "'  , '" + str(self.id_usuario) + "' , 0)")
         elif id_pagina != 0 and id_grupo == 0:
             cursor.execute("insert into Post values (NULL , '" + str(fecha) + "' , '" + str(descripcion) + "' ,"
-                           " NULL , '" + str(id_grupo) + "' , '" + str(self.correo_electronico) + "' , 0 , 0 , 0)")
+                           " '" + str(id_pagina) + "' , NULL , '" + str(self.id_usuario) + "' , 0)")
         else:
             cursor.execute("insert into Post values (NULL , '" + str(fecha) + "' , '" + str(descripcion) + "' ,"
-                           " NULL , NULL , '" + str(self.correo_electronico) + "' , 0 , 0 , 0)")
+                           " NULL , NULL , '" + str(self.id_usuario) + "' , 0)")
 
-        cursor.execute("select idPost from post where usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'"
+        cursor.execute("select idPost from post where usuario_idUsuario = '" + str(self.id_usuario) + "'"
                        "order by idPost DESC")
         id = cursor.fetchall()
         id = id[0]["idPost"]
 
-        cursor.execute("insert into post_has_multimedia values ('" + str(id) + "' , '" + str(id_archivo) + "')")
+        for item in id_multimedia:
+            cursor.execute("insert into post_has_multimedia values ('" + str(id) + "' , '" + str(item) + "')")
 
+        mi_post = Post()
         mi_post.id_post = id
         mi_post.fecha = fecha
         mi_post.descripcion = descripcion
         mi_post.id_pagina = id_pagina
         mi_post.id_grupo = id_grupo
-        mi_post.archivos_multimedia = id_archivo
+        mi_post.archivos_multimedia = id_multimedia
+        mi_post.aceptacion = 0
         self.lista_posts.append(mi_post)
         return 1
 

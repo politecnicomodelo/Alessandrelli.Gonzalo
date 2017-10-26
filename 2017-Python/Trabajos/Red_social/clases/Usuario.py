@@ -330,7 +330,6 @@ class Usuario (object):
 
     def mandar_mensaje (self , id_amigo , mensaje , fecha , lista_usuarios , db):
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        mi_chat = Chat()
 
         cursor.execute("select usuario_CorreoElectronico from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
         usuario_correo = cursor.fetchall()
@@ -346,6 +345,7 @@ class Usuario (object):
         id = cursor.fetchall()
         id = id[0]["idChat"]
 
+        mi_chat = Chat()
         mi_chat.id_chat = id
         mi_chat.mensaje = mensaje
         mi_chat.id_amigo = id_amigo

@@ -39,21 +39,33 @@ datos = cursor.fetchall()
 #   lista_usuarios.append(mi_usuario)
 
 mi_usuario = Usuario()
-mi_usuario.correo_electronico = "juana.rojas@hotmail.com"
-mi_usuario.id_usuario = 5
+#mi_usuario.correo_electronico = "juana.rojas@hotmail.com"
+#mi_usuario.id_usuario = 5
 
+formacion_empleo = "desempleado,nunca trabaje,"
+lugares_vividos = "argentina,chile,"
+informacion_basica = "soy una eprsona sentimental"
+acontecimientos_importantes = "murio mi abuelo en 1989,naci,"
+nombre = "juan"
+apellido = "jordiano"
+correo_electronico = "richard.joirdano@hotmail.com"
+numero_tarjeta_credito = None
+fecha_vencimiento_tarjeta = None
+codigo_seguridad_tarjeta = None
+fecha_nacimiento = '1995-03-06'
+genero_sexual = "masculino"
+contrasena = "Hnvpuhkh1"
 
-#mi_usuario = mi_usuario.crear_usuario("sin estudios" , "en la calle" , "me gusta el pan" , "naci" , "juan" , "perez"
-#                                    , "juan.DIEGOperez@hotmail.com" , None , None , None , '1980-03-11' , "masculino"
-#                                    , "el_juanpi" , db)
+mi_usuario = mi_usuario.crear_usuario(formacion_empleo , lugares_vividos , informacion_basica , acontecimientos_importantes
+                         , nombre , apellido , correo_electronico , numero_tarjeta_credito
+                         , fecha_vencimiento_tarjeta , codigo_seguridad_tarjeta , fecha_nacimiento , genero_sexual
+                         , contrasena , db)[0]
 
-#print (mi_usuario.hashear_contrasena("Hnvpuhkh1"))
-#print (mi_usuario.loguear("juana.rojas@hotmail.com" , "Hnvpuhkh1" , db))
-#print(mi_usuario.agregar_amigo("juan.perez@hotmail.com" , db))
-#print(mi_usuario.eliminar_amigo("juan.perez@hotmail.com" , db))
-#print (mi_usuario.crear_grupo ("grupo cool" , 0 , db))
+lista_usuarios.append(mi_usuario)
 
-print (mi_usuario.hola(db))
+print(mi_usuario.agregar_amigo(5 , db))
+print(mi_usuario.lista_amigos[0].id_amigo)
+
 
 
 #app = Flask(__name__)

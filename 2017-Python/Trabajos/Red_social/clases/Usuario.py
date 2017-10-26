@@ -32,7 +32,7 @@ class Usuario (object):
     lista_posts = []
 
 
-    def crear_usuario (self , formacion_empleo , lugares_vividos , informacion_basica
+    def crear_usuario (self , formacion_empleo , lugares_vividos , informacion_basica #ANDA
                        , acontecimientos_importantes , nombre , apellido , correo_electronico , numero_tarjeta_credito
                        , fecha_vencimiento_tarjeta , codigo_seguridad_tarjeta , fecha_nacimiento , genero_sexual
                        , contrasena_hash , db):
@@ -67,7 +67,7 @@ class Usuario (object):
 
         return self , id
 
-    def eliminar_usuario (self , db , lista_usuarios):
+    def eliminar_usuario (self , lista_usuarios , db): #TERMIANR DE HACER Y TESTEAR
         cursor = db.cursor(pymysql.cursors.DictCursor)
 
         cursor.execute("select idamigo from usuario_has_usuario where usuario_idusuario = "
@@ -88,7 +88,8 @@ class Usuario (object):
                     "select usuario_idusuario , administrador from grupoparticipa where grupo_idgrupo = '" + str(
                         item["idgrupo"]) + "'")
                 datos = cursor.fetchall()
-                if datos == ():
+                if (len(datos) == 1):
+                    cursor.execute("delete from grupoparticipa where usuario_idusuario = '" + str(item[self.id_usuario]) + "'")
                     cursor.execute("delete from grupo where idgrupo = '" + str(item["idgrupo"]) + "'")
                 else:
                     for item2 in datos:
@@ -127,15 +128,15 @@ class Usuario (object):
 
 
 
-    def hashear_contrasena (self , contrasena):
+    def hashear_contrasena (self , contrasena): #ANDA
         return hashlib.md5(contrasena.encode('utf-8')).hexdigest()
 
-    def crear_lista (self , dato):
+    def crear_lista (self , dato): #ANDA
         datos = []
         datos = dato.split(",")
         return datos
 
-    def loguear (self , correo , contrasena , db):
+    def loguear (self , correo , contrasena , db): #ANDA
 
         cursor = db.cursor(pymysql.cursors.DictCursor)
         cursor.execute("select CorreoElectronico from Usuario")
@@ -150,27 +151,31 @@ class Usuario (object):
         return 0
 
 
-    def agregar_amigo(self , correo_amigo, db):
+    def agregar_amigo(self , id_amigo, db): #ANDA
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("select CorreoElectronico from Usuario")
+        cursor.execute("select idusuario from Usuario")
         correo = cursor.fetchall()
         for item in correo:
-            if item["CorreoElectronico"] == correo_amigo:
+            print(item["idusuario"])
+            if item["idusuario"] == id_amigo:
+                print ("adfs")
                 cursor.execute("select * from usuario_has_usuario")
                 datos = cursor.fetchall()
                 for item in datos:
-                    if ((item["usuario_CorreoElectronico"] == self.correo_electronico) and (item["usuario_CorreoElectronico1"] == correo_amigo)) or ((item["usuario_CorreoElectronico"] == correo_amigo) and (item["usuario_CorreoElectronico1"] == self.correo_electronico)):
+
+                    if (((item["usuario_idusuario"] == self.correo_electronico) and
+                            (item["usuario_idusuario1"] == id_amigo) and (str(item["estado"]) == "0")) or
+                            ((item["usuario_idusuario"] == id_amigo) and
+                            (item["usuario_idusuario1"] == self.correo_electronico) and (str(item["estado"]) == "0"))):
                             return 0
-                cursor.execute("insert into usuario_has_usuario values (NULL , '" + str(self.correo_electronico) + "' , '" + str(
-                    correo_amigo) + "')")
-                cursor.execute("select idAmigo from usuario_has_usuario where usuario_CorreoElectronico = '" + str(
-                    self.correo_electronico) + "' and usuario_CorreoElectronico1 = '" + str(correo_amigo) + "'")
-                id = cursor.fetchall()
-                id = id[0]["idAmigo"]
+
+                cursor.execute("insert into usuario_has_usuario values (NULL , '" + str(self.id_usuario) + "' "
+                               ", '" + str(id_amigo) + "' , '" + "0" + "')")
+
                 mi_amigo = Amigo()
-                mi_amigo.id_amigo = id
-                mi_amigo.mi_correo = self.correo_electronico
-                mi_amigo.correo_amigo = correo_amigo
+                mi_amigo.id_amigo = id_amigo
+                mi_amigo.mi_id = self.id_usuario
+                mi_amigo.estado = "0"
                 self.lista_amigos.append(mi_amigo)
                 return 1
         return 0

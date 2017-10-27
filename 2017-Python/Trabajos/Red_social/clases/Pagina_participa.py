@@ -5,4 +5,4 @@ class Pagina_participa (object):
     id_pagina_participa = None
     id_pagina = None
     administrador = None
-    correo_electronico = None
+    id_ususario = None

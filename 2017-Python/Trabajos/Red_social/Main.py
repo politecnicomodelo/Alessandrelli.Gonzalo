@@ -37,7 +37,7 @@ datos = cursor.fetchall()
 
 #   lista_usuarios.append(mi_usuario)
 
-mi_usuario = Usuario()
+usuario = Usuario()
 #mi_usuario.correo_electronico = "juana.rojas@hotmail.com"
 #mi_usuario.id_usuario = 5
 
@@ -55,22 +55,29 @@ fecha_nacimiento = '1995-03-06'
 genero_sexual = "masculino"
 contrasena = "Hnvpuhkh1"
 
-cursor.execute("delete from usuario where correoelectronico = '" + "richard.jordiano@hotmail.com" + "'")
+#cursor.execute("delete from grupoparticipa where usuario_idusuario = '" + "richard.jordiano@hotmail.com" + "' =")
+#cursor.execute("delete from grupo where usuario_idusuario = '" + "richard.jordiano@hotmail.com" + "'")
+#cursor.execute("delete from usuario_has_usuario where idamigo = 1")
+#cursor.execute("delete from usuario where correoelectronico = '" + "richard.jordiano@hotmail.com" + "'")
 
-mi_usuario = mi_usuario.crear_usuario(formacion_empleo , lugares_vividos , informacion_basica , acontecimientos_importantes
+usuario = usuario.crear_usuario(formacion_empleo , lugares_vividos , informacion_basica , acontecimientos_importantes
                          , nombre , apellido , correo_electronico , numero_tarjeta_credito
                          , fecha_vencimiento_tarjeta , codigo_seguridad_tarjeta , fecha_nacimiento , genero_sexual
                          , contrasena , db)
 
-lista_usuarios.append(mi_usuario)
+lista_usuarios.append(usuario)
+
+
 
 #print(mi_usuario.agregar_amigo(5 , db) , "A")
 #print(mi_usuario.lista_amigos[0].id_amigo , "B")
 #print(mi_usuario.eliminar_amigo(5 , db) , "C")
 #print(mi_usuario.eliminar_amigo(5 , db) , "C")
 #print(mi_usuario.crear_pagina("pagina gay" , db))
-lista_multimedia = [1 , 2 , 3 , 4]
-print(mi_usuario.crear_post(1 , "1" , 0 , 0 , lista_multimedia , db))
+#print(usuario.agregar_amigo(33 , db) , "A")
+#print(usuario.mandar_mensaje(11 , "GAY" , '1999-09-09' , lista_usuarios , db) , "B")
+print (usuario.suscribir_pagina(5 , db))
+
 
 
 #app = Flask(__name__)

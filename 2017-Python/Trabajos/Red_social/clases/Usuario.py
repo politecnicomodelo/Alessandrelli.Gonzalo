@@ -28,6 +28,7 @@ class Usuario (object):
     lista_paginas = []
     lista_multimedia = []
     lista_posts = []
+    conversacion = []
 
 
     def crear_usuario (self , formacion_empleo , lugares_vividos , informacion_basica #ANDA
@@ -41,7 +42,6 @@ class Usuario (object):
         check = cursor.fetchall()
 
         for item in check:
-            print (item["correoelectronico"])
             if item["correoelectronico"] == correo_electronico:
                 return 0 , "el correo esta en uso"
 
@@ -162,9 +162,7 @@ class Usuario (object):
         cursor.execute("select idusuario from Usuario")
         correo = cursor.fetchall()
         for item in correo:
-            print(item["idusuario"])
             if item["idusuario"] == id_amigo:
-                print ("adfs")
                 cursor.execute("select * from usuario_has_usuario")
                 datos = cursor.fetchall()
                 for item in datos:
@@ -328,13 +326,19 @@ class Usuario (object):
                         return 1
             return 0
 
-    def mandar_mensaje (self , id_amigo , mensaje , fecha , lista_usuarios , db):
+    def mandar_mensaje (self , id_amigo , mensaje , fecha , lista_usuarios , db): #ANDA
         cursor = db.cursor(pymysql.cursors.DictCursor)
 
-        cursor.execute("select usuario_CorreoElectronico from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
-        usuario_correo = cursor.fetchall()
-        usuario_correo = usuario_correo[0]["usuario_CorreoElectronico"]
-        if usuario_correo == self.correo_electronico:
+        cursor.execute("select estado from usuario_has_usuario where idamigo = '" + str(id_amigo) + "'")
+        check = cursor.fetchall()
+        check = check[0]["estado"]
+        if check == 2:
+            return 0
+
+        cursor.execute("select usuario_idUsuario from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
+        usuario_id = cursor.fetchall()
+        usuario_id = usuario_id[0]["usuario_idUsuario"]
+        if usuario_id == self.id_usuario:
             emisor = 1
         else:
             emisor = 0
@@ -356,61 +360,57 @@ class Usuario (object):
             if item.id_amigo == id_amigo:
                 item.conversacion.append(mi_chat)
         if emisor == 1:
-            cursor.execute("select usuario_CorreoElectronico1 from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
-            correo_usuario_CorreoElectronico = cursor.fetchall()
-            correo_usuario_CorreoElectronico = correo_usuario_CorreoElectronico[0]["usuario_CorreoElectronico1"]
+            cursor.execute("select usuario_idUsuario1 from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
+            id_usaurio = cursor.fetchall()
+            id_usaurio = id_usaurio[0]["usuario_idUsuario1"]
         else:
-            cursor.execute("select usuario_CorreoElectronico from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
-            correo_usuario_CorreoElectronico = cursor.fetchall()
-            correo_usuario_CorreoElectronico = correo_usuario_CorreoElectronico[0]["usuario_CorreoElectronico"]
+            cursor.execute("select usuario_idUsuario from usuario_has_usuario where IdAmigo = '" + str(id_amigo) + "'")
+            id_usaurio = cursor.fetchall()
+            id_usaurio = id_usaurio[0]["usuario_idUsuario"]
 
         for item in lista_usuarios:
-            if item.correo_electronico == correo_usuario_CorreoElectronico:
+            if item.id_usuario == id_usaurio:
                 item.conversacion.append(mi_chat)
         return 1
 
-
-
-    def suscribir_pagina (self , id_pagina , db):
-        admin = "0"
+    def suscribir_pagina (self , id_pagina , db): #ANDA
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        mi_pagina = Pagina_participa()
 
         for item in self.lista_paginas:
-            if item.correo_electronico == self.correo_electronico and item.id_pagina == id_pagina:
+            if item.usuario_idusuario == self.id_usuario and item.id_pagina == id_pagina:
                 return 0;
 
-        cursor.execute("insert into paginaparticipa values (NULL , '" + str(id_pagina) + "' , '" + str(admin) + "' , '" + str(
-            self.correo_electronico) + "')")
+        cursor.execute("insert into paginaparticipa values (NULL , '" + str(id_pagina) + "' , '" + "0" + "' , '" + str(
+            self.id_usuario) + "')")
         cursor.execute("select idPaginasParticipa from paginaparticipa where Pagina_idPagina = '" + str(id_pagina) + "'"
-                       "and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+                       "and usuario_idusuario = '" + str(self.id_usuario) + "'")
         id_pagina_participa = cursor.fetchall()
         id_pagina_participa = id_pagina_participa[0]["idPaginasParticipa"]
         mi_pagina_participa = Pagina_participa()
         mi_pagina_participa.id_pagina_participa = id_pagina_participa
         mi_pagina_participa.id_pagina = id
-        mi_pagina_participa.Administrador = 1
-        mi_pagina_participa.correo_electronico = self.correo_electronico
+        mi_pagina_participa.Administrador = 0
+        mi_pagina_participa.id_ususario = self.id_usuario
         self.lista_paginas.append(mi_pagina_participa)
         return 1
 
     def suscribir_grupo (self , id_grupo , db): #terminar de testear
         cursor = db.cursor(pymysql.cursors.DictCursor)
-        admin = 0
-        mi_grupo_participa = Grupo_participa()
 
         for item in self.lista_grupos:
-            if item.correo_electronico == self.correo_electronico and item.id_grupo == id_grupo:
+            if item.usuario_idUsuario == self.id_usuario and item.id_grupo == id_grupo:
                 return 0;
 
-        cursor.execute("insert into grupoparticipa values (NULL , '" + str(admin) + "' , "
+        cursor.execute("insert into grupoparticipa values (NULL , '" + "0" + "' , "
                        "'" + str(self.correo_electronico) + "' , '" + str(id_grupo) + "')")
         cursor.execute("select idGruposParticipa from grupoparticipa where idGrupo = '" + str(id_grupo) + "' and usuario_CorreoElectronico = "
                        "'" + str(self.correo_electronico) + "'")
         id = cursor.fetchall()
         id = id[0]["idGruposParticipa"]
+
+        mi_grupo_participa = Grupo_participa()
         mi_grupo_participa.id_grupo_participa = id
-        mi_grupo_participa.administrador = admin
+        mi_grupo_participa.administrador = 0
         mi_grupo_participa.id_grupo = id_grupo
         mi_grupo_participa.correo_electronico = self.correo_electronico
         self.lista_grupos.append(mi_grupo_participa)

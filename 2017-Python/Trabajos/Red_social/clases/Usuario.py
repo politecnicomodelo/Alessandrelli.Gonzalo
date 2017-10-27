@@ -394,7 +394,7 @@ class Usuario (object):
         self.lista_paginas.append(mi_pagina_participa)
         return 1
 
-    def suscribir_grupo (self , id_grupo , db): #terminar de testear
+    def suscribir_grupo (self , id_grupo , db): #ANDA
         cursor = db.cursor(pymysql.cursors.DictCursor)
 
         for item in self.lista_grupos:
@@ -402,9 +402,9 @@ class Usuario (object):
                 return 0;
 
         cursor.execute("insert into grupoparticipa values (NULL , '" + "0" + "' , "
-                       "'" + str(self.correo_electronico) + "' , '" + str(id_grupo) + "')")
-        cursor.execute("select idGruposParticipa from grupoparticipa where idGrupo = '" + str(id_grupo) + "' and usuario_CorreoElectronico = "
-                       "'" + str(self.correo_electronico) + "'")
+                       "'" + str(self.id_usuario) + "' , '" + str(id_grupo) + "' , '" + "0" + "')")
+        cursor.execute("select idGruposParticipa from grupoparticipa where grupo_idGrupo = '" + str(id_grupo) + "' and usuario_idusuario = "
+                       "'" + str(self.id_usuario) + "'")
         id = cursor.fetchall()
         id = id[0]["idGruposParticipa"]
 
@@ -413,13 +413,14 @@ class Usuario (object):
         mi_grupo_participa.administrador = 0
         mi_grupo_participa.id_grupo = id_grupo
         mi_grupo_participa.correo_electronico = self.correo_electronico
+        mi_grupo_participa.estado_invitacion = 0
         self.lista_grupos.append(mi_grupo_participa)
         return 1
 
-        def desuscribir_pagina(self, id_pagina, db):
+        def desuscribir_pagina(self, id_pagina, db): #ANDA
             cursor = db.cursor(pymysql.cursors.DictCursor)
 
-            cursor.execute("delete from paginaparticipa where idPagina = '" + str(id_pagina) + "' and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+            cursor.execute("delete from paginaparticipa where idPagina = '" + str(id_pagina) + "' and usuario_idUsuario = '" + str(self.id_usuario) + "'")
 
             for item in self.lista_paginas:
                 if item.id_pagina == id_pagina:
@@ -427,10 +428,10 @@ class Usuario (object):
                     return 1
             return 0
 
-        def desuscribir_grupo(self, id_grupo, db):
+        def desuscribir_grupo(self, id_grupo, db): #ANDA
             cursor = db.cursor(pymysql.cursors.DictCursor)
 
-            cursor.execute("delete from grupoparticipa where idGrupo = '" + str(id_grupo) + "' and usuario_CorreoElectronico = '" + str(self.correo_electronico) + "'")
+            cursor.execute("delete from grupoparticipa where idGrupo = '" + str(id_grupo) + "' and usuario_idusuario = '" + str(self.id_usuario) + "'")
 
             for item in self.lista_grupos:
                 if item.id_grupo == id_grupo:
@@ -438,7 +439,7 @@ class Usuario (object):
                     return 1
             return 0
 
-        def eliminar_grupo(self, id_grupo, lista_usuarios, db):
+        def eliminar_grupo(self, id_grupo, lista_usuarios, db): #TESTEAR
             cursor = db.cursor(pymysql.cursors.DictCursor)
 
             cursor.execute("select idGruposParticipa from grupoparticipa where idGrupo = '" + str(id_grupo) + "'")
@@ -455,11 +456,11 @@ class Usuario (object):
 
             for item in self.lista_grupos:
                 if item.id_grupo == id_grupo:
-                    self.lista_paginas.remove(item)
+                    self.lista_grupos.remove(item)
                     return 1
             return 0
 
-        def eliminar_pagina(self , id_pagina , lista_usuarios , db):
+        def eliminar_pagina(self , id_pagina , lista_usuarios , db): #TESTEAR
             cursor = db.cursor(pymysql.cursors.DictCursor)
 
             cursor.execute("select idPaginasParticipa from paginaparticipa where pagina_idPagina = '" + str(id_pagina) + "'")
@@ -480,7 +481,7 @@ class Usuario (object):
                     return 1
             return 0
 
-        def hacer_admin_grupo (self , id_usuario , id_grupo , db):
+        def hacer_admin_grupo (self , id_usuario , id_grupo , lista_usuarios , db): #TESTEAR
             cursor = db.cursor(pymysql.cursors.DictCursor)
 
             cursor.execute(
@@ -488,31 +489,36 @@ class Usuario (object):
             check = cursor.fetchall()
 
             if ((check != ()) and (check[0]["administrador"] == 1)):
-                cursor.execute("select administrador from grupoparticipa where usuario_idusuario = '" + str(id_usuario) + "'"
-                               " and grupo_idgrupo = '" + str(id_grupo) + "'")
-                check = cursor.fetchall()
+                return 0 , "el usuario ya es un administrador"
 
                 if ((check != ()) and (str(check[0]["administrador"]) == "0")):
                     cursor.execute("update grupoparticipa set administrador = '" + str("1") + "' where usuario_idusuario"
                                    " = '" + str(id_usuario) + "' and grupo_idgrupo = '" + str(id_grupo) + "'")
+                    for item in lista_usuarios:
+                        if item.id_usuario == id_usuario:
+                            for item2 in item.lista_grupos:
+                                if item2.id_grupo == id_grupo:
+                                    item2.administrador = 1
                     return 1
             return 0
 
-        def hacer_admin_pagina (self , id_usuario , id_pagina , db):
+        def hacer_admin_pagina (self , id_usuario , id_pagina , lista_usuarios , db):
             cursor = db.cursor(pymysql.cursors.DictCursor)
 
-            cursor.execute("select administrador from grupoparticipa where usuario_idusuario = '" + str(self.id_usuario) + "'")
+            cursor.execute("select administrador from paginaparticipa where usuario_idusuario = '" + str(self.id_usuario) + "'")
             check = cursor.fetchall()
 
             if ((check != ()) and (check[0]["administrador"] == 1)):
-                cursor.execute(
-                    "select administrador from paginaparticipa where usuario_idusuario = '" + str(id_pagina) + "'"
-                    " and pagina_idpagina = '" + str(id_pagina) + "'")
-                check = cursor.fetchall()
+                return 0 , "el usuario ya es administrador"
 
                 if ((check != ()) and (str(check[0]["administrador"]) == "0")):
                     cursor.execute("update paginaparticipa set administrador = '" + str("1") + "' where usuario_idusuario"
                                    " = '" + str(id_usuario) + "' and pagina_idpagina = '" + str(id_pagina) + "'")
+                    for item in lista_usuarios:
+                        if item.id_usuario == id_usuario:
+                            for item2 in item.lista_paginas:
+                                if item2.id_pagina == id_pagina:
+                                    item2.administrador = 1
                     return 1
             return 0
 

@@ -47,7 +47,7 @@ informacion_basica = "soy una eprsona sentimental"
 acontecimientos_importantes = "murio mi abuelo en 1989,naci,"
 nombre = "juan"
 apellido = "jordiano"
-correo_electronico = "richard.joirdano@hotmail.com"
+correo_electronico = "mariano.joirdano@hotmail.com"
 numero_tarjeta_credito = None
 fecha_vencimiento_tarjeta = None
 codigo_seguridad_tarjeta = None
@@ -76,7 +76,7 @@ lista_usuarios.append(usuario)
 #print(mi_usuario.crear_pagina("pagina gay" , db))
 #print(usuario.agregar_amigo(33 , db) , "A")
 #print(usuario.mandar_mensaje(11 , "GAY" , '1999-09-09' , lista_usuarios , db) , "B")
-print (usuario.suscribir_pagina(5 , db))
+print (usuario.suscribir_grupo(4 , db))
 
 
 

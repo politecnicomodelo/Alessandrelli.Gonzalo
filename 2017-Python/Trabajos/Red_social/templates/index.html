@@ -2,9 +2,67 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+    <style>
+    /* Fuentes */
+	@font-face{
+		font-family:"PTF55F";
+	 	src: url({{ static }}Fuentes/PTF55F.ttf) format("truetype");
+	 	letter-spacing:12px;
+	}
+	@font-face{
+		font-family:"LeagueGothic-Regular";
+		src: url({{static}}Fuentes/LeagueGothic-Regular.otf);
+		letter-spacing:22px;
+	}
+	@font-face{
+		font-family:"Capsuula";
+		src: url({{static}}Fuentes/Capsuula.ttf);
+		letter-spacing:22px;
+	}
+	@font-face{
+		font-family:"Quenda";
+		src: url({{static}}Fuentes/Quenda.otf);
+		letter-spacing:22px;
+	}
+	@font-face{
+		font-family:"Uni";
+		src: url({{static}}Fuentes/Uni.ttf);
+		letter-spacing:22px;
+	}
+	@font-face{
+		font-family:"HBM";
+		src: url({{static}}Fuentes/HBM.ttf);
+		letter-spacing:22px;
+	}
+	@font-face{
+		font-family:"OpenSans";
+		src: url({{static}}Fuentes/OpenSans.ttf);
+		letter-spacing:22px;
+	}
+    #principal {
+		 width:800px;
+		 font-size:80px;
+		 position: fixed;
+		 top:50px;
+		 right:50px;
+
+	}
+	</style>
     <title>Title</title>
 </head>
 <body>
+    <div id = principal>
+        <span style="font-family: LeagueGothic-Regular; color:#3e3dff">FACEBOOL</span>
+    </div>
+    <div id = amigos>
+        <div id="wrapper">
+            <div class="scrollbar" id="style-default">
+                  <div class="force-overflow">
+                      <a href={{direccion}}> {{lista}}</a>
+                  </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

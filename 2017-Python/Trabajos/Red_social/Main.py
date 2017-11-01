@@ -4,7 +4,7 @@ from flask import Flask, render_template , request
 import hashlib
 from datetime import date
 from socket import *
-import wmi
+#import wmi
 
 
 HTTP_STATIC="http://127.0.0.1/"
@@ -23,9 +23,13 @@ HTTP_STATIC="http://127.0.0.1/"
 
 app = Flask(__name__)
 @app.route('/')
-def index():
+def index(lista_amigos , lista_grupos , lista_paginas , imagen , comentarios , me_gusta , no_me_gusta , lol
+          , wow , sad , beautiful , anger):
     lista = ["amigo1","amigo2","amigo3","amigo4","amigo5"]
-    return render_template('index.html', static = HTTP_STATIC,  lista = lista)
+    return render_template('index.html', static = HTTP_STATIC,  lista_amigos = lista_amigos
+                           , lista_grupos = lista_grupos , lista_paginas = lista_paginas , imagen = imagen
+                           , comentarios = comentarios , me_gusta = me_gusta , no_me_gusta = no_me_gusta  , lol = lol
+                           , wow = wow , sad = sad , beautiful = beautiful , anger = anger)
     id = request.args.get('id')
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)

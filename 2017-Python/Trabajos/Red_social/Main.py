@@ -6,6 +6,7 @@ from datetime import date
 from socket import *
 import wmi
 
+
 HTTP_STATIC="http://127.0.0.1/"
 #db = pymysql.connect (host = '127.0.0.1' , user = "root" , password = "" ,
 #                      db = "red_social" , autocommit = True)
@@ -13,6 +14,12 @@ HTTP_STATIC="http://127.0.0.1/"
 
 #c=wmi.WMI('172.16.2.250',user='root',password='alumno')
 #process_id, return_value = c.Win32_Process.Create(CommandLine="cmd.exe /c  <your command>")
+
+
+
+
+
+
 
 app = Flask(__name__)
 @app.route('/')

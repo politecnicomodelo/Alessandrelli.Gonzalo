@@ -111,12 +111,12 @@
 		 top:240px;
 	}
 	#posts{
-	     width:1000px;
-	     height:500px;
+	     width:900px;
+	     height:550px;
 		 font-size:20px;
-		 position: absolute;
+		 position: relative;
 		 top:90px;
-		 right: 150px;
+		 right: -220px;
 		 background-color: #7A3EFF;
 	}
 	#menu{
@@ -130,7 +130,7 @@
 	    height:300px;
         position: absolute;
         top:40px;
-        right:350px;
+        right:250px;
         background-color:#01CC00;
     }
     #comentarios{
@@ -138,22 +138,23 @@
 	    height:100px;
         position: absolute;
         top:350px;
-        right:550px;
+        right:450px;
         background-color:#ff0000;
+        border: 0;
     }
     #like{
 	    width:100px;
 	    height:30px;
         position: absolute;
-        top:40px;
+        top:50px;
         right:50px;
         background-color:#e8540c;
     }
     #dislike{
-	    width:100px;
+	    width:120px;
 	    height:30px;
         position: absolute;
-        top:100px;
+        top:110px;
         right:50px;
         background-color:#e8540c;
     }
@@ -161,15 +162,15 @@
 	    width:100px;
 	    height:30px;
         position: absolute;
-        top:160px;
+        top:170px;
         right:50px;
         background-color:#e8540c;
     }
     #wow{
-	    width:100px;
+	    width:120px;
 	    height:30px;
         position: absolute;
-        top:220px;
+        top:230px;
         right:50px;
         background-color:#e8540c;
     }
@@ -177,7 +178,7 @@
 	    width:100px;
 	    height:30px;
         position: absolute;
-        top:280px;
+        top:290px;
         right:50px;
         background-color:#e8540c;
     }
@@ -185,18 +186,31 @@
 	    width:100px;
 	    height:30px;
         position: absolute;
-        top:340px;
+        top:350px;
         right:50px;
         background-color:#e8540c;
     }
     #beautiful{
-	    width:100px;
+	    width:120px;
 	    height:30px;
         position: absolute;
-        top:400px;
+        top:410px;
         right:50px;
         background-color:#e8540c;
     }
+    #Comentar{
+	    width:800px;
+	    height:400px;
+        position: absolute;
+        top:481px;
+        right:50px;
+        border: 0;
+    }
+    input {
+        width: 596px;
+        height: 50px;
+    }
+}
 
 	</style>
 
@@ -210,7 +224,7 @@
                   <div class="force-overflow">
                         {% for list in lista_amigos %}
                         <div class=flash>
-                            <a href=chat?id={{list}}> {{ lista_amigos }}</a>
+                            <a href=chat?id={{list}}> {{ list }}</a>
                         </div>
                         {% endfor %}
                   </div>
@@ -224,7 +238,7 @@
                 <div class="force-overflow">
                     {% for list in lista_grupos %}
                         <div class=flash>
-                            <a href=chat?id={{list}}> {{ lista_grupos }}</a>
+                            <a href=chat?id={{list}}> {{ list }}</a>
                         </div>
                     {% endfor %}
                 </div>
@@ -238,7 +252,7 @@
                 <div class="force-overflow">
                     {% for list in lista_paginas %}
                         <div class=flash>
-                            <a href=chat?id={{list}}> {{ lista_paginas }}</a>
+                            <a href=chat?id={{list}}> {{ list }}</a>
                         </div>
                     {% endfor %}
                 </div>
@@ -246,64 +260,54 @@
         </div>
     </div>
 
+    {% for post in lista_post %}
     <div id = posts>
-
-        <div id = imagen>
-            <div class=flash>
-                <a href=chat?id={{list}}> {{ imagen }}</a>
-            </div>
-        </div>
+        <img id="imagen" src="nene.jpg" />
         <div id = like>
-            <div class=flash>
-                <button type="button">Me Gusta</button>
-            </div>
+            <a> <button type="button">Me Gusta</button> {{ post.me_gusta }}</a>
+            <a href="nene.jpg">Imagen</a>
         </div>
         <div id = dislike>
-            <div class=flash>
-                <button type="button">NO Me Gusta</button>
-            </div>
+            <a> <button type="button">No me gusta</button> {{ post.no_me_gusta }}</a>
         </div>
         <div id = anger>
-            <div class=flash>
-                <button type="button">Me Enoja</button>
-            </div>
+            <a> <button type="button">Me enoja</button> {{ post.anger }}</a>
         </div>
         <div id = wow>
-            <div class=flash>
-                <button type="button">Me Sorprende</button>
-            </div>
+            <a> <button type="button">Me asombra</button> {{ post.wow }}</a>
         </div>
         <div id = lol>
-            <div class=flash>
-                <button type="button">Me Divierte</button>
-            </div>
+            <a> <button type="button">Me enrisa</button> {{ post.lol }}</a>
         </div>
         <div id = sad>
-            <div class=flash>
-                <button type="button">Me Enllora</button>
-            </div>
+            <a> <button type="button">Me enllora</button> {{ post.sad }}</a>
         </div>
         <div id = beautiful>
-            <div class=flash>
-                <button type="button">Me Encanta</button>
-            </div>
+            <a> <button type="button">Me encanta</button> {{ post.beautiful }}</a>
         </div>
 
         <div id = comentarios>
             <div id="wrapper">
                 <div class="scrollbar3" id="style-default">
                     <div class="force-overflow">
-                        {% for list in lista_comentarios %}
-                            <div class=flash>
-                                <a href=chat?id={{list}}> {{ lista_comentarios }}</a>
+                        {% for list in post.lista_comentarios %}
+                            <div>
+                                <a> {{list}} </a>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
-
+        <div id = Comentar>
+            <a>
+            <input type="text">
+                <button type="button"> Comentar </button>
+            </a>
+            </div>
     </div>
+    {% endfor %}
+
     <div id = principal>
         <span style="font-family: LeagueGothic-Regular; color:#3e3dff">FaceBool</span>
     </div>

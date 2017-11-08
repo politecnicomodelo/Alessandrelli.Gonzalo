@@ -1,12 +1,14 @@
 import pymysql
 from datetime import date
+#modificado
 
 class Post (object):
-    id_post = None
-    fecha = None
-    descripcion = None
-    id_pagina = None
-    id_grupo = None
-    archivos_multimedia = []
-    id_usuario = None
-    aceptacion = None
+    imagen = None
+    lista_comentarios = []
+    me_gusta = None
+    no_me_gusta = None
+    lol = None
+    wow = None
+    sad = None
+    beautiful = None
+    anger = None

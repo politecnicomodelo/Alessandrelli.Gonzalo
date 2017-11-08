@@ -8,7 +8,7 @@ from socket import *
 #import wmi
 
 
-HTTP_STATIC="http://127.0.0.1/"
+HTTP_STATIC="http://127.0.0.1:5000/"
 #db = pymysql.connect (host = '127.0.0.1' , user = "root" , password = "" ,
 #                      db = "red_social" , autocommit = True)
 #cursor = db.cursor()

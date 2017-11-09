@@ -262,10 +262,9 @@
 
     {% for post in lista_post %}
     <div id = posts>
-        <img id="imagen" src="{{static}}nene.jpg" />
+        <img id="imagen" src="/static/nene.jpg"/>
         <div id = like>
             <a> <button type="button">Me Gusta</button> {{ post.me_gusta }}</a>
-            <a href="{{static}}nene.jpg">Imagen</a>
         </div>
         <div id = dislike>
             <a> <button type="button">No me gusta</button> {{ post.no_me_gusta }}</a>

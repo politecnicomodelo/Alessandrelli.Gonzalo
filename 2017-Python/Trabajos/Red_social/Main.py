@@ -22,14 +22,14 @@ HTTP_STATIC="http://127.0.0.1:5000/"
 
 
 
-app = Flask(__name__)
+app = Flask(__name__ , static_url_path='/static')
 @app.route('/')
 def index():
     lista_amigos = ["amigo1", "amigo2", "amigo3", "amigo4", "amigo5"]
-    lista_grupos = ["caca", "grupo gay"]
-    lista_paginas = ["pis", "pagina muy gai"]
+    lista_grupos = ["caca", "grupo cool"]
+    lista_paginas = ["pis", "pagina cool"]
     imagen = "nene.jpg"
-    lista_comentarios = ["gonzi loco: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa sos un cancer idiota" , "juana manuela: progerioso de mierda"]
+    lista_comentarios = ["gonzi loco: QUE BUENA FOTO" , "juana manuela: wow!!"]
     me_gusta = 0
     no_me_gusta = 60
     lol = 10

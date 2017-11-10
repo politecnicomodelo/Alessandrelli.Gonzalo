@@ -1,4 +1,6 @@
+import pymysql
+
 class lugar (object):
-    nombre = None
     codigo = None
+    nombre = None
     coordenadas = []

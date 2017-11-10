@@ -1,8 +1,8 @@
-from .lugar import lugar
+from .Lugar import lugar
 
 class barrio (lugar):
     poblacion = None
     ciudad_perteneciente = None
 
-def soy():
-    return "barrio"
+    def soy(cls):
+        return "barrio"

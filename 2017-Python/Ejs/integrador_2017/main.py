@@ -52,6 +52,7 @@ for item in paises:
     mi_pais = pais()
     mi_pais.codigo = item[0]
     mi_pais.nombre = item[1]
+    mi_pais.continente_perteneciente = item[2]
     for mi_coordenada in pais_coordenadas:
         for item in lista_coordenadas:
             if item.codigo == mi_coordenada[1]:
@@ -67,6 +68,7 @@ for item in provincias:
     mi_provincia = provincia()
     mi_provincia.codigo = item[0]
     mi_provincia.nombre = item[1]
+    mi_provincia.pais_perteneciente = item[2]
     for mi_coordenada in provincia_coordenadas:
         for item in lista_coordenadas:
             if item.codigo == mi_coordenada[1]:
@@ -82,6 +84,7 @@ for item in ciudades:
     mi_ciudad = ciudad()
     mi_ciudad.codigo = item[0]
     mi_ciudad.nombre = item[1]
+    mi_ciudad.provincia_perteneciente = item[2]
     for mi_coordenada in ciudad_coordenadas:
         for item in lista_coordenadas:
             if item.codigo == mi_coordenada[1]:
@@ -97,6 +100,8 @@ for item in barrios:
     mi_barrio = barrio()
     mi_barrio.codigo = item[0]
     mi_barrio.nombre = item[1]
+    mi_barrio.poblacion = item[2]
+    mi_barrio.ciudad_perteneciente = item[3]
     for mi_coordenada in barrio_coordenadas:
         for item in lista_coordenadas:
             if item.codigo == mi_coordenada[1]:
@@ -187,10 +192,92 @@ def crear_continente(nombre , lista_coordenadas):
     return mi_continente
 
 
+
+def eliminar_continente(continente , mis_lugares_a_eliminar):
+    continente.eliminar(mis_lugares_a_eliminar)
+
+    for barrio in mis_lugares_a_eliminar[3]:
+        for item in lista_barrios:
+            if item.codigo == barrio.codigo:
+                lista_barrios.remove(item)
+    for ciudad in mis_lugares_a_eliminar[2]:
+        for item in lista_ciudades:
+            if item.codigo == ciudad.codigo:
+                lista_ciudades.remove(item)
+    for provincia in mis_lugares_a_eliminar[1]:
+        for item in lista_provincias:
+            if item.codigo == provincia.codigo:
+                lista_provincias.remove(item)
+    for pais in mis_lugares_a_eliminar[0]:
+        for item in lista_paises:
+            if item.codigo == pais.codigo:
+                lista_paises.remove(item)
+
+    for item in lista_continentes:
+        if item.codigo == continente.codigo:
+            lista_continentes.remove(item)
+
+def eliminar_pais(pais , mis_lugares_a_eliminar):
+    pais.eliminar(mis_lugares_a_eliminar)
+
+    for barrio in mis_lugares_a_eliminar[2]:
+        for item in lista_barrios:
+            if item.codigo == barrio.codigo:
+                lista_barrios.remove(item)
+    for ciudad in mis_lugares_a_eliminar[1]:
+        for item in lista_ciudades:
+            if item.codigo == ciudad.codigo:
+                lista_ciudades.remove(item)
+    for provincia in mis_lugares_a_eliminar[0]:
+        for item in lista_provincias:
+            if item.codigo == provincia.codigo:
+                lista_provincias.remove(item)
+
+    for item in lista_paises:
+        if item.codigo == continente.codigo:
+            lista_paises.remove(item)
+
+def eliminar_provincia(provincia , mis_lugares_a_eliminar):
+    provincia.eliminar(mis_lugares_a_eliminar)
+
+    for barrio in mis_lugares_a_eliminar[1]:
+        for item in lista_barrios:
+            if item.codigo == barrio.codigo:
+                lista_barrios.remove(item)
+    for ciudad in mis_lugares_a_eliminar[0]:
+        for item in lista_ciudades:
+            if item.codigo == ciudad.codigo:
+                lista_ciudades.remove(item)
+
+    for item in lista_provincias:
+        if item.codigo == provincia.codigo:
+            lista_provincias.remove(item)
+
+def eliminar_ciudad(ciudad , mis_lugares_a_eliminar):
+    ciudad.eliminar(mis_lugares_a_eliminar)
+
+    for barrio in mis_lugares_a_eliminar[0]:
+        for item in lista_barrios:
+            if item.codigo == barrio.codigo:
+                lista_barrios.remove(item)
+
+    for item in lista_ciudades:
+        if item.codigo == ciudad.codigo:
+            lista_ciudades.remove(item)
+
+def eliminar_barrio(barrio):
+    barrio.eliminar_objetos_relacionados()
+
+    for item in lista_barrios:
+        if item.codigo == barrio.codigo:
+            lista_barrios.remove(item)
+
+
+
 def main ():
     while (True):
        selector = input("INGRESE UNA ACCION (0/1/2/3/4): \n\n<0>ABRIR CREAR\n<1>ABRIR MODIFICAR\n<2>ABRIR ELIMINAR\n"
-                         "<3>ABRIR OBTENER\n<4>CERRAR PROGRAMA\n\nRESPUESTA: ")
+                         "<3>ABRIR OBTENER\n\n<4>CERRAR PROGRAMA\n\nRESPUESTA: ")
 
 
        if (selector == "0"):
@@ -280,10 +367,11 @@ def main ():
        elif selector == "2":
            os.system('cls')
            selector = input("INGRESE UNA ACCION (0/1/2/3/4/5): \n\n<0> ELIMINAR CONTINENTE\n<1> ELIMINAR PAIS\n<2> ELIMINAR PROVINCIA\n"
-                            "<3> ELIMINAR CIUDAD\n<4> ELIMINAR BARRIO\n<4> ELIMINAR COORDENADA\n\nRESPUESTA: ")
+                            "<3> ELIMINAR CIUDAD\n<4> ELIMINAR BARRIO\n<5> ELIMINAR COORDENADA\n\nRESPUESTA: ")
 
-           if selector == "0": #aca
+           mis_lugares_a_eliminar = []
 
+           if selector == "0":
                print("CONTINENTES:")
 
                for item in lista_continentes:
@@ -292,70 +380,254 @@ def main ():
                mi_continente = input("INGRESAR CODIGO CONTINENTE: ")
                for item in lista_continentes:
                     if str(item.codigo) == mi_continente:
-                        item.eliminar_continente
+                        continente = item
+                        mis_lugares_a_eliminar = item.objetos_a_eliminar(lista_paises , lista_provincias , lista_ciudades , lista_barrios)
 
-               lista_continentes.append(crear_continente(nombre, lista_coordenadas))
+               print("LOS LUGARES QUE SE ELIMINARAN SON LOS SIGUIENTES:\n")
+               for pais in mis_lugares_a_eliminar[0]:
+                   print("NOMBRE: " + pais.nombre + "\nCODIGO PAIS: " + str(pais.codigo) + "\n")
+                   print("PROVINCIAS DE: " + str(pais.codigo))
+                   for provincia in mis_lugares_a_eliminar[1]:
+                       if provincia.pais_perteneciente == pais.codigo:
+                           print("NOMBRE: " + provincia.nombre + "\nCODIGO PROVINCIA: " + str(provincia.codigo) + "\n")
+                           print("CIUDADES DE: " + str(provincia.codigo))
+                           for ciudad in mis_lugares_a_eliminar[2]:
+                               if ciudad.provincia_perteneciente == provincia.codigo:
+                                   print("NOMBRE: " + ciudad.nombre + "\nCODIGO CIUDAD: " + str(ciudad.codigo) + "\n")
+                                   print("BARRIOS DE: " + str(ciudad.codigo))
+                                   for barrio in mis_lugares_a_eliminar[3]:
+                                       if barrio.ciudad_perteneciente == ciudad.codigo:
+                                           print("NOMBRE: " + barrio.nombre + "\nCODIGO BARRIO: " + str(barrio.codigo) + "\n")
+
+               while (True):
+                   respuesta = input("\n¿DESEA ELIMINAR ELIMINAR EL CONTINENTE JUNTO CON SUS RELACIONADOS? <S/N>\n\nRESPUESTA: ")
+                   if ((respuesta == "s") or (respuesta == "S")):
+                       eliminar_continente(continente , mis_lugares_a_eliminar)
+                       break
+
+                   elif ((respuesta == "n") or (respuesta == "N")):
+                       os.system('cls')
+                       break
+                   else:
+                       os.system('cls')
+                       print("LETRA ERRONEA. REINGRESAR")
 
 
 
            elif selector == "1":
                print("CONTINENTES:")
 
-               for item in lista_continentes:
-                   print("CODIGO: " + str(item.codigo) + "\nNOMBRE: " + item.nombre + "\n")
+               for continente in lista_continentes:
+                   print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
 
-               mi_continente = input("INGRESAR CODIGO CONTINENTE: ")
-               for item in lista_continentes:
-                    if str(item.codigo) == mi_continente:
-                        mi_continente = item
+               codigo_continente = input("INGRESAR CODIGO CONTINENTE QUE CONTIENE EL PAIS: ")
 
-               lista_paises.append(crear_pais(mi_continente))
+               print("PAISES:")
+
+               for pais in lista_paises:
+                   if str(pais.continente_perteneciente) == codigo_continente:
+
+                       print("CODIGO: " + str(pais.codigo) + "\nNOMBRE: " + pais.nombre + "\n")
+
+                       codigo_pais = input("INGRESAR CODIGO PAIS: ")
+
+               for pais in lista_paises:
+                   if str(pais.codigo) == codigo_pais:
+                       mi_pais = pais
+                       mis_lugares_a_eliminar = pais.objetos_a_eliminar(lista_provincias, lista_ciudades,
+                                                                        lista_barrios)
+
+               print("LOS LUGARES QUE SE ELIMINARAN SON LOS SIGUIENTES:\n")
+               for provincia in mis_lugares_a_eliminar[0]:
+                   if provincia.pais_perteneciente == mi_pais.codigo:
+                       print("NOMBRE: " + provincia.nombre + "\nCODIGO PROVINCIA: " + str(provincia.codigo) + "\n")
+                       print("CIUDADES DE: " + str(provincia.codigo))
+                       for ciudad in mis_lugares_a_eliminar[1]:
+                           if ciudad.provincia_perteneciente == provincia.codigo:
+                               print("NOMBRE: " + ciudad.nombre + "\nCODIGO CIUDAD: " + str(ciudad.codigo) + "\n")
+                               print("BARRIOS DE: " + str(ciudad.codigo))
+                               for barrio in mis_lugares_a_eliminar[2]:
+                                   if barrio.ciudad_perteneciente == ciudad.codigo:
+                                       print("NOMBRE: " + barrio.nombre + "\nCODIGO BARRIO: " + str(
+                                           barrio.codigo) + "\n")
+
+               while (True):
+                   respuesta = input(
+                       "\n¿DESEA ELIMINAR ELIMINAR EL PAIS JUNTO CON SUS RELACIONADOS? <S/N>\n\nRESPUESTA: ")
+                   if ((respuesta == "s") or (respuesta == "S")):
+                       eliminar_pais(mi_pais, mis_lugares_a_eliminar)
+                       break
+
+                   elif ((respuesta == "n") or (respuesta == "N")):
+                       os.system('cls')
+                       break
+                   else:
+                       os.system('cls')
+                       print("LETRA ERRONEA. REINGRESAR")
 
 
 
            elif selector == "2":
+               print("CONTINENTES:")
+
+               for continente in lista_continentes:
+                   print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
+
+               codigo_continente = input("INGRESAR CODIGO CONTINENTE LA PROVINCIA: ")
 
                print("PAISES:")
 
-               for item in lista_paises:
-                   print("CODIGO: " + str(item.codigo) + "\nNOMBRE: " + item.nombre + "\n")
+               for pais in lista_paises:
+                   if str(pais.continente_perteneciente) == codigo_continente:
+                       print("CODIGO: " + str(pais.codigo) + "\nNOMBRE: " + pais.nombre + "\n")
 
-               mi_pais = input("INGRESAR CODIGO PAIS: ")
+                       codigo_pais = input("INGRESAR CODIGO PAIS: ")
 
-               for item in lista_paises:
+               for provincia in lista_provincias:
+                   if str(provincia.pais_perteneciente) == codigo_pais:
+                       print("CODIGO: " + str(provincia.codigo) + "\nNOMBRE: " + provincia.nombre + "\n")
 
-                   if str(item.codigo) == mi_pais:
-                       mi_pais = item
+                       codigo_provincia = input("INGRESAR CODIGO PROVINCIA: ")
 
-               lista_provincias.append(crear_provincia(mi_pais))
+               for provincia in lista_provincias:
+                   if str(provincia.codigo) == codigo_provincia:
+                       mi_provincia = provincia
+                       mis_lugares_a_eliminar = provincia.objetos_a_eliminar(lista_ciudades , lista_barrios)
+
+               print("LOS LUGARES QUE SE ELIMINARAN SON LOS SIGUIENTES:\n")
+               for ciudad in mis_lugares_a_eliminar[0]:
+                   if ciudad.provincia_perteneciente == provincia.codigo:
+                       print("NOMBRE: " + ciudad.nombre + "\nCODIGO CIUDAD: " + str(ciudad.codigo) + "\n")
+                       print("BARRIOS DE: " + str(ciudad.codigo))
+                       for barrio in mis_lugares_a_eliminar[1]:
+                           if barrio.ciudad_perteneciente == ciudad.codigo:
+                               print("NOMBRE: " + barrio.nombre + "\nCODIGO BARRIO: " + str(
+                                   barrio.codigo) + "\n")
+
+               while (True):
+                   respuesta = input(
+                       "\n¿DESEA ELIMINAR ELIMINAR LA PROVINCIA JUNTO CON SUS RELACIONADOS? <S/N>\n\nRESPUESTA: ")
+                   if ((respuesta == "s") or (respuesta == "S")):
+                       eliminar_provincia(mi_provincia, mis_lugares_a_eliminar)
+                       break
+
+                   elif ((respuesta == "n") or (respuesta == "N")):
+                       os.system('cls')
+                       break
+                   else:
+                       os.system('cls')
+                       print("LETRA ERRONEA. REINGRESAR")
 
 
            elif selector == "3":
+               print("CONTINENTES:")
+
+               for continente in lista_continentes:
+                   print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
+
+               codigo_continente = input("INGRESAR CODIGO CONTINENTE QUE CONTIENE LA CIUDAD: ")
+
+               print("PAISES:")
+
+               for pais in lista_paises:
+                   if str(pais.continente_perteneciente) == codigo_continente:
+                       print("CODIGO: " + str(pais.codigo) + "\nNOMBRE: " + pais.nombre + "\n")
+
+                       codigo_pais = input("INGRESAR CODIGO PAIS QUE CONTIENE LA CIUDAD: ")
+
                print("PROVINCIAS:")
 
-               for item in lista_provincias:
-                   print("CODIGO: " + str(item.codigo) + "\nNOMBRE: " + item.nombre + "\n")
+               for provincia in lista_provincias:
+                   if str(provincia.pais_perteneciente) == codigo_pais:
+                       print("CODIGO: " + str(provincia.codigo) + "\nNOMBRE: " + provincia.nombre + "\n")
 
-               mi_provincia = input("INGRESAR CODIGO PROVINCIA: ")
-               for item in lista_provincias:
-                   if str(item.codigo) == mi_provincia:
-                       mi_provincia = item
+                       codigo_provincia = input("INGRESAR CODIGO PROVINCIA QUE CONTIENE LA CIUDAD: ")
 
-               lista_ciudades.append(crear_ciudad(mi_provincia))
+               for ciudad in lista_ciudades:
+                   if str(ciudad.provincia_perteneciente) == codigo_provincia:
+                       print("CODIGO: " + str(ciudad.codigo) + "\nNOMBRE: " + ciudad.nombre + "\n")
+
+                       codigo_ciudad = input("INGRESAR CODIGO CIUDAD: ")
+
+               for ciudad in lista_ciudades:
+                   if str(ciudad.codigo) == codigo_ciudad:
+                       mi_ciudad = ciudad
+                       mis_lugares_a_eliminar = ciudad.objetos_a_eliminar(lista_barrios)
+
+               print("LOS LUGARES QUE SE ELIMINARAN SON LOS SIGUIENTES:\n")
+               for barrio in mis_lugares_a_eliminar[0]:
+                   if barrio.ciudad_perteneciente == ciudad.codigo:
+                       print("NOMBRE: " + barrio.nombre + "\nCODIGO BARRIO: " + str(
+                           barrio.codigo) + "\n")
+
+               while (True):
+                   respuesta = input(
+                       "\n¿DESEA ELIMINAR ELIMINAR LA CIUDAD JUNTO CON SUS RELACIONADOS? <S/N>\n\nRESPUESTA: ")
+                   if ((respuesta == "s") or (respuesta == "S")):
+                       eliminar_ciudad(mi_ciudad, mis_lugares_a_eliminar)
+                       break
+
+                   elif ((respuesta == "n") or (respuesta == "N")):
+                       os.system('cls')
+                       break
+                   else:
+                       os.system('cls')
+                       print("LETRA ERRONEA. REINGRESAR")
 
 
            elif selector == "4":
-               print("CIUDADES:")
+               print("CONTINENTES:")
 
-               for item in lista_ciudades:
-                   print("CODIGO: " + str(item.codigo) + "\nNOMBRE: " + item.nombre + "\n")
+               for continente in lista_continentes:
+                   print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
 
-               mi_ciudad = input("INGRESAR CODIGO CIUDAD: ")
-               for item in lista_ciudades:
-                    if str(item.codigo) == mi_ciudad:
-                        mi_ciudad = item
+               codigo_continente = input("INGRESAR CODIGO CONTINENTE QUE CONTIENE EL BARRIO: ")
 
-               lista_barrios.append(crear_barrio(mi_ciudad))
+               print("PAISES:")
+
+               for pais in lista_paises:
+                   if str(pais.continente_perteneciente) == codigo_continente:
+                       print("CODIGO: " + str(pais.codigo) + "\nNOMBRE: " + pais.nombre + "\n")
+
+                       codigo_pais = input("INGRESAR CODIGO PAIS QUE CONTIENE EL BARRIO: ")
+
+               print("PROVINCIAS:")
+
+               for provincia in lista_provincias:
+                   if str(provincia.pais_perteneciente) == codigo_pais:
+                       print("CODIGO: " + str(provincia.codigo) + "\nNOMBRE: " + provincia.nombre + "\n")
+
+                       codigo_provincia = input("INGRESAR CODIGO PROVINCIA QUE CONTIENE EL BARRIO: ")
+
+               for ciudad in lista_ciudades:
+                   if str(ciudad.provincia_perteneciente) == codigo_provincia:
+                       print("CODIGO: " + str(ciudad.codigo) + "\nNOMBRE: " + ciudad.nombre + "\n")
+
+                       codigo_ciudad = input("INGRESAR CODIGO CIUDAD QUE CONTIENE EL BARRIO: ")
+
+               for barrio in lista_barrios:
+                   if str(barrio.ciudad_perteneciente) == codigo_ciudad:
+                       print("CODIGO: " + str(barrio.codigo) + "\nNOMBRE: " + barrio.nombre + "\n")
+
+                       codigo_barrio = input("INGRESAR CODIGO BARRIO: ")
+
+               for barrio in lista_barrios:
+                   if str(barrio.codigo) == codigo_barrio:
+                       mi_barrio = barrio
+
+               while (True):
+                   respuesta = input(
+                       "\n¿DESEA ELIMINAR ELIMINAR EL BARRIO? <S/N>\n\nRESPUESTA: ")
+                   if ((respuesta == "s") or (respuesta == "S")):
+                       eliminar_barrio(mi_barrio)
+                       break
+
+                   elif ((respuesta == "n") or (respuesta == "N")):
+                       os.system('cls')
+                       break
+                   else:
+                       os.system('cls')
+                       print("LETRA ERRONEA. REINGRESAR")
 
 
 

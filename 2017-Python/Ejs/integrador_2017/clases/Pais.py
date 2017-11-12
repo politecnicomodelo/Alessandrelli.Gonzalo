@@ -18,16 +18,14 @@ class pais (lugar):
         cursor.execute("insert into provincia values (NULL , '" + str(nombre) + "' , '" + str(self.codigo) + "')")
         codigo = cursor.lastrowid
 
-        for item in lista_coordenadas:
-            cursor.execute("insert into coordenada values (NULL , '" + str(item[0]) + "') , '" + str(item[1]) + "')")
-            codigo_coordenada = cursor.lastrowid
-            cursor.execute("insert into provincia_has_coordenada values ('" + str(codigo) + "' ,"
-                           " '" + str(codigo_coordenada) + "')")
-            item.codigo = codigo_coordenada
-
         mi_provincia.codigo = codigo
         mi_provincia.nombre = nombre
         mi_provincia.pais_perteneciente = self.codigo
         mi_provincia.coordenadas = lista_coordenadas
+
+        for item in lista_coordenadas:
+            print(item)
+            print(item[0])
+            self.crear_coordenada(item[0][0] , item[0][1] , mi_provincia)
 
         return mi_provincia

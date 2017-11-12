@@ -19,19 +19,17 @@ class ciudad (lugar):
                         ", '" + str(self.codigo) + "')")
         codigo = cursor.lastrowid
 
-        for item in lista_coordenadas:
-            cursor.execute("insert into coordenada values (NULL , '" + str(item[0]) + "') , '" + str(item[1]) + "')")
-            codigo_coordenada = cursor.lastrowid
-            cursor.execute("insert into barrio_has_coordenada values ('" + str(codigo) + "' ,"
-                           " '" + str(codigo_coordenada) + "')")
-            item.codigo = codigo_coordenada
-
 
         mi_barrio.codigo = codigo
         mi_barrio.nombre = nombre
         mi_barrio.poblacion = poblacion
         mi_barrio.ciudad_perteneciente = self.codigo
         mi_barrio.coordenadas = lista_coordenadas
+
+        for item in lista_coordenadas:
+            print(item)
+            print(item[0])
+            self.crear_coordenada(item[0][0] , item[0][1] , mi_barrio)
 
         return mi_barrio
 

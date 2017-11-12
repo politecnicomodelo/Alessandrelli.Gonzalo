@@ -17,16 +17,14 @@ class continente (lugar):
         cursor.execute("insert into pais values (NULL , '" + str(nombre) + "' , '" + str(self.codigo) + "')")
         codigo = cursor.lastrowid
 
-        for item in lista_coordenadas:
-            cursor.execute("insert into coordenada values (NULL , '" + str(item[0]) + "') , '" + str(item[1]) + "')")
-            codigo_coordenada = cursor.lastrowid
-            cursor.execute("insert into pais_has_coordenada values ('" + str(codigo) + "' ,"
-                           " '" + str(codigo_coordenada) + "')")
-            item.codigo = codigo_coordenada
-
         mi_pais.codigo = codigo
         mi_pais.nombre = nombre
         mi_pais.pais_perteneciente = self.codigo
         mi_pais.coordenadas = lista_coordenadas
+
+        for item in lista_coordenadas:
+            print(item)
+            print(item[0])
+            self.crear_coordenada(item[0][0] , item[0][1] , mi_pais)
 
         return mi_pais

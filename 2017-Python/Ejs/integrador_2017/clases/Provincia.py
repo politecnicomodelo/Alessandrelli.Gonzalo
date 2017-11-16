@@ -71,3 +71,18 @@ class provincia (lugar):
             cursor.execute("delete from coordenada where codigo = '" + str(codigo[0]) + "'")
 
         cursor.execute("delete from provincia where codigo = '" + str(self.codigo) + "'")
+
+    def eliminar_coordenada(self, codigo_coordenada):
+        db = pymysql.connect(host='127.0.0.1', user="root", password="", db="mydb", autocommit=True)
+        cursor = db.cursor()
+
+        cursor.execute("delete from provincia_has_coordenada where coordenada_codigo = '" +
+                       str(codigo_coordenada) + "'")
+        cursor.execute("delete from coordenada where codigo = '" +
+                       str(codigo_coordenada) + "'")
+
+    def actualizar_nombre (self , nombre):
+        db = pymysql.connect(host='127.0.0.1', user="root", password="", db="mydb", autocommit=True)
+        cursor = db.cursor()
+
+        cursor.execute("update provincia set nombre = '" +str(nombre) + "' where codigo = '" + str(self.codigo) + "'")

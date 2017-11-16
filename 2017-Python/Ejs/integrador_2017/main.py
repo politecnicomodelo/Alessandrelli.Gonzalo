@@ -272,6 +272,77 @@ def eliminar_barrio(barrio):
         if item.codigo == barrio.codigo:
             lista_barrios.remove(item)
 
+def eliminar_coordenada_barrio(barrio , codigo_coordenada):
+    barrio.eliminar_coordenada(codigo_coordenada)
+
+    for coordenada in barrio.coordenadas:
+        if str(coordenada.codigo) == codigo_coordenada:
+            barrio.coordenadas.remove(coordenada)
+
+def eliminar_coordenada_ciudad(ciudad , codigo_coordenada):
+    ciudad.eliminar_coordenada(codigo_coordenada)
+
+    for coordenada in ciudad.coordenadas:
+        if str(coordenada.codigo) == codigo_coordenada:
+            ciudad.coordenadas.remove(coordenada)
+
+
+def eliminar_coordenada_provincia(provincia , codigo_coordenada):
+    provincia.eliminar_coordenada(codigo_coordenada)
+
+    for coordenada in provincia.coordenadas:
+        if str(coordenada.codigo) == codigo_coordenada:
+            provincia.coordenadas.remove(coordenada)
+
+def eliminar_coordenada_pais(pais , codigo_coordenada):
+    pais.eliminar_coordenada(codigo_coordenada)
+
+    for coordenada in pais.coordenadas:
+        if str(coordenada.codigo) == codigo_coordenada:
+            continente.coordenadas.remove(coordenada)
+
+def eliminar_coordenada_continente(continente , codigo_coordenada):
+    continente.eliminar_coordenada(codigo_coordenada)
+
+    for coordenada in continente.coordenadas:
+        if str(coordenada.codigo) == codigo_coordenada:
+            continente.coordenadas.remove(coordenada)
+
+def cambiar_nombre_barrio(barrio , nombre):
+
+    for item in lista_barrios:
+        if item == barrio:
+            item.nombre = nombre
+            item.actualzar_nombre(nombre)
+
+def cambiar_nombre_ciudad(ciudad , nombre):
+
+    for item in lista_ciudades:
+        if item == ciudad:
+            item.nombre = nombre
+            item.actualzar_nombre(nombre)
+
+def cambiar_nombre_provincia(provincia , nombre):
+
+    for item in lista_provincias:
+        if item == provincia:
+            item.nombre = nombre
+            item.actualzar_nombre(nombre)
+
+def cambiar_nombre_pais(pais , nombre):
+
+    for item in lista_paises:
+        if item == pais:
+            item.nombre = nombre
+            item.actualzar_nombre(nombre)
+
+def cambiar_nombre_continente(continente , nombre):
+
+    for item in lista_barrios:
+        if item == barrio:
+            item.nombre = nombre
+            item.actualzar_nombre(nombre)
+
 
 
 def main ():
@@ -369,7 +440,19 @@ def main ():
                "<3> ACTUALIZAR CIUDAD\n<4> ACTUALIZAR BARRIO\n<5> IR AL MENU PRINCIPAL\n\nRESPUESTA: ")
 
            if selector == "0":
-               pass
+               print("CONTINENTES:")
+
+               for continente in lista_continentes:
+                   print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
+
+               codigo_continente = input("INGRESAR CODIGO CONTINENTE: ")
+
+               selector = input(
+                   "INGRESE UNA ACCION (0): \n\n<0> ACTUALIZAR NOMBRE\n\nRESPUESTA: ")
+
+               if (selector == "0"):
+
+
 
            if selector == "1":
                pass
@@ -672,14 +755,7 @@ def main ():
 
                            codigo_coordenada = input("INGRESAR CODIGO COORDENADA: ")
 
-                           cursor.execute("delete from continente_has_coordenada where coordenada_codigo = '" +
-                                          str(codigo_coordenada) + "'")
-                           cursor.execute("delete from coordenada where codigo = '" +
-                                          str(codigo_coordenada) + "'")
-
-                           for coordenada in continente.coordenadas:
-                               if str(coordenada.codigo) == codigo_coordenada:
-                                   continente.coordenadas.remove(coordenada)
+                           eliminar_coordenada_continente(continente , codigo_coordenada)
 
                if selector == "1":
                    print("CONTINENTES:")
@@ -725,17 +801,11 @@ def main ():
                            for coordenada in provincia.coordenadas:
                                print("CODIGO: " + str(coordenada.codigo) + "\nLATITUD: " + str(coordenada.latitud)
                                      + "\nLONGITUD: " + str(coordenada.longitud) + "\n")
-
                            codigo_coordenada = input("INGRESAR CODIGO COORDENADA: ")
 
-                           cursor.execute("delete from provincia_has_coordenada where coordenada_codigo = '" +
-                                          str(codigo_coordenada) + "'")
-                           cursor.execute("delete from coordenada where codigo = '" +
-                                          str(codigo_coordenada) + "'")
+                           eliminar_coordenada_provincia(provincia, codigo_coordenada)
+                           break
 
-                           for coordenada in provincia.coordenadas:
-                               if str(coordenada.codigo) == codigo_coordenada:
-                                   provincia.coordenadas.remove(coordenada)
 
                elif selector == "3":
                    print("CONTINENTES:")
@@ -766,14 +836,7 @@ def main ():
 
                            codigo_coordenada = input("INGRESAR CODIGO COORDENADA: ")
 
-                           cursor.execute("delete from ciudad_has_coordenada where coordenada_codigo = '" +
-                                          str(codigo_coordenada) + "'")
-                           cursor.execute("delete from coordenada where codigo = '" +
-                                          str(codigo_coordenada) + "'")
-
-                           for coordenada in ciudad.coordenadas:
-                               if str(coordenada.codigo) == codigo_coordenada:
-                                   ciudad.coordenadas.remove(coordenada)
+                           eliminar_coordenada_ciudad(ciudad , codigo_coordenada)
 
                elif selector == "4":
                    print("CONTINENTES:")
@@ -810,14 +873,8 @@ def main ():
 
                            codigo_coordenada = input("INGRESAR CODIGO COORDENADA: ")
 
-                           cursor.execute("delete from barrio_has_coordenada where coordenada_codigo = '" +
-                                          str(codigo_coordenada) + "'")
-                           cursor.execute("delete from coordenada where codigo = '" +
-                                          str(codigo_coordenada) + "'")
-
-                           for coordenada in barrio.coordenadas:
-                               if str(coordenada.codigo) == codigo_coordenada:
-                                   barrio.coordenadas.remove(coordenada)
+                           eliminar_coordenada_barrio(barrio , codigo_coordenada)
+                           break
 
 
                elif selector == "5":

@@ -282,7 +282,7 @@ def main ():
 
        if (selector == "0"):
            selector = input("INGRESE UNA ACCION (0/1/2/3/4): \n\n<0> CREAR CONTINENTE\n<1> CREAR PAIS\n<2> CREAR PROVINCIA\n"
-                            "<3> CREAR CIUDAD\n<4>CREAR BARRIO\n\nRESPUESTA: ")
+                            "<3> CREAR CIUDAD\n<4>CREAR BARRIO\n<5> IR AL MENU PRINCIPAL\n\nRESPUESTA: ")
 
            if selector == "0":
                nombre = input("NOMBRE DEL CONTINENTE: ")
@@ -357,17 +357,40 @@ def main ():
 
                lista_barrios.append(crear_barrio(mi_ciudad))
 
+           elif selector == "5":
+               pass
+
 
 
        elif selector == "1":
            os.system('cls')
+           selector = input(
+               "INGRESE UNA ACCION (0/1/2/3/4/5): \n\n<0> ACTUALIZAR CONTINENTE\n<1> ACTUALIZAR PAIS \n<2> ACTUALIZAR PROVINCIA\n"
+               "<3> ACTUALIZAR CIUDAD\n<4> ACTUALIZAR BARRIO\n<5> IR AL MENU PRINCIPAL\n\nRESPUESTA: ")
+
+           if selector == "0":
+               pass
+
+           if selector == "1":
+               pass
+
+           if selector == "2":
+               pass
+
+           if selector == "3":
+               pass
+
+           if selector == "5":
+               pass
+
+
 
 
 
        elif selector == "2":
            os.system('cls')
            selector = input("INGRESE UNA ACCION (0/1/2/3/4/5): \n\n<0> ELIMINAR CONTINENTE\n<1> ELIMINAR PAIS\n<2> ELIMINAR PROVINCIA\n"
-                            "<3> ELIMINAR CIUDAD\n<4> ELIMINAR BARRIO\n<5> ELIMINAR COORDENADA\n\nRESPUESTA: ")
+                            "<3> ELIMINAR CIUDAD\n<4> ELIMINAR BARRIO\n<5> ELIMINAR COORDENADA\n<6> IR AL MENU PRINCIPAL\n\nRESPUESTA: ")
 
            mis_lugares_a_eliminar = []
 
@@ -628,6 +651,181 @@ def main ():
                    else:
                        os.system('cls')
                        print("LETRA ERRONEA. REINGRESAR")
+
+           elif selector == "5":
+               selector = input("SELECCIONAR UN LUGAR (0/1/2/3/4/5)\n\n<0> CONTINENTE\n<1> PAIS\n<2> PROVINCIA\n"
+                                "<3> CIUDAD\n<4> BARRIO\n<5> IR AL MENU PRINCIPAL\n\nRESPUESTA: ")
+
+               if selector == "0":
+                   print("CONTINENTES:")
+
+                   for continente in lista_continentes:
+                       print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
+
+                   codigo_continente = input("INGRESAR CODIGO CONTINENTE A ELIMINAR COORDENADA: ")
+
+                   for continente in lista_continentes:
+                       if str(continente.codigo) == codigo_continente:
+                           for coordenada in continente.coordenadas:
+                               print("CODIGO: " + str(coordenada.codigo) + "\nLATITUD: " + str(coordenada.latitud)
+                                     + "\nLONGITUD: " + str(coordenada.longitud) + "\n")
+
+                           codigo_coordenada = input("INGRESAR CODIGO COORDENADA: ")
+
+                           cursor.execute("delete from continente_has_coordenada where coordenada_codigo = '" +
+                                          str(codigo_coordenada) + "'")
+                           cursor.execute("delete from coordenada where codigo = '" +
+                                          str(codigo_coordenada) + "'")
+
+                           for coordenada in continente.coordenadas:
+                               if str(coordenada.codigo) == codigo_coordenada:
+                                   continente.coordenadas.remove(coordenada)
+
+               if selector == "1":
+                   print("CONTINENTES:")
+
+                   for continente in lista_continentes:
+                       print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
+
+                   codigo_continente = input("INGRESAR CODIGO CONTINENTE QUE CONTIENE PAIS A ELIMINAR COORDENADA: ")
+
+                   for pais in lista_paises:
+                       if str(pais.continente_perteneciente) == codigo_continente:
+                           for coordenada in pais.coordenadas:
+                               print("CODIGO: " + str(coordenada.codigo) + "\nLATITUD: " + str(coordenada.latitud)
+                                     + "\nLONGITUD: " + str(coordenada.longitud) + "\n")
+
+                           codigo_coordenada = input("INGRESAR CODIGO COORDENADA: ")
+
+                           cursor.execute("delete from pais_has_coordenada where coordenada_codigo = '" +
+                                          str(codigo_coordenada) + "'")
+                           cursor.execute("delete from coordenada where codigo = '" +
+                                          str(codigo_coordenada) + "'")
+
+                           for coordenada in pais.coordenadas:
+                               if str(coordenada.codigo) == codigo_coordenada:
+                                   pais.coordenadas.remove(coordenada)
+
+               elif selector == "2":
+                   print("CONTINENTES:")
+
+                   for continente in lista_continentes:
+                       print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
+
+                   codigo_continente = input("INGRESAR CODIGO CONTINENTE QUE CONTIENE PROVINCIA A ELIMINAR COORDENADA: ")
+
+                   for pais in lista_paises:
+                       if str(pais.continente_perteneciente) == codigo_continente:
+                           print("CODIGO: " + str(pais.codigo) + "\nNOMBRE: " + pais.nombre + "\n")
+
+                   codigo_pais = input("INGRESAR CODIGO PAIS QUE CONTIENE PROVINCIA A ELIMINAR COORDENADA: ")
+
+                   for provincia in lista_provincias:
+                       if str(provincia.pais_perteneciente) == codigo_pais:
+                           for coordenada in provincia.coordenadas:
+                               print("CODIGO: " + str(coordenada.codigo) + "\nLATITUD: " + str(coordenada.latitud)
+                                     + "\nLONGITUD: " + str(coordenada.longitud) + "\n")
+
+                           codigo_coordenada = input("INGRESAR CODIGO COORDENADA: ")
+
+                           cursor.execute("delete from provincia_has_coordenada where coordenada_codigo = '" +
+                                          str(codigo_coordenada) + "'")
+                           cursor.execute("delete from coordenada where codigo = '" +
+                                          str(codigo_coordenada) + "'")
+
+                           for coordenada in provincia.coordenadas:
+                               if str(coordenada.codigo) == codigo_coordenada:
+                                   provincia.coordenadas.remove(coordenada)
+
+               elif selector == "3":
+                   print("CONTINENTES:")
+
+                   for continente in lista_continentes:
+                       print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
+
+                   codigo_continente = input(
+                       "INGRESAR CODIGO CONTINENTE QUE CONTIENE CIUDAD A ELIMINAR COORDENADA: ")
+
+                   for pais in lista_paises:
+                       if str(pais.continente_perteneciente) == codigo_continente:
+                           print("CODIGO: " + str(pais.codigo) + "\nNOMBRE: " + pais.nombre + "\n")
+
+                   codigo_pais = input("INGRESAR CODIGO PAIS QUE CONTIENE PROVINCIA A ELIMINAR COORDENADA: ")
+
+                   for provincia in lista_provincias:
+                       if str(provincia.pais_perteneciente) == codigo_pais:
+                           print("CODIGO: " + str(provincia.codigo) + "\nNOMBRE: " + provincia.nombre + "\n")
+
+                   codigo_provincia = input("INGRESAR CODIGO PROVINCIA QUE CONTIENE CIUDAD A ELIMINAR COORDENADA: ")
+
+                   for ciudad in lista_ciudades:
+                       if str(ciudad.provincia_perteneciente) == codigo_provincia:
+                           for coordenada in ciudad.coordenadas:
+                               print("CODIGO: " + str(coordenada.codigo) + "\nLATITUD: " + str(coordenada.latitud)
+                                     + "\nLONGITUD: " + str(coordenada.longitud) + "\n")
+
+                           codigo_coordenada = input("INGRESAR CODIGO COORDENADA: ")
+
+                           cursor.execute("delete from ciudad_has_coordenada where coordenada_codigo = '" +
+                                          str(codigo_coordenada) + "'")
+                           cursor.execute("delete from coordenada where codigo = '" +
+                                          str(codigo_coordenada) + "'")
+
+                           for coordenada in ciudad.coordenadas:
+                               if str(coordenada.codigo) == codigo_coordenada:
+                                   ciudad.coordenadas.remove(coordenada)
+
+               elif selector == "4":
+                   print("CONTINENTES:")
+
+                   for continente in lista_continentes:
+                       print("CODIGO: " + str(continente.codigo) + "\nNOMBRE: " + continente.nombre + "\n")
+
+                   codigo_continente = input(
+                       "INGRESAR CODIGO CONTINENTE QUE CONTIENE BARRIO A ELIMINAR COORDENADA: ")
+
+                   for pais in lista_paises:
+                       if str(pais.continente_perteneciente) == codigo_continente:
+                           print("CODIGO: " + str(pais.codigo) + "\nNOMBRE: " + pais.nombre + "\n")
+
+                   codigo_pais = input("INGRESAR CODIGO PAIS QUE CONTIENE BARRIO A ELIMINAR COORDENADA: ")
+
+                   for provincia in lista_provincias:
+                       if str(provincia.pais_perteneciente) == codigo_pais:
+                           print("CODIGO: " + str(provincia.codigo) + "\nNOMBRE: " + provincia.nombre + "\n")
+
+                   codigo_provincia = input("INGRESAR CODIGO PROVINCIA QUE CONTIENE BARRIO A ELIMINAR COORDENADA: ")
+
+                   for ciudad in lista_ciudades:
+                       if str(ciudad.continente_perteneciente) == codigo_provincia:
+                           print("CODIGO: " + str(ciudad.codigo) + "\nNOMBRE: " + ciudad.nombre + "\n")
+
+                   codigo_ciudad = input("INGRESAR CODIGO CIUDAD QUE CONTIENE BARRIO A ELIMINAR COORDENADA: ")
+
+                   for barrio in lista_barrios:
+                       if str(barrio.ciudad_perteneciente) == codigo_ciudad:
+                           for coordenada in barrio.coordenadas:
+                               print("CODIGO: " + str(coordenada.codigo) + "\nLATITUD: " + str(coordenada.latitud)
+                                     + "\nLONGITUD: " + str(coordenada.longitud) + "\n")
+
+                           codigo_coordenada = input("INGRESAR CODIGO COORDENADA: ")
+
+                           cursor.execute("delete from barrio_has_coordenada where coordenada_codigo = '" +
+                                          str(codigo_coordenada) + "'")
+                           cursor.execute("delete from coordenada where codigo = '" +
+                                          str(codigo_coordenada) + "'")
+
+                           for coordenada in barrio.coordenadas:
+                               if str(coordenada.codigo) == codigo_coordenada:
+                                   barrio.coordenadas.remove(coordenada)
+
+
+               elif selector == "5":
+                   pass
+
+
+           elif selector == "6":
+               pass
 
 
 

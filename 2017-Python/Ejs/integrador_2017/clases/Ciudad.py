@@ -59,9 +59,10 @@ class ciudad (lugar):
 
         cursor.execute("select coordenada_codigo from ciudad_has_coordenada where ciudad_codigo = '" + str(
             self.codigo) + "'")
-        codigo = cursor.fetchall()
-        codigo = codigo[0]
-        cursor.execute("delete from ciudad_has_coordenada where ciudad_codigo = '" + str(self.codigo) + "'")
-        cursor.execute("delete from coordenada where codigo = '" + str(codigo) + "'")
+        codigos = cursor.fetchall()
+        for codigo in codigos:
+            cursor.execute("delete from ciudad_has_coordenada where ciudad_codigo = '" + str(self.codigo) + "'")
+            cursor.execute("delete from coordenada where codigo = '" + str(codigo[0]) + "'")
+
         cursor.execute("delete from ciudad where codigo = '" + str(self.codigo) + "'")
 

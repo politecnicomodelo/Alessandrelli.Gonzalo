@@ -56,13 +56,18 @@ class provincia (lugar):
         db = pymysql.connect(host='127.0.0.1', user="root", password="", db="mydb", autocommit=True)
         cursor = db.cursor()
 
+        mis_lugares_a_eliminar_2 = []
+        mis_lugares_a_eliminar_2.append(mis_lugares_a_eliminar[1])
+
         for ciudad in mis_lugares_a_eliminar[0]:
-            ciudad.eliminar(mis_lugares_a_eliminar[1])
+            ciudad.eliminar(mis_lugares_a_eliminar_2)
 
         cursor.execute("select coordenada_codigo from provincia_has_coordenada where provincia_codigo = '" + str(
             self.codigo) + "'")
-        codigo = cursor.fetchall()
-        codigo = codigo[0]
-        cursor.execute("delete from provincia_has_coordenada where provincia_codigo = '" + str(self.codigo) + "'")
-        cursor.execute("delete from coordenada where codigo = '" + str(codigo) + "'")
+        codigos = cursor.fetchall()
+
+        for codigo in codigos:
+            cursor.execute("delete from provincia_has_coordenada where provincia_codigo = '" + str(self.codigo) + "'")
+            cursor.execute("delete from coordenada where codigo = '" + str(codigo[0]) + "'")
+
         cursor.execute("delete from provincia where codigo = '" + str(self.codigo) + "'")

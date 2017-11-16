@@ -4,21 +4,12 @@ from clases.Post import Post
 from flask import Flask, render_template , request
 import hashlib
 from datetime import date
-from socket import *
-#import wmi
 
 
 HTTP_STATIC="http://127.0.0.1:5000/"
-#db = pymysql.connect (host = '127.0.0.1' , user = "root" , password = "" ,
-#                      db = "red_social" , autocommit = True)
-#cursor = db.cursor()
-
-#c=wmi.WMI('172.16.2.250',user='root',password='alumno')
-#process_id, return_value = c.Win32_Process.Create(CommandLine="cmd.exe /c  <your command>")
-
-
-
-
+db = pymysql.connect (host = '127.0.0.1' , user = "root" , password = "" ,
+                      db = "red_social" , autocommit = True)
+cursor = db.cursor()
 
 
 
@@ -54,5 +45,10 @@ def index():
     return render_template('index.html', static = HTTP_STATIC,  lista_amigos = lista_amigos
                            , lista_grupos = lista_grupos , lista_paginas = lista_paginas , lista_post = lista_post)
     id = request.args.get('id')
+
+@app.route('/login')
+def login():
+    return render_template('templates/pagina/login_logon/index.html', static=HTTP_STATIC)
+
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)

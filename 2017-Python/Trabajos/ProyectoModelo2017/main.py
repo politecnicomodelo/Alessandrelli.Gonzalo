@@ -2,21 +2,7 @@
 import pymysql
 from flask import Flask, render_template
 from clases.proyecto import *
-	/* Fuentes */
-	@font-face{
-		font-family:"PTF55F";
-	 	src: url({{ static }}Fuentes/PTF55F.ttf) format("truetype");
-		font-size:10px;
-	}
-	</style>
-	<title>Expo Modelo 2017</title>
-</head>
-<body background = {{ static }}mainPagina.png>
-	<div>
-		<h1 style="font-family: PTF55F;"><span style="color:#b2b2b2"></span></h1>
-	</div>
-</body>
-</html>
+
 HTTP_STATIC="http://172.16.2.250/"
 db = pymysql.connect (host = '172.16.2.250' , user = "root" , password = "alumno" ,
                       db = "expo_modelo_2017_computacion" , autocommit = True)

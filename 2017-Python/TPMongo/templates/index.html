@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 <html>
-<head>
+<title>Trabajo Mongo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<head><meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <style>
+
 .button {
     background-color: #4CAF50; /* Green */
     border: none;
@@ -17,19 +25,28 @@
 
 .button2 {background-color: #008CBA;} /* Blue */
 
+div{
+    margin: 5px 10px;
+
+}
 </style>
 </head>
 <body>
 
-<h2>Button Colors</h2>
-<p>Change the background color of a button with the background-color property:</p>
+<div class="w3-container w3-teal">
+    <h2>Seleccionar Grafico</h2>
+  </div>
+<div>
+<div class="col-sm-2" style="background-color:lavender;">
+        <center><button name="barras" id="barras" class="button"
+                        onclick="window.location='http://127.0.0.1:8000/barras'">Grafico de Barras</button></center>
+    </div>
+<div class="col-sm-2" style="background-color:lavender;">
+        <center><button name="maps" id="maps" class="button"
+        onclick="window.location='http://127.0.0.1:8000/maps'">Grafico Maps</button></center>
+    </div>
+</div>
 
-<div style="background-color:AliceBlue">
-<button class="button button2" onclick="window.location.href='/barras'" >Barras</button>
-</div>
-<div style="background-color:AliceBlue" >
-<button class="button button2" onclick="window.location.href='/maps'" >Maps</button>
-</div>
 
 </body>
 </html>

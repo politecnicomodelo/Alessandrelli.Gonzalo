@@ -1,52 +1,139 @@
 <!DOCTYPE html>
 <html>
-<title>Trabajo Mongo</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<head><meta charset="utf-8">
+<title>Trabajo de Mongo</title>
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 <style>
+            html, body {
+                background-color: #fff;
+                color: #636b6f;
+                font-family: 'Raleway', sans-serif;
+                font-weight: 100;
+                height: 100vh;
+                margin: 0;
+            }
 
-.button {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-}
+            .full-height {
+                height: 100vh;
+            }
 
-.button2 {background-color: #008CBA;} /* Blue */
+            .flex-center {
+                align-items: center;
+                display: flex;
+                justify-content: center;
+            }
 
-div{
-    margin: 5px 10px;
+            .position-ref {
+                position: relative;
+            }
 
-}
-</style>
+            .top-right {
+                position: absolute;
+                right: 10px;
+                top: 18px;
+            }
+
+            .content {
+                text-align: center;
+            }
+
+            .title {
+                font-size: 84px;
+            }
+
+            .links > a {
+                color: #636b6f;
+                padding: 0 25px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            .m-b-md {
+                margin-bottom: 30px;
+            }
+        </style>
+
+<style>
+            html, body {
+                background-color: #fff;
+                color: #636b6f;
+                font-family: 'Raleway', sans-serif;
+                font-weight: 100;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .full-height {
+                height: 100vh;
+            }
+
+            .flex-center {
+                align-items: center;
+                display: flex;
+                justify-content: center;
+            }
+
+            .position-ref {
+                position: relative;
+            }
+
+            .top-right {
+                position: absolute;
+                right: 10px;
+                top: 18px;
+            }
+
+            .content {
+                text-align: center;
+            }
+
+            .title {
+                font-size: 84px;
+            }
+
+            .links > a {
+                color: #636b6f;
+                padding: 0 25px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            .m-b-md {
+                margin-bottom: 30px;
+            }
+        </style>
 </head>
 <body>
 
-<div class="w3-container w3-teal">
-    <h2>Seleccionar Grafico</h2>
-  </div>
-<div>
-<div class="col-sm-2" style="background-color:lavender;">
-        <center><button name="barras" id="barras" class="button"
-                        onclick="window.location='http://127.0.0.1:8000/barras'">Grafico de Barras</button></center>
+<nav class="navbar navbar-inverse">
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/"> <span class="glyphicon glyphicon-home"></span> Home</a></li>
+      </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/barras"> <span class="glyphicon glyphicon-align-left"></span> Grafico de Barras</a></li>
+          <li><a href="/mapa"> <span class="glyphicon glyphicon-map-marker"></span> Mapa</a></li>
+          <li><a href="/torta"> <span class="glyphicon glyphicon-adjust"></span> Grafico de Torta</a></li>
+        </ul>
+      </ul>
     </div>
-<div class="col-sm-2" style="background-color:lavender;">
-        <center><button name="maps" id="maps" class="button"
-        onclick="window.location='http://127.0.0.1:8000/maps'">Grafico Maps</button></center>
-    </div>
-</div>
+</nav>
 
+
+    <div class="content">
+        <div class="title m-b-md">
+            SELLESSA
+        </div>
 
 </body>
 </html>

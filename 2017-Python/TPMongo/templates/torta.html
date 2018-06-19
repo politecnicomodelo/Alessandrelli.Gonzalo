@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<title>Trabajo de Mongo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<head>
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/"> <span class="glyphicon glyphicon-home"></span> Home</a></li>
+      </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/barras"> <span class="glyphicon glyphicon-align-left"></span> Grafico de Barras</a></li>
+          <li><a href="/mapa"> <span class="glyphicon glyphicon-map-marker"></span> Mapa</a></li>
+          <li><a href="/torta"> <span class="glyphicon glyphicon-adjust"></span> Grafico de Torta</a></li>
+        </ul>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<h1 style="padding: 0px 25px;">Grafico de Torta</h1>
+
+<div id="piechart"></div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+// Draw the chart and set the chart values
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+  ['Task', 'Hours per Day'],
+  ['Capacidad Grande', {{gran}}],
+  ['Capacidad Mediano', {{med}}],
+  ['Capacidad Chico', {{chico}}]
+]);
+
+  // Optional; add a title and set the width and height of the chart
+  var options = {'title':'Boliches CABA', 'width':550, 'height':400};
+
+  // Display the chart inside the <div> element with id="piechart"
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  chart.draw(data, options);
+}
+</script>
+
+</body>
+</html>
